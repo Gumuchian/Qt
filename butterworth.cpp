@@ -1,5 +1,5 @@
 #include "Butterworth.h"
-#include <ressources.h>
+#include "global.h"
 
 Butterworth::Butterworth()
 {

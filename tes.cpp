@@ -2,7 +2,7 @@
 #include <math.h>
 #include <fstream>
 #include <random>
-#include "ressources.h"
+#include "global.h"
 
 TES::TES():gen((std::random_device())())
 {

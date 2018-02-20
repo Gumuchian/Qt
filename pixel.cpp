@@ -3,7 +3,7 @@
 #include "TES.h"
 #include <math.h>
 #include <random>
-#include "ressources.h"
+#include "global.h"
 
 Pixel::Pixel()
 {

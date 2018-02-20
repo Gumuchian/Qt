@@ -1,6 +1,6 @@
 #include "DDS.h"
 #include <math.h>
-#include <ressources.h>
+#include "global.h"
 
 DDS::DDS()
 {

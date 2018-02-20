@@ -5,9 +5,7 @@
 #include <fstream>
 #include <string>
 #include <random>
-#include "ressources.h"
-#include <thread>
-#include <system_error>
+#include "global.h"
 
 Channel::Channel():dds(Npt,Npr,interpolation)
 {

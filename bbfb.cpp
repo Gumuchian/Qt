@@ -1,6 +1,6 @@
 #include "BBFB.h"
 #include <math.h>
-#include "ressources.h"
+#include "global.h"
 
 BBFB::BBFB()
 {

@@ -7,7 +7,7 @@
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
+CONFIG += c++11
 TARGET = X-IFU_simulator
 TEMPLATE = app
 
@@ -31,7 +31,13 @@ SOURCES += main.cpp\
     pixel.cpp \
     pulse_generator.cpp \
     tes.cpp \
-    cic.cpp
+    cic.cpp \
+    tinystr.cpp \
+    tinyxml.cpp \
+    tinyxmlerror.cpp \
+    tinyxmlparser.cpp \
+    display.cpp \
+    xifu.cpp
 
 HEADERS  += mainwindow.h \
     channel.h \
@@ -42,7 +48,12 @@ HEADERS  += mainwindow.h \
     pixel.h \
     pulse_generator.h \
     tes.h \
-    cic.h
+    cic.h \
+    global.h \
+    tinystr.h \
+    tinyxml.h \
+    display.h \
+    xifu.h
 
 INCLUDEPATH += C:\Users\Paul\Downloads\Boost\boost_1_66_0
 LIBS += -L/usr/local/boost_1_48_0/stage/lib

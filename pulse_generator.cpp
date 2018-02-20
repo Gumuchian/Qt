@@ -1,5 +1,6 @@
 #include "Pulse_generator.h"
-#include "ressources.h"
+#include "global.h"
+#include <math.h>
 
 typedef double (*ptrm) (double,double,double);
 
