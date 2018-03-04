@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QtWidgets>
-#include "display.h"
+#include <QWidget>
 #include <string>
 #include "xifu.h"
 
@@ -23,6 +23,7 @@ public slots:
     void simulate();
     void setmode1();
     void setmode2();
+    void openConfig();
 
 private:
     Ui::MainWindow *ui;
@@ -31,8 +32,9 @@ private:
     QPushButton *bouton_launch;
     QPushButton *Calibration_mode;
     QPushButton *Resolution_mode;
+    QWidget *fenetre;
     QProgressBar *progress;
-
+    QThread *thread;
 };
 
 #endif // MAINWINDOW_H

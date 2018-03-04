@@ -30,17 +30,21 @@ using namespace boost::numeric;
 typedef complex<double> Complex;
 typedef valarray<Complex> CArray;
 
-class xifu: public QWidget
+class xifu: public QObject
 {
+    Q_OBJECT
 public:
     xifu();
     void fft(CArray& x);
     void ifft(CArray& x);
     template<class T> bool InvertMatrix(const ublas::matrix<T>& input, ublas::matrix<T>& inverse);
     QString getResults();
-    void simulate();
-    int getProgress();
     void setMode(int mod);
+public slots:
+    void simulate();
+signals:
+    void getProgress(int prog);
+    void simulation_ended();
 private:
     int mode;
     Channel ch0;

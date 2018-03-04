@@ -21,7 +21,6 @@
 #include <boost/numeric/ublas/lu.hpp>
 #include <boost/numeric/ublas/io.hpp>
 #include <QString>
-#include <QElapsedTimer>
 
 using namespace std;
 using namespace boost::numeric;
@@ -39,13 +38,11 @@ xifu::xifu()
 
 void xifu::simulate()
 {
-    progress=0;
+    progress=0; 
     int i,k,ip=0,l=0,n_alea=0,m;
     vector<double> module(Npat,0);
     vector<double> E;
     string str;
-    QElapsedTimer timer;
-    qint64 nanoSec;
     double sum,Em=0,var=0,P=0,maxi,a=0,energy_mode,puls;
     ublas::matrix<double> X(Nfit,order_fit+1),Z(order_fit+1,order_fit+1);
     for (i=0;i<Nfit;i++)
@@ -92,7 +89,7 @@ void xifu::simulate()
         }
         puls=pulse_generator.compute();
         if (i>=1000000 && i<1000000+Npul)
-    {
+        {
         pulse[ip]=puls;
         ip++;
         }
@@ -110,6 +107,7 @@ void xifu::simulate()
     for (i=0;i<N;i++)
     {
         progress=(100*i)/N;
+        emit getProgress(progress);
         ch0.sumPolar();
         if (mode==2)
         {
@@ -238,15 +236,17 @@ void xifu::simulate()
 
         results=QString::fromStdString("Input energy: "+to_string(energy)+" eV\n"
                +"Number of estimations: "+to_string(E.size()-3)+"\n"
-               +"E:  pattern @ "+to_string(1000)+" eV"+"\n"
-               +"\tEnergy estimation: "+to_string(Em)+" eV\n"
-               +"\tRelative error: "+to_string(abs(energy-Em)/energy)+"\n"
-               +"\tResolution: "+to_string(var)+" eV\n");
+               +"pattern @ "+to_string(1000)+" eV"+"\n"
+               +"Energy estimation: "+to_string(Em)+" eV\n"
+               +"Relative error: "+to_string(abs(energy-Em)/energy)+"\n"
+               +"Resolution: "+to_string(var)+" eV\n");
     }
     file1.close();
     file2.close();
     file3.close();
-    std::cout<< "done" << std::endl;
+    progress=100;
+    emit getProgress(progress);
+    emit simulation_ended();
 }
 
 void xifu::fft(CArray& x)
@@ -283,8 +283,7 @@ bool xifu::InvertMatrix(const ublas::matrix<T>& input, ublas::matrix<T>& inverse
     ublas::matrix<T> A(input);
     pmatrix pm(A.size1());
     int res = lu_factorize(A, pm);
-    if (res != 0)
-        return false;
+    if (res != 0) return false;
     inverse.assign(ublas::identity_matrix<T> (A.size1()));
     lu_substitute(A, pm, inverse);
     return true;
@@ -293,11 +292,6 @@ bool xifu::InvertMatrix(const ublas::matrix<T>& input, ublas::matrix<T>& inverse
 QString xifu::getResults()
 {
     return results;
-}
-
-int xifu::getProgress()
-{
-    return progress;
 }
 
 void xifu::setMode(int mod)
