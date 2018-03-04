@@ -36,8 +36,8 @@ SOURCES += main.cpp\
     tinyxml.cpp \
     tinyxmlerror.cpp \
     tinyxmlparser.cpp \
-    display.cpp \
-    xifu.cpp
+    xifu.cpp \
+    config.cpp
 
 HEADERS  += mainwindow.h \
     channel.h \
@@ -52,8 +52,8 @@ HEADERS  += mainwindow.h \
     global.h \
     tinystr.h \
     tinyxml.h \
-    display.h \
-    xifu.h
+    xifu.h \
+    config.h
 
 INCLUDEPATH += C:\Users\Paul\Downloads\Boost\boost_1_66_0
 LIBS += -L/usr/local/boost_1_48_0/stage/lib
