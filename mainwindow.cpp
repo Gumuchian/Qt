@@ -43,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
     Resolution_mode->move(210,150);
     Resolution_mode->setFixedSize(150,50);
     connect(Resolution_mode, SIGNAL(clicked()), this, SLOT(setmode2()));
+    mode=2;
 
 }
 
@@ -65,10 +66,11 @@ void MainWindow::simulate()
     connect(thread, SIGNAL(finished()), &instrument, SLOT(deleteLater()));
     connect(thread, SIGNAL(started()), &instrument, SLOT(simulate()));
     progress = new QProgressBar;
+    progress->setWindowTitle("Progression");
+    progress->setFixedSize(400,50);
     progress->show();
     connect(&instrument, SIGNAL(getProgress(int)),progress, SLOT(setValue(int)));
     thread->start();
-    //connect(&instrument, SIGNAL(simulation_ended()), thread, SLOT(quit()));
     connect(&instrument, SIGNAL(simulation_ended()), progress, SLOT(close()));
 }
 

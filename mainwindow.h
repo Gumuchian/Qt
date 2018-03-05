@@ -35,6 +35,8 @@ private:
     QWidget *fenetre;
     QProgressBar *progress;
     QThread *thread;
+    int mode;
+    QString results;
 };
 
 #endif // MAINWINDOW_H

@@ -78,13 +78,20 @@ config::config()
     N_pr->setRange(1,26);
     N_pr->setValue((int)(std::log2(Npr)));
 
+    QLabel *interpolLabel = new QLabel(tr("Power of 2 as interpolation factor:"));
+    interpol = new QSpinBox;
+    interpol->setRange(1,15);
+    interpol->setValue((int)(std::log2(interpolation)));
+
     QVBoxLayout *DDSLayout = new QVBoxLayout;
     DDSLayout->addWidget(NptLabel);
     DDSLayout->addWidget(N_pt);
     DDSLayout->addWidget(NprLabel);
     DDSLayout->addWidget(N_pr);
+    DDSLayout->addWidget(interpolLabel);
+    DDSLayout->addWidget(interpol);
     DDS_parameter->setLayout(DDSLayout);
-    DDS_parameter->setFixedHeight(150);
+    DDS_parameter->setFixedHeight(250);
 
 
     QGroupBox *LC_TES_parameter = new QGroupBox(tr(""));
@@ -268,9 +275,9 @@ config::config()
 
     QLabel *dslbLabel = new QLabel(tr("Spectral linear density of bias:"));
     DACdslb = new QDoubleSpinBox;
-    DACdslb->setSuffix(" pA/sqrt(Hz)");
+    DACdslb->setSuffix(" nA/sqrt(Hz)");
     DACdslb->setRange(0,1000);
-    DACdslb->setValue(DAC_dsl_b*pow(10,12));
+    DACdslb->setValue(DAC_dsl_b*pow(10,9));
 
     QVBoxLayout *dacLayout = new QVBoxLayout;
     dacLayout->addWidget(FSLabel);
@@ -405,6 +412,7 @@ void config::setVal()
     energy=pulse_energy->value();
     Npt=pow(2,N_pt->value());
     Npr=pow(2,N_pr->value());
+    interpolation=pow(2,interpol->value());
     I0=(Int0->value())*pow(10,-6);
     R0=(Res0->value())*pow(10,-3);
     T0=(Temp0->value())*pow(10,-3);
@@ -427,7 +435,7 @@ void config::setVal()
     PE_DAC=(full_scale->value())*pow(10,-3);
     DAC_bit=DAC_bits->value();
     B_DAC=DAC_B->value();
-    DAC_dsl_b=(DACdslb->value())*pow(10,-12);
+    DAC_dsl_b=(DACdslb->value())*pow(10,-9);
     DAC_dsl=(DACdslf->value())*pow(10,-12);
     PE_ADC=full_scale_adc->value();
     ADC_bit=ADC_bits->value();
@@ -466,6 +474,10 @@ void config::reset()
     N_pr->setValue(Npr);
     Npr=pow(2,Npr);
 
+    file >> interpolation;
+    interpol->setValue(interpolation);
+    interpolation=pow(2,interpolation);
+
     file >> TES_dsl;
     TESdsl->setValue(TES_dsl);
     TES_dsl=TES_dsl*pow(10,-12);
@@ -496,7 +508,6 @@ void config::reset()
 
     file >> PE_DAC;
     full_scale->setValue(PE_DAC);
-    PE_DAC=PE_DAC*pow(10,-3);
 
     file >> DAC_bit;
     DAC_bits->setValue(DAC_bit);
@@ -506,7 +517,7 @@ void config::reset()
 
     file >> DAC_dsl_b;
     DACdslb->setValue(DAC_dsl_b);
-    DAC_dsl_b=DAC_dsl_b*pow(10,-12);
+    DAC_dsl_b=DAC_dsl_b*pow(10,-9);
 
     file >> DAC_dsl;
     DACdslf->setValue(DAC_dsl);

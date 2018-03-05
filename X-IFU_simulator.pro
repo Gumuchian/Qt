@@ -37,7 +37,8 @@ SOURCES += main.cpp\
     tinyxmlerror.cpp \
     tinyxmlparser.cpp \
     xifu.cpp \
-    config.cpp
+    config.cpp \
+    global.cpp
 
 HEADERS  += mainwindow.h \
     channel.h \

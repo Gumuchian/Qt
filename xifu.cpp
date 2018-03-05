@@ -127,14 +127,14 @@ void xifu::simulate()
         ch0.computeLC_TES();
         ch0.computeBBFB();
 
-        if (i==Np)
+        if (i==Npat*decimation)
         {
             maxi=ch0.getmod();
         }
 
         if (mode==2)
         {
-            if (i>Np-Nfit/2*decimation+decimation)
+            if (i>Npat*decimation-Nfit/2*decimation+decimation)
             {
                 a=Butter.compute(maxi-ch0.getmod());
                 if (Butter.getaccess())
@@ -167,7 +167,7 @@ void xifu::simulate()
         }
         else
         {
-            if (i>Np+decimation)
+            if (i>Npat*decimation+decimation)
             {
                 a=Butter.compute(maxi-ch0.getmod());
                 if (Butter.getaccess())
@@ -202,7 +202,7 @@ void xifu::simulate()
             }
         }
         ip++;
-        ip=ip%Np;
+        ip=ip%(Npat*decimation);
     }
 
     if (mode==1)
