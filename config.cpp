@@ -273,11 +273,11 @@ config::config()
     DACdslf->setRange(0,1000);
     DACdslf->setValue(DAC_dsl*pow(10,12));
 
-    QLabel *dslbLabel = new QLabel(tr("Spectral linear density of bias:"));
+    QLabel *dslbLabel = new QLabel(tr("Relative level of noise for bias DAC:"));
     DACdslb = new QDoubleSpinBox;
-    DACdslb->setSuffix(" nA/sqrt(Hz)");
+    DACdslb->setSuffix(" dB");
     DACdslb->setRange(0,1000);
-    DACdslb->setValue(DAC_dsl_b*pow(10,9));
+    DACdslb->setValue((std::log10(2*DAC_dsl_b))*20);
 
     QVBoxLayout *dacLayout = new QVBoxLayout;
     dacLayout->addWidget(FSLabel);
@@ -293,6 +293,7 @@ config::config()
     DAC_parameter->setLayout(dacLayout);
     DAC_parameter->setFixedHeight(300);
 
+
     QGroupBox *ADC_parameter = new QGroupBox(tr(""));
     QLabel *FSadcLabel = new QLabel(tr("Full scale:"));
     full_scale_adc = new QDoubleSpinBox;
@@ -306,11 +307,13 @@ config::config()
     QLabel *BadcLabel = new QLabel(tr("Noise bandwidth:"));
     ADC_B = new QDoubleSpinBox;
     ADC_B->setSuffix(" Hz");
+    ADC_B->setRange(0,20000000);
     ADC_B->setValue(B_ADC);
 
     QLabel *dslLabel = new QLabel(tr("Spectral linear density of feedback:"));
     ADCdsl = new QDoubleSpinBox;
     ADCdsl->setSuffix(" nV/sqrt(Hz)");
+    ADCdsl->setRange(0,1000);
     ADCdsl->setValue(ADC_dsl*pow(10,9));
 
     QVBoxLayout *adcLayout = new QVBoxLayout;
@@ -323,7 +326,7 @@ config::config()
     adcLayout->addWidget(dslLabel);
     adcLayout->addWidget(ADCdsl);
     ADC_parameter->setLayout(adcLayout);
-
+    ADC_parameter->setFixedHeight(250);
 
 
     QGroupBox *LNA_parameter = new QGroupBox(tr(""));
@@ -389,6 +392,7 @@ config::config()
     onglets->addTab(Decimation_filter_parameter,"Decimation filter");
     onglets->addTab(BBFB_parameter,"BBFB");
     onglets->addTab(DAC_parameter,"DAC");
+    onglets->addTab(ADC_parameter,"ADC");
     onglets->addTab(LNA_parameter,"LNA");
     onglets->addTab(SQUID_parameter,"SQUID");
 
@@ -435,7 +439,7 @@ void config::setVal()
     PE_DAC=(full_scale->value())*pow(10,-3);
     DAC_bit=DAC_bits->value();
     B_DAC=DAC_B->value();
-    DAC_dsl_b=(DACdslb->value())*pow(10,-9);
+    DAC_dsl_b=0.5*pow(10,(DACdslb->value())/20);
     DAC_dsl=(DACdslf->value())*pow(10,-12);
     PE_ADC=full_scale_adc->value();
     ADC_bit=ADC_bits->value();
@@ -515,13 +519,13 @@ void config::reset()
     file >> B_DAC;
     DAC_B->setValue(B_DAC);
 
-    file >> DAC_dsl_b;
-    DACdslb->setValue(DAC_dsl_b);
-    DAC_dsl_b=DAC_dsl_b*pow(10,-9);
-
     file >> DAC_dsl;
     DACdslf->setValue(DAC_dsl);
     DAC_dsl=DAC_dsl*pow(10,-12);
+
+    file >> DAC_dsl_b;
+    DACdslb->setValue(DAC_dsl_b);
+    DAC_dsl_b=0.5*pow(10,DAC_dsl_b/20);
 
     file >> PE_ADC;
     full_scale_adc->setValue(PE_ADC);
