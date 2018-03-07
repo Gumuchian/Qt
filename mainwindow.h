@@ -34,7 +34,6 @@ private:
     QPushButton *Resolution_mode;
     QWidget *fenetre;
     QProgressBar *progress;
-    QThread *thread;
     int mode;
     QString results;
 };

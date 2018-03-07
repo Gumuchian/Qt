@@ -277,7 +277,7 @@ config::config()
     DACdslb = new QDoubleSpinBox;
     DACdslb->setSuffix(" dB");
     DACdslb->setRange(0,1000);
-    DACdslb->setValue((std::log10(2*DAC_dsl_b))*20);
+    DACdslb->setValue(-(std::log10(2*DAC_dsl_b))*20);
 
     QVBoxLayout *dacLayout = new QVBoxLayout;
     dacLayout->addWidget(FSLabel);
@@ -439,7 +439,7 @@ void config::setVal()
     PE_DAC=(full_scale->value())*pow(10,-3);
     DAC_bit=DAC_bits->value();
     B_DAC=DAC_B->value();
-    DAC_dsl_b=0.5*pow(10,(DACdslb->value())/20);
+    DAC_dsl_b=0.5*pow(10,-(DACdslb->value())/20);
     DAC_dsl=(DACdslf->value())*pow(10,-12);
     PE_ADC=full_scale_adc->value();
     ADC_bit=ADC_bits->value();
@@ -525,7 +525,7 @@ void config::reset()
 
     file >> DAC_dsl_b;
     DACdslb->setValue(DAC_dsl_b);
-    DAC_dsl_b=0.5*pow(10,DAC_dsl_b/20);
+    DAC_dsl_b=0.5*pow(10,-DAC_dsl_b/20);
 
     file >> PE_ADC;
     full_scale_adc->setValue(PE_ADC);

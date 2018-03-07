@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     file >> DAC_bit;
     file >> B_DAC;
     file >> DAC_dsl;DAC_dsl=DAC_dsl*pow(10,-12);
-    file >> DAC_dsl_b;DAC_dsl_b=0.5*pow(10,DAC_dsl_b/20);
+    file >> DAC_dsl_b;DAC_dsl_b=0.5*pow(10,-DAC_dsl_b/20);
     file >> PE_ADC;
     file >> ADC_bit;
     file >> ADC_dsl;ADC_dsl=ADC_dsl*pow(10,-9);

@@ -49,8 +49,8 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
 
 MainWindow::~MainWindow()
 {
-    thread->terminate();
-    thread->wait();
+    //thread->terminate();
+    //thread->wait();
     delete ui;
 }
 
@@ -61,8 +61,8 @@ void MainWindow::displayresult()
 
 void MainWindow::simulate()
 {
-    thread = new QThread(this);
-    instrument.moveToThread(thread);
+    QThread *thread = new QThread();
+    instrument.moveToThread(QApplication::instance()->thread());
     connect(thread, SIGNAL(finished()), &instrument, SLOT(deleteLater()));
     connect(thread, SIGNAL(started()), &instrument, SLOT(simulate()));
     progress = new QProgressBar;
@@ -70,8 +70,8 @@ void MainWindow::simulate()
     progress->setFixedSize(400,50);
     progress->show();
     connect(&instrument, SIGNAL(getProgress(int)),progress, SLOT(setValue(int)));
-    thread->start();
     connect(&instrument, SIGNAL(simulation_ended()), progress, SLOT(close()));
+    thread->start();
 }
 
 void MainWindow::setmode1()
