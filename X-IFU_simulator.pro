@@ -16,7 +16,7 @@ TEMPLATE = app
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
-
+QMAKE_CXXFLAGS += -Werror
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
@@ -60,4 +60,7 @@ INCLUDEPATH += C:\Users\Paul\Downloads\Boost\boost_1_66_0
 LIBS += -L/usr/local/boost_1_48_0/stage/lib
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    ressources.qrc
 

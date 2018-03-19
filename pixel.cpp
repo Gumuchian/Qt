@@ -10,6 +10,11 @@ Pixel::Pixel()
 
 }
 
+Pixel::~Pixel()
+{
+
+}
+
 Pixel::Pixel(double frequency, double real_frequency, int phase):frequency(frequency)
 {
     comptR_I=phase%(Npt*interpolation);

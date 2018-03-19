@@ -23,6 +23,11 @@ Butterworth::Butterworth()
     coeff[2][1]=0.932934731756612;
 }
 
+Butterworth::~Butterworth()
+{
+
+}
+
 double Butterworth::compute(double in)
 {
     int i;

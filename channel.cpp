@@ -33,6 +33,11 @@ Channel::Channel():dds(Npt,Npr,interpolation)
     }
 }
 
+Channel::~Channel()
+{
+
+}
+
 double Channel::sumPolar()
 {
     int i;

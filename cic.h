@@ -6,6 +6,7 @@ class CIC
 {
     public:
         CIC();
+        virtual ~CIC();
         double compute(double input);
         bool getaccess();
 

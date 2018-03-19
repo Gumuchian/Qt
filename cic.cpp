@@ -23,6 +23,10 @@ CIC::CIC()
     }
 }
 
+CIC::~CIC()
+{
+
+}
 
 double CIC::compute(double input)
 {

@@ -6,6 +6,7 @@ class TES
 {
     public:
         TES();
+        virtual ~TES();
         double computeLCTES(double freq);
         void setbias(double biass);
         double getI();

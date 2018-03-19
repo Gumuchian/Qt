@@ -9,6 +9,11 @@ BBFB::BBFB()
     feedback=0;
 }
 
+BBFB::~BBFB()
+{
+
+}
+
 void BBFB::compute_feedback(double demoduI, double remoduI, double demoduQ, double remoduQ, double input)
 {
     /*I+=G*trunc(demoduI*input/Npr);

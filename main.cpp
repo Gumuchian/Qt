@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     file >> L;L=L*pow(10,-6);
 
     QApplication app(argc, argv);
-    app.setWindowIcon(QIcon("icon.jpg"));
+    app.setWindowIcon(QIcon(":/images/icon.jpg"));
     MainWindow w;
     w.show();
     return app.exec();

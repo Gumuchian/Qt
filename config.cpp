@@ -405,7 +405,12 @@ config::config()
     Valider->move(20,910);
     Reset->move(127,910);
     Annuler->move(235,910);
- }
+}
+
+config::~config()
+{
+
+}
 
 void config::setVal()
 {

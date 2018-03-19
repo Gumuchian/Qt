@@ -12,6 +12,11 @@ TES::TES():gen((std::random_device())())
     bbfi[0]=0;bbfo[0]=0;bbfo[1]=0;
 }
 
+TES::~TES()
+{
+
+}
+
 double TES::computeLCTES(double freq)
 {
     double Ccar=(1/(4*pow(PI,2)*L*pow(freq,2))),

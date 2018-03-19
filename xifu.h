@@ -35,6 +35,7 @@ class xifu: public QObject
     Q_OBJECT
 public:
     xifu();
+    virtual ~xifu();
     void fft(CArray& x);
     void ifft(CArray& x);
     template<class T> bool InvertMatrix(const ublas::matrix<T>& input, ublas::matrix<T>& inverse);
@@ -54,7 +55,7 @@ private:
     double *pulse;
     double *puls_inter;
     double *pattern;
-    int progress;
+    long progress;
 };
 
 #endif // XIFU_H

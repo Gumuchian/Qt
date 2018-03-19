@@ -7,6 +7,7 @@ class Pixel
 {
     public:
         Pixel();
+        virtual ~Pixel();
         Pixel(double frequency, double real_frequency, int phase);
         double getfeedback();
         double getmodule();

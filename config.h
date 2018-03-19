@@ -15,6 +15,7 @@ class config: public QWidget
     Q_OBJECT
 public:
     config();
+    virtual ~config();
 public slots:
     void setVal();
     void reset();

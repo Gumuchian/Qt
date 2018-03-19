@@ -6,6 +6,7 @@ class Butterworth
 {
     public:
         Butterworth();
+        virtual ~Butterworth();
         double compute(double in);
         bool getaccess();
 

@@ -36,6 +36,11 @@ xifu::xifu()
     mode=2;
 }
 
+xifu::~xifu()
+{
+
+}
+
 void xifu::simulate()
 {
     progress=0; 
@@ -43,7 +48,7 @@ void xifu::simulate()
     vector<double> module(Npat,0);
     vector<double> E;
     string str;
-    double sum,Em=0,var=0,P=0,maxi,a=0,energy_mode,puls;
+    double sum,Em=0,var=0,P=0,maxi=0,a=0,energy_mode,puls;
     ublas::matrix<double> X(Nfit,order_fit+1),Z(order_fit+1,order_fit+1);
     for (i=0;i<Nfit;i++)
     {
@@ -52,7 +57,7 @@ void xifu::simulate()
             X(i,j)=pow(i-Nfit/2,order_fit-j);
         }
     }
-    ublas::vector<double> Y(Nfit),poly_max(order_fit+1),poly_max2(order_fit+1);
+    ublas::vector<double> Y(Nfit),poly_max(order_fit+1);
     fstream file1,file2,file3;
     file3.open("test.txt",ios::out);
     CArray sig_fft (Npat);
@@ -104,10 +109,14 @@ void xifu::simulate()
        }
     }
 
-    for (i=0;i<N;i++)
+    for (long i=0;i<N;i++)
     {
-        progress=(100*i)/N;
-        emit getProgress(progress);
+        if (i%10000==0)
+        {
+            progress=100*i/(double)N;
+            emit getProgress(progress);
+            cout << progress << endl;
+        }
         ch0.sumPolar();
         if (mode==2)
         {

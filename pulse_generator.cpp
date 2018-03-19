@@ -17,7 +17,6 @@ double Pulse_generator::dT(double T, double Pj, double Po)
     return (Po+Pj-Gtes/(3*pow(T,2))*(pow(T,3)-pow(Tbath,3)))/Ctherm;
 }
 
-
 double Pulse_generator::dI(double I, double V, double R)
 {
     return (V-I*Rl-I*R)/(L/pow(TR,2));
