@@ -15,6 +15,7 @@
 #include <math.h>
 #include "tinyxml.h"
 #include <tinystr.h>
+#include <QMessageBox>
 
 config::config()
 {
@@ -32,7 +33,7 @@ config::config()
 
     QLabel *NLabel = new QLabel(tr("Step number"));
     Npoint = new QSpinBox;
-    Npoint->setRange(0, 200000000);
+    Npoint->setRange(0, 300000000);
     Npoint->setValue(N);
 
     QLabel *Npixel = new QLabel(tr("Number of pixels"));
@@ -402,6 +403,7 @@ config::config()
     connect(Valider,SIGNAL(clicked()), this, SLOT(setVal()));
     connect(Reset,SIGNAL(clicked()), this, SLOT(reset()));
     connect(Annuler,SIGNAL(clicked()), this, SLOT(close()));
+    connect(Valider,SIGNAL(clicked()), this, SLOT(saved()));
     Valider->move(20,910);
     Reset->move(127,910);
     Annuler->move(235,910);
@@ -410,6 +412,11 @@ config::config()
 config::~config()
 {
 
+}
+
+void config::saved()
+{
+    QMessageBox::information(this, "", "Configuration saved");
 }
 
 void config::setVal()

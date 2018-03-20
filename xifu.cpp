@@ -113,9 +113,8 @@ void xifu::simulate()
     {
         if (i%10000==0)
         {
-            progress=100*i/(double)N;
+            progress=(int)(100*(double)i/N);
             emit getProgress(progress);
-            cout << progress << endl;
         }
         ch0.sumPolar();
         if (mode==2)

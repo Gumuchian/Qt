@@ -19,6 +19,7 @@ public:
 public slots:
     void setVal();
     void reset();
+    void saved();
 private:
     QDoubleSpinBox *sampling_frequency;
     QSpinBox *Npoint;
@@ -66,6 +67,7 @@ private:
     QPushButton *Valider;
     QPushButton *Reset;
     QPushButton *Annuler;
+    QPushButton *Save;
 };
 
 #endif // CONFIG_H
