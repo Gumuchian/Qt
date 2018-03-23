@@ -57,7 +57,6 @@ HEADERS  += mainwindow.h \
     config.h
 
 INCLUDEPATH += C:\Users\Paul\Downloads\Boost\boost_1_66_0
-LIBS += -L/usr/local/boost_1_48_0/stage/lib
 
 FORMS    += mainwindow.ui
 
