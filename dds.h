@@ -6,7 +6,7 @@ class DDS
     public:
         DDS();
         virtual ~DDS();
-        DDS(int taille, int precision, int interp);
+        DDS(int size, int accuracy, int inter);
         int getvalue(int indice);
     protected:
 

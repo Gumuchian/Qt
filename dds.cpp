@@ -12,11 +12,11 @@ DDS::~DDS()
 
 }
 
-DDS::DDS(int taille, int precision, int interp)
+DDS::DDS(int size, int accuracy, int inter)
 {
-    taille = taille;
-    precision = precision;
-    interp = interp;
+    taille = size;
+    precision = accuracy;
+    interp = inter;
     table = new int[interp*taille+1];
     int i,j;
     for (i=0;i<taille+1;i++){

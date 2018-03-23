@@ -232,13 +232,13 @@ void xifu::simulate()
     {
         for (i=3;i<(int)E.size();i++)
         {
-            Em=abs(E[i])+Em;
+            Em+=abs(E[i]);
         }
-        Em=Em/(E.size()-3);
+        Em/=(E.size()-3);
 
         for (i=3;i<(int)E.size();i++)
         {
-            var=pow(abs(E[i]-Em),2)+var;
+            var+=pow(abs(E[i]-Em),2);
         }
         var=energy/Em*2.35*sqrt(var/(E.size()-3));
 
