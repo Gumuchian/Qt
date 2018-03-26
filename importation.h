@@ -6,6 +6,7 @@ class Importation
 {
 public:
     Importation();
+    static void setGlobal();
 };
 
 #endif // IMPORTATION_H

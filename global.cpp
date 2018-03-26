@@ -11,7 +11,6 @@ double fc;
 int Npat;
 double energy;
 int decimation;
-int order;
 double G;
 int delay;
 double PE_DAC;

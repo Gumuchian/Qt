@@ -16,6 +16,7 @@
 #include "tinyxml.h"
 #include <tinystr.h>
 #include <QMessageBox>
+#include <importation.h>
 
 config::config()
 {
@@ -445,7 +446,6 @@ void config::setVal()
     fc=f_c->value();
     Npat=N_pat->value();
     decimation=decimation_f->value();
-    order=filter_order->value();
     G=gain_bbfb->value();
     delay=delay_step->value();
     PE_DAC=(full_scale->value())*pow(10,-3);
@@ -467,149 +467,47 @@ void config::setVal()
 
 void config::reset()
 {
-    std::fstream file;
-    file.open("global.txt",std::ios::in);
-
-    file >> fs;
+    Importation::setGlobal();
     sampling_frequency->setValue(fs);
-
-    file >> N;
     Npoint->setValue(N);
-
-    file >> Npix;
     Npixels->setValue(Npix);
-
-    file >> Nfit;
     N_fit->setValue(Nfit);
-
-    file >> Npt;
-    N_pt->setValue(Npt);
-    Npt=pow(2,Npt);
-
-    file >> Npr;
-    N_pr->setValue(Npr);
-    Npr=pow(2,Npr);
-
-    file >> interpolation;
-    interpol->setValue(interpolation);
-    interpolation=pow(2,interpolation);
-
-    file >> TES_dsl;
-    TESdsl->setValue(TES_dsl);
-    TES_dsl=TES_dsl*pow(10,-12);
-
-    file >> Btes;
+    N_pt->setValue((int)(std::log2(Npt)));
+    N_pr->setValue((int)(std::log2(Npr)));
+    interpol->setValue((int)(std::log2(interpolation)));
+    TESdsl->setValue(TES_dsl*pow(10,12));
     B_TES->setValue(Btes);
-
-    file >> fc;
     f_c->setValue(fc);
-
-    file >> Npat;
     N_pat->setValue(Npat);
-
-    file >> energy;
     pulse_energy->setValue(energy);
-
-    file >> decimation;
     decimation_f->setValue(decimation);
-
-    file >> order;
     filter_order->setValue(order);
-
-    file >> G;
     gain_bbfb->setValue(G);
-
-    file >> delay;
     delay_step->setValue(delay);
-
-    file >> PE_DAC;
-    full_scale->setValue(PE_DAC);
-
-    file >> DAC_bit;
+    full_scale->setValue(PE_DAC*pow(10,3));
     DAC_bits->setValue(DAC_bit);
-
-    file >> B_DAC;
     DAC_B->setValue(B_DAC);
-
-    file >> DAC_dsl;
-    DACdslf->setValue(DAC_dsl);
-    DAC_dsl=DAC_dsl*pow(10,-12);
-
-    file >> DAC_dsl_b;
-    DACdslb->setValue(DAC_dsl_b);
-    DAC_dsl_b=0.5*pow(10,-DAC_dsl_b/20);
-
-    file >> PE_ADC;
+    DACdslf->setValue(DAC_dsl*pow(10,12));
+    DACdslb->setValue(-(std::log10(2*DAC_dsl_b))*20);
     full_scale_adc->setValue(PE_ADC);
-
-    file >> ADC_bit;
     ADC_bits->setValue(ADC_bit);
-
-    file >> ADC_dsl;
-    ADCdsl->setValue(ADC_dsl);
-    ADC_dsl=ADC_dsl*pow(10,-9);
-
-    file >> B_ADC;
+    ADCdsl->setValue(ADC_dsl*pow(10,9));
     ADC_B->setValue(B_ADC);
-
-    file >> G_LNA;
     GLNA->setValue(G_LNA);
-
-    file >> LNA_dsl;
-    LNAdsl->setValue(LNA_dsl);
-    LNA_dsl=LNA_dsl*pow(10,-9);
-
-    file >> B_LNA;
+    LNAdsl->setValue(LNA_dsl*pow(10,9));
     BLNA->setValue(B_LNA);
-
-    file >> G_SQUID;
     GSQUID->setValue(G_SQUID);
-
-    file >> SQUID_dsl;
-    SQUIDdsl->setValue(SQUID_dsl);
-    SQUID_dsl=SQUID_dsl*pow(10,-12);
-
-    file >> B_SQUID;
+    SQUIDdsl->setValue(SQUID_dsl*pow(10,12));
     BSQUID->setValue(B_SQUID);
-
-    file >> R0;
-    Res0->setValue(R0);
-    R0=R0*pow(10,-3);
-
-    file >> T0;
-    Temp0->setValue(T0);
-    T0=T0*pow(10,-3);
-
-    file >> Vp;
-    Vpol->setValue(Vp);
-    Vp=Vp*pow(10,-9);
-
-    file >> alpha;
+    Res0->setValue(R0*pow(10,3));
+    Temp0->setValue(T0*pow(10,3));
+    Vpol->setValue(Vp*pow(10,9));
     alpha_cst->setValue(alpha);
-
-    file >> beta;
     beta_cst->setValue(beta);
-
-    file >> Rl;
-    Rl_cst->setValue(Rl);
-    Rl=Rl*pow(10,-6);
-
-    file >> Ctherm;
-    C_therm->setValue(Ctherm);
-    Ctherm=Ctherm*pow(10,-12);
-
-    file >> Tbath;
-    T_bath->setValue(Tbath);
-    Tbath=Tbath*pow(10,-3);
-
-    file >> I0;
-    Int0->setValue(I0);
-    I0=I0*pow(10,-6);
-
-    file >> TR;
+    Rl_cst->setValue(Rl*pow(10,6));
+    C_therm->setValue(Ctherm*pow(10,12));
+    T_bath->setValue(Tbath*pow(10,3));
+    Int0->setValue(I0*pow(10,6));
     TTR->setValue(TR);
-
-    file >> L;
-    LL->setValue(L);
-    L=L*pow(10,-6);
+    LL->setValue(L*pow(10,6));
 }

@@ -8,6 +8,11 @@ using namespace std;
 
 Importation::Importation()
 {
+
+}
+
+void Importation::setGlobal()
+{
     TiXmlDocument doc("global.xml");
     if(!doc.LoadFile()){
         cerr << "erreur lors du chargement" << endl;
@@ -31,7 +36,7 @@ Importation::Importation()
     elem = elem->NextSiblingElement();
     elem->QueryIntAttribute("value", &Npr);Npt=pow(2,Npr);
     elem = elem->NextSiblingElement();
-    elem->QueryIntAttribute("value", &interpolation);
+    elem->QueryIntAttribute("value", &interpolation);interpolation=pow(2,interpolation);
     elem = elem->NextSiblingElement();
     elem->QueryDoubleAttribute("value", &TES_dsl);TES_dsl=TES_dsl*pow(10,-12);
     elem = elem->NextSiblingElement();
@@ -45,13 +50,11 @@ Importation::Importation()
     elem = elem->NextSiblingElement();
     elem->QueryIntAttribute("value", &decimation);
     elem = elem->NextSiblingElement();
-    elem->QueryIntAttribute("value", &order);
-    elem = elem->NextSiblingElement();
     elem->QueryDoubleAttribute("value", &G);
     elem = elem->NextSiblingElement();
     elem->QueryIntAttribute("value", &delay);
     elem = elem->NextSiblingElement();
-    elem->QueryDoubleAttribute("value", &PE_DAC);
+    elem->QueryDoubleAttribute("value", &PE_DAC);PE_DAC=PE_DAC*pow(10,-3);
     elem = elem->NextSiblingElement();
     elem->QueryIntAttribute("value", &DAC_bit);
     elem = elem->NextSiblingElement();

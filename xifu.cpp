@@ -226,7 +226,7 @@ void xifu::simulate()
         ifft(div_fft);
         for (i=0;i<Npat;i++)
         {
-            file1 << real(div_fft[i]) << endl;
+            file1 << real(div_fft[i]) << "\n";
             P+=puls_inter[i]*real(div_fft[i]);
         }
         file2 << P;

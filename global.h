@@ -35,7 +35,7 @@ extern double energy; // energy of the injected X-rays (eV)
 
 // CIC or Butterworth
 extern int decimation; // down sampling factor
-extern int order; // CIC/Butterworth order, if Butterworth order must be equal to 2
+const int order=2; // CIC/Butterworth order, if Butterworth order must be equal to 2
 
 
 
