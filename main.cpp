@@ -3,9 +3,12 @@
 #include "global.h"
 #include <iostream>
 #include <fstream>
+#include "importation.h"
 
 int main(int argc, char *argv[])
 {
+
+    Importation import;
     std::fstream file;
     file.open("global.txt",std::ios::in);
 

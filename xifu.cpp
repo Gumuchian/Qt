@@ -43,6 +43,9 @@ xifu::~xifu()
 
 void xifu::simulate()
 {
+    Channel ch0;
+    Butterworth Butter;
+    Pulse_generator pulse_generator;
     progress=0; 
     int i,k,ip=0,l=0,n_alea=0,m;
     vector<double> module(Npat,0);

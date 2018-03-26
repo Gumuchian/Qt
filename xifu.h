@@ -48,9 +48,6 @@ signals:
     void simulation_ended();
 private:
     int mode;
-    Channel ch0;
-    Butterworth Butter;
-    Pulse_generator pulse_generator;
     QString results;
     double *pulse;
     double *puls_inter;
