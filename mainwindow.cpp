@@ -57,8 +57,37 @@ MainWindow::~MainWindow()
 
 void MainWindow::displayresult()
 {
+    std::vector<double> E = instrument.getE();
+    E.erase(E.begin(),E.begin()+2);
+    double Em=0,max=0,Emax=0,Emin=energy;
+    int Nbin;
+    for (int i=0;i<(int)E.size();i++)
+    {
+        Em+=E[i];
+        if (Emax<E[i])
+        {
+            Emax=E[i];
+        }
+        if (Emin>E[i])
+        {
+            Emin=E[i];
+        }
+    }
+    Em/=((int)E.size());
+    Nbin=(int)std::ceil((Emax-Emin)/binWidth);
+    QVector<double> Data(100);
+    computeHist(Data, E, Nbin, binWidth, Em);
+    for (int i=0;i<Data.size();i++)
+    {
+        if (max<Data[i])
+        {
+            max=Data[i];
+        }
+    }
+
+
     QCustomPlot  *customPlot = new QCustomPlot;
-    customPlot->setMinimumSize(500,500);
+    customPlot->setMinimumSize(750,900);
     QLinearGradient gradient(0, 0, 0, 400);
     gradient.setColorAt(0, QColor(90, 90, 90));
     gradient.setColorAt(0.38, QColor(105, 105, 105));
@@ -76,18 +105,19 @@ void MainWindow::displayresult()
     // prepare x axis with country labels:
     QVector<double> ticks;
     QVector<QString> labels;
-    for (int i=0;i<100;i++)
+    for (int i=0;i<Nbin;i++)
     {
         ticks.push_back(i);
-        labels.push_back(QString::number(i));
+        labels.push_back(QString::number(Emin+i*binWidth));
     }
     QSharedPointer<QCPAxisTickerText> textTicker(new QCPAxisTickerText);
     textTicker->addTicks(ticks, labels);
+    customPlot->xAxis->setLabel("eV");
     customPlot->xAxis->setTicker(textTicker);
     customPlot->xAxis->setTickLabelRotation(60);
     customPlot->xAxis->setSubTicks(false);
     customPlot->xAxis->setTickLength(0, 4);
-    customPlot->xAxis->setRange(0, 100);
+    customPlot->xAxis->setRange(0, Nbin);
     customPlot->xAxis->setBasePen(QPen(Qt::white));
     customPlot->xAxis->setTickPen(QPen(Qt::white));
     customPlot->xAxis->grid()->setVisible(true);
@@ -95,32 +125,11 @@ void MainWindow::displayresult()
     customPlot->xAxis->setTickLabelColor(Qt::white);
     customPlot->xAxis->setLabelColor(Qt::white);
 
-    // Add data:
-    std::vector<double> E = instrument.getE();
-    E.erase(E.begin(),E.begin()+2);
-    double Em=0,max=0;
-    for (int i=0;i<(int)E.size();i++)
-    {
-        Em+=E[i];
-    }
-    Em/=((int)E.size());
-    QVector<double> Data(100);
-    computeHist(Data, E, (int)Data.size(), binWidth, Em);
-    energy_distrib->setData(ticks, Data);
-
-    for (int i=0;i<Data.size();i++)
-    {
-        if (max<Data[i])
-        {
-            max=Data[i];
-        }
-        std::cout << Data[i] << std::endl;
-    }
 
     // prepare y axis:
     customPlot->yAxis->setRange(0,max);
     customPlot->yAxis->setPadding(5); // a bit more space to the left border
-    customPlot->yAxis->setLabel("Number of Particules");
+    customPlot->yAxis->setLabel("Percentage of Particules");
     customPlot->yAxis->setBasePen(QPen(Qt::white));
     customPlot->yAxis->setTickPen(QPen(Qt::white));
     customPlot->yAxis->setSubTickPen(QPen(Qt::white));
@@ -130,11 +139,18 @@ void MainWindow::displayresult()
     customPlot->yAxis->grid()->setPen(QPen(QColor(130, 130, 130), 0, Qt::SolidLine));
     customPlot->yAxis->grid()->setSubGridPen(QPen(QColor(130, 130, 130), 0, Qt::DotLine));
 
+    // Add data:
+    energy_distrib->setData(ticks, Data);
+
     customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
     customPlot->replot();
     customPlot->show();
 
-    QMessageBox::information(this, "Results", instrument.getResults());
+    QWidget *window = new QWidget();
+    QLabel *label = new QLabel(instrument.getResults(), window);
+    window->setWindowTitle("Results");
+    window->setFixedSize(250,150);
+    window->show();
 }
 
 void MainWindow::simulate()
