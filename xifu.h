@@ -41,8 +41,7 @@ public:
     template<class T> bool InvertMatrix(const ublas::matrix<T>& input, ublas::matrix<T>& inverse);
     QString getResults();
     void setMode(int mod);
-    QVector<double> getHist();
-    void computeHist(vector<double> data,int Nbin, double binWidth, double MidBin);
+    vector<double> getE();
 public slots:
     void simulate();
 signals:
@@ -51,7 +50,7 @@ signals:
 private:
     int mode;
     QString results;
-    QVector<double> hist;
+    vector<double> E;
     double *pulse;
     double *puls_inter;
     double *pattern;

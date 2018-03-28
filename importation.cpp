@@ -106,4 +106,6 @@ void Importation::setGlobal()
     elem->QueryDoubleAttribute("value", &TR);
     elem = elem->NextSiblingElement();
     elem->QueryDoubleAttribute("value", &L);L=L*pow(10,-6);
+    elem = elem->NextSiblingElement();
+    elem->QueryDoubleAttribute("value", &binWidth);
 }

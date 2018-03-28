@@ -95,8 +95,28 @@ void MainWindow::displayresult()
     customPlot->xAxis->setTickLabelColor(Qt::white);
     customPlot->xAxis->setLabelColor(Qt::white);
 
+    // Add data:
+    std::vector<double> E = instrument.getE();
+    E.erase(E.begin(),E.begin()+2);
+    double Em=0,max=0;
+    for (int i=0;i<(int)E.size();i++)
+    {
+        Em+=E[i];
+    }
+    Em/=((int)E.size());
+    QVector<double> Data(100);
+    energy_distrib->setData(ticks, computeHist(Data, E, (int)Data.size(), binWidth, Em));
+
+    for (int i=0;i<Data.size();i++)
+    {
+        if (max<Data[i])
+        {
+            max=Data[i];
+        }
+    }
+
     // prepare y axis:
-    customPlot->yAxis->setRange(0,40);
+    customPlot->yAxis->setRange(0,max);
     customPlot->yAxis->setPadding(5); // a bit more space to the left border
     customPlot->yAxis->setLabel("Number of Particules");
     customPlot->yAxis->setBasePen(QPen(Qt::white));
@@ -107,11 +127,6 @@ void MainWindow::displayresult()
     customPlot->yAxis->setLabelColor(Qt::white);
     customPlot->yAxis->grid()->setPen(QPen(QColor(130, 130, 130), 0, Qt::SolidLine));
     customPlot->yAxis->grid()->setSubGridPen(QPen(QColor(130, 130, 130), 0, Qt::DotLine));
-
-    // Add data:
-    QVector<double> Data;
-    Data = instrument.getHist();
-    energy_distrib->setData(ticks, Data);
 
     customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
     customPlot->replot();
@@ -153,3 +168,25 @@ void MainWindow::openConfig()
     conf->show();
 }
 
+QVector<double> MainWindow::computeHist(QVector<double> hist, std::vector<double> data, int Nbin, double binW, double MidBin)
+{
+    for (int i=0;i<(int)hist.size();i++)
+    {
+        hist[i]=0;
+    }
+    double h;
+    for (int i=0;i<(int)data.size();i++)
+    {
+        h=data[i]-MidBin+Nbin/2*binW;
+
+        if (h>0)
+        {
+            hist[(int)std::floor(h/binW)]+=1;
+        }
+    }
+    for (int i=0;i<(int)hist.size();i++)
+    {
+        hist[i]=hist[i]*100/(int)data.size();
+    }
+    return hist;
+}

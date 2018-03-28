@@ -53,6 +53,12 @@ config::config()
     pulse_energy->setRange(200,12000);
     pulse_energy->setValue(energy);
 
+    QLabel *binLabel = new QLabel(tr("Bin width:"));
+    bin = new QDoubleSpinBox;
+    bin->setSuffix(" eV");
+    bin->setRange(0,2);
+    bin->setValue(binWidth);
+
     QVBoxLayout *SimuLayout = new QVBoxLayout;
     SimuLayout->addWidget(fsLabel);
     SimuLayout->addWidget(sampling_frequency);
@@ -64,8 +70,10 @@ config::config()
     SimuLayout->addWidget(N_fit);
     SimuLayout->addWidget(energyLabel);
     SimuLayout->addWidget(pulse_energy);
+    SimuLayout->addWidget(binLabel);
+    SimuLayout->addWidget(bin);
     Simulation_parameter->setLayout(SimuLayout);
-    Simulation_parameter->setFixedHeight(300);
+    Simulation_parameter->setFixedHeight(320);
 
 
 
@@ -463,6 +471,7 @@ void config::setVal()
     G_SQUID=GSQUID->value();
     SQUID_dsl=(SQUIDdsl->value())*pow(10,-12);
     B_SQUID=BSQUID->value();
+    binWidth=bin->value();
 }
 
 void config::reset()
@@ -510,4 +519,5 @@ void config::reset()
     Int0->setValue(I0*pow(10,6));
     TTR->setValue(TR);
     LL->setValue(L*pow(10,6));
+    bin->setValue(binWidth);
 }

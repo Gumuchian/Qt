@@ -26,6 +26,7 @@ private:
     QSpinBox *Npixels;
     QSpinBox *N_fit;
     QDoubleSpinBox *pulse_energy;
+    QDoubleSpinBox *bin;
     QSpinBox *N_pt;
     QSpinBox *N_pr;
     QSpinBox *interpol;
