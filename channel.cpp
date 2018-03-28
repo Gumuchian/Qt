@@ -1,5 +1,5 @@
-#include "Channel.h"
-#include "DDS.h"
+#include "channel.h"
+#include "dds.h"
 #include <math.h>
 #include <iostream>
 #include <fstream>

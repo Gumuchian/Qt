@@ -1,6 +1,6 @@
-#include "Pixel.h"
-#include "BBFB.h"
-#include "TES.h"
+#include "pixel.h"
+#include "bbfb.h"
+#include "tes.h"
 #include <math.h>
 #include <random>
 #include "global.h"

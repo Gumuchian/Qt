@@ -1,4 +1,4 @@
-#include "CIC.h"
+#include "cic.h"
 #include <math.h>
 #include "global.h"
 

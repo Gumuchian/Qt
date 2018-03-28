@@ -1,7 +1,7 @@
 #ifndef PIXEL_H
 #define PIXEL_H
-#include "BBFB.h"
-#include "TES.h"
+#include "bbfb.h"
+#include "tes.h"
 
 class Pixel
 {

@@ -39,3 +39,4 @@ double Tbath;
 double I0;
 double TR;
 double L;
+double binWidth;

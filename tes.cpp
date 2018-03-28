@@ -1,4 +1,4 @@
-#include "TES.h"
+#include "tes.h"
 #include <math.h>
 #include <fstream>
 #include <random>

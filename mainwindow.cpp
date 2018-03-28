@@ -4,6 +4,7 @@
 #include "xifu.h"
 #include "config.h"
 #include <QThread>
+#include "qcustomplot.h"
 
 MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindow)
 {
@@ -56,6 +57,66 @@ MainWindow::~MainWindow()
 
 void MainWindow::displayresult()
 {
+    QCustomPlot  *customPlot = new QCustomPlot;
+    //customPlot->setFixedSize(500,300);
+    QLinearGradient gradient(0, 0, 0, 400);
+    gradient.setColorAt(0, QColor(90, 90, 90));
+    gradient.setColorAt(0.38, QColor(105, 105, 105));
+    gradient.setColorAt(1, QColor(70, 70, 70));
+    customPlot->setBackground(QBrush(gradient));
+
+    // create empty bar chart objects:
+    QCPBars *energy_distrib = new QCPBars(customPlot->xAxis, customPlot->yAxis);
+    energy_distrib->setAntialiased(false);
+    energy_distrib->setStackingGap(1);
+    // set names and colors:
+    energy_distrib->setPen(QPen(QColor(111, 9, 176).lighter(170)));
+    energy_distrib->setBrush(QColor(111, 9, 176));
+
+    // prepare x axis with country labels:
+    QVector<double> ticks;
+    QVector<QString> labels;
+    for (int i=0;i<100;i++)
+    {
+        ticks.push_back(i);
+        labels.push_back(QString::number(i));
+    }
+    QSharedPointer<QCPAxisTickerText> textTicker(new QCPAxisTickerText);
+    textTicker->addTicks(ticks, labels);
+    customPlot->xAxis->setTicker(textTicker);
+    customPlot->xAxis->setTickLabelRotation(60);
+    customPlot->xAxis->setSubTicks(false);
+    customPlot->xAxis->setTickLength(0, 4);
+    customPlot->xAxis->setRange(0, 100);
+    customPlot->xAxis->setBasePen(QPen(Qt::white));
+    customPlot->xAxis->setTickPen(QPen(Qt::white));
+    customPlot->xAxis->grid()->setVisible(true);
+    customPlot->xAxis->grid()->setPen(QPen(QColor(130, 130, 130), 0, Qt::DotLine));
+    customPlot->xAxis->setTickLabelColor(Qt::white);
+    customPlot->xAxis->setLabelColor(Qt::white);
+
+    // prepare y axis:
+    customPlot->yAxis->setRange(0,40);
+    customPlot->yAxis->setPadding(5); // a bit more space to the left border
+    customPlot->yAxis->setLabel("Number of Particules");
+    customPlot->yAxis->setBasePen(QPen(Qt::white));
+    customPlot->yAxis->setTickPen(QPen(Qt::white));
+    customPlot->yAxis->setSubTickPen(QPen(Qt::white));
+    customPlot->yAxis->grid()->setSubGridVisible(true);
+    customPlot->yAxis->setTickLabelColor(Qt::white);
+    customPlot->yAxis->setLabelColor(Qt::white);
+    customPlot->yAxis->grid()->setPen(QPen(QColor(130, 130, 130), 0, Qt::SolidLine));
+    customPlot->yAxis->grid()->setSubGridPen(QPen(QColor(130, 130, 130), 0, Qt::DotLine));
+
+    // Add data:
+    QVector<double> Data;
+    Data = instrument.getHist();
+    energy_distrib->setData(ticks, Data);
+
+    customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+    customPlot->replot();
+    customPlot->show();
+
     QMessageBox::information(this, "Results", instrument.getResults());
 }
 

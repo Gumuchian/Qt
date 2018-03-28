@@ -1,4 +1,4 @@
-#include "Pulse_generator.h"
+#include "pulse_generator.h"
 #include "global.h"
 #include <math.h>
 

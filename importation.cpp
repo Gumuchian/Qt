@@ -3,6 +3,7 @@
 #include <tinyxml.h>
 #include <tinystr.h>
 #include "global.h"
+#include <math.h>
 
 using namespace std;
 
@@ -32,11 +33,11 @@ void Importation::setGlobal()
     elem = elem->NextSiblingElement();
     elem->QueryIntAttribute("value", &Nfit);
     elem = elem->NextSiblingElement();
-    elem->QueryIntAttribute("value", &Npt);Npt=pow(2,Npt);
+    elem->QueryIntAttribute("value", &Npt);Npt=(int)pow(2,Npt);
     elem = elem->NextSiblingElement();
-    elem->QueryIntAttribute("value", &Npr);Npt=pow(2,Npr);
+    elem->QueryIntAttribute("value", &Npr);Npr=(int)pow(2,Npr);
     elem = elem->NextSiblingElement();
-    elem->QueryIntAttribute("value", &interpolation);interpolation=pow(2,interpolation);
+    elem->QueryIntAttribute("value", &interpolation);interpolation=(int)pow(2,interpolation);
     elem = elem->NextSiblingElement();
     elem->QueryDoubleAttribute("value", &TES_dsl);TES_dsl=TES_dsl*pow(10,-12);
     elem = elem->NextSiblingElement();

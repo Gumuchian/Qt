@@ -9,6 +9,7 @@ extern int Npix; // pixels number
 const double PI=3.14159265358979;
 extern int Nfit;
 const int order_fit=2;
+extern double binWidth=0.1;
 
 
 

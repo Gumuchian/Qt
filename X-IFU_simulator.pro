@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 CONFIG += c++11
 TARGET = X-IFU_simulator
 TEMPLATE = app
@@ -16,7 +16,6 @@ TEMPLATE = app
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
-QMAKE_CXXFLAGS += -Werror
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
@@ -39,7 +38,8 @@ SOURCES += main.cpp\
     xifu.cpp \
     config.cpp \
     global.cpp \
-    importation.cpp
+    importation.cpp \
+    qcustomplot.cpp
 
 HEADERS  += mainwindow.h \
     channel.h \
@@ -56,7 +56,8 @@ HEADERS  += mainwindow.h \
     tinyxml.h \
     xifu.h \
     config.h \
-    importation.h
+    importation.h \
+    qcustomplot.h
 
 INCLUDEPATH += C:\Users\Paul\Downloads\Boost\boost_1_66_0
 

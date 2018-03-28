@@ -1,4 +1,4 @@
-#include "DDS.h"
+#include "dds.h"
 #include <math.h>
 #include "global.h"
 

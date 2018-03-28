@@ -50,7 +50,6 @@ void xifu::simulate()
     int i,k,ip=0,l=0,n_alea=0,m;
     vector<double> module(Npat,0);
     vector<double> E;
-    string str;
     double sum,Em=0,var=0,P=0,maxi=0,a=0,energy_mode,puls;
     ublas::matrix<double> X(Nfit,order_fit+1),Z(order_fit+1,order_fit+1);
     for (i=0;i<Nfit;i++)
@@ -244,7 +243,7 @@ void xifu::simulate()
             var+=pow(abs(E[i]-Em),2);
         }
         var=energy/Em*2.35*sqrt(var/(E.size()-3));
-
+        computeHist(E, 100, binWidth, Em);
         results=QString::fromStdString("Input energy: "+to_string(energy)+" eV\n"
                +"Number of estimations: "+to_string(E.size()-3)+"\n"
                +"pattern @ "+to_string(1000)+" eV"+"\n"
@@ -308,4 +307,27 @@ QString xifu::getResults()
 void xifu::setMode(int mod)
 {
     mode=mod;
+}
+
+void xifu::computeHist(vector<double> data,int Nbin, double binW, double MidBin)
+{
+    for (int j=0;j<Nbin;j++)
+    {
+        hist.push_back(0);
+    }
+    double h;
+    for (int i=0;i<(int)data.size();i++)
+    {
+        h=data[i]-MidBin+Nbin/2*binW;
+
+        if (h>0)
+        {
+            hist[(int)std::floor(h/binW)]+=1;
+        }
+    }
+}
+
+QVector<double> xifu::getHist()
+{
+    return hist;
 }

@@ -1,8 +1,8 @@
 #ifndef CHANNEL_H
 #define CHANNEL_H
 #include <vector>
-#include "Pixel.h"
-#include "DDS.h"
+#include "pixel.h"
+#include "dds.h"
 #include <random>
 
 class Channel

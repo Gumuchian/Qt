@@ -1,4 +1,4 @@
-#include "BBFB.h"
+#include "bbfb.h"
 #include <math.h>
 #include "global.h"
 

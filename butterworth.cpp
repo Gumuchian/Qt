@@ -1,4 +1,4 @@
-#include "Butterworth.h"
+#include "butterworth.h"
 #include "global.h"
 
 Butterworth::Butterworth()

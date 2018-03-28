@@ -1,14 +1,11 @@
 #include "mainwindow.h"
 #include <QApplication>
-#include "global.h"
-#include <iostream>
 #include "importation.h"
 
 int main(int argc, char *argv[])
 {
-
-    Importation::setGlobal();
     QApplication app(argc, argv);
+    Importation::setGlobal();
     app.setWindowIcon(QIcon(":/images/icon.jpg"));
     MainWindow w;
     w.show();
