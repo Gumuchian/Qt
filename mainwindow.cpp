@@ -58,7 +58,7 @@ MainWindow::~MainWindow()
 void MainWindow::displayresult()
 {
     QCustomPlot  *customPlot = new QCustomPlot;
-    //customPlot->setFixedSize(500,300);
+    customPlot->setMinimumSize(500,500);
     QLinearGradient gradient(0, 0, 0, 400);
     gradient.setColorAt(0, QColor(90, 90, 90));
     gradient.setColorAt(0.38, QColor(105, 105, 105));
@@ -105,7 +105,8 @@ void MainWindow::displayresult()
     }
     Em/=((int)E.size());
     QVector<double> Data(100);
-    energy_distrib->setData(ticks, computeHist(Data, E, (int)Data.size(), binWidth, Em));
+    computeHist(Data, E, (int)Data.size(), binWidth, Em);
+    energy_distrib->setData(ticks, Data);
 
     for (int i=0;i<Data.size();i++)
     {
@@ -113,6 +114,7 @@ void MainWindow::displayresult()
         {
             max=Data[i];
         }
+        std::cout << Data[i] << std::endl;
     }
 
     // prepare y axis:
@@ -168,7 +170,7 @@ void MainWindow::openConfig()
     conf->show();
 }
 
-QVector<double> MainWindow::computeHist(QVector<double> hist, std::vector<double> data, int Nbin, double binW, double MidBin)
+void MainWindow::computeHist(QVector<double> &hist, std::vector<double> data, int Nbin, double binW, double MidBin)
 {
     for (int i=0;i<(int)hist.size();i++)
     {
@@ -188,5 +190,4 @@ QVector<double> MainWindow::computeHist(QVector<double> hist, std::vector<double
     {
         hist[i]=hist[i]*100/(int)data.size();
     }
-    return hist;
 }

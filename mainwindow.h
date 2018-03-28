@@ -24,7 +24,7 @@ public slots:
     void setmode1();
     void setmode2();
     void openConfig();
-    QVector<double> computeHist(QVector<double> hist, std::vector<double> data, int Nbin, double binW, double MidBin);
+    void computeHist(QVector<double> &hist, std::vector<double> data, int Nbin, double binW, double MidBin);
 
 private:
     Ui::MainWindow *ui;
