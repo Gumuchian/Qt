@@ -5,6 +5,7 @@
 #include "config.h"
 #include <QThread>
 #include "qcustomplot.h"
+#include <math.h>
 
 MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindow)
 {
@@ -50,106 +51,126 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
 
 MainWindow::~MainWindow()
 {
-    //thread->terminate();
-    //thread->wait();
     delete ui;
 }
 
 void MainWindow::displayresult()
 {
     std::vector<double> E = instrument.getE();
-    E.erase(E.begin(),E.begin()+2);
-    double Em=0,max=0,Emax=0,Emin=energy;
-    int Nbin;
-    for (int i=0;i<(int)E.size();i++)
+    if (E.size()!=0)
     {
-        Em+=E[i];
-        if (Emax<E[i])
+        E.erase(E.begin(),E.begin()+2);
+        double Em=0,max=0,Emax=0,Emin=energy,var=0;
+        int Nbin;
+        for (int i=0;i<(int)E.size();i++)
         {
-            Emax=E[i];
+            Em+=E[i];
+            if (Emax<E[i])
+            {
+                Emax=E[i];
+            }
+            if (Emin>E[i])
+            {
+                Emin=E[i];
+            }
         }
-        if (Emin>E[i])
+        Em/=((int)E.size());
+        for (int i=0;i<(int)E.size();i++)
         {
-            Emin=E[i];
+            var+=pow(E[i]-Em,2);
         }
-    }
-    Em/=((int)E.size());
-    Nbin=(int)std::ceil((Emax-Emin)/binWidth);
-    QVector<double> Data(100);
-    computeHist(Data, E, Nbin, binWidth, Em);
-    for (int i=0;i<Data.size();i++)
-    {
-        if (max<Data[i])
+        var/=(int)E.size();
+        var=std::sqrt(var);
+        Nbin=(int)std::ceil((Emax-Emin)/binWidth);
+        QVector<double> Data(100);
+        computeHist(Data, E, Nbin, binWidth, Em);
+        for (int i=0;i<Data.size();i++)
         {
-            max=Data[i];
+            if (max<Data[i])
+            {
+                max=Data[i];
+            }
         }
+
+
+        QCustomPlot  *customPlot = new QCustomPlot;
+        customPlot->setMinimumSize(750,900);
+        QLinearGradient gradient(0, 0, 0, 400);
+        gradient.setColorAt(0, QColor(90, 90, 90));
+        gradient.setColorAt(0.38, QColor(105, 105, 105));
+        gradient.setColorAt(1, QColor(70, 70, 70));
+        customPlot->setBackground(QBrush(gradient));
+
+        // create empty bar chart objects:
+        QCPBars *energy_distrib = new QCPBars(customPlot->xAxis, customPlot->yAxis);
+        energy_distrib->setAntialiased(false);
+        energy_distrib->setStackingGap(1);
+        // set names and colors:
+        energy_distrib->setPen(QPen(QColor(111, 9, 176).lighter(170)));
+        energy_distrib->setBrush(QColor(111, 9, 176));
+
+        // prepare x axis with country labels:
+        QVector<double> ticks;
+        QVector<QString> labels;
+        for (int i=0;i<Nbin;i++)
+        {
+            ticks.push_back(i);
+            labels.push_back(QString::number(Emin+i*binWidth));
+        }
+
+        QVector<double> gaussian(Nbin);
+        for (int i=0;i<(int)gaussian.size();i++)
+        {
+            gaussian[i]=100/(std::sqrt(2*PI)*var)*std::exp(-pow(Emin+i*binWidth-Em,2)/(2*pow(var,2)));
+        }
+
+        QCPGraph *fit = customPlot->addGraph();
+        fit->setData(ticks, gaussian);
+        fit->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, QPen(Qt::black, 1.5), QBrush(Qt::white), 9));
+        fit->setPen(QPen(QColor(120, 120, 120), 2));
+
+        QSharedPointer<QCPAxisTickerText> textTicker(new QCPAxisTickerText);
+        textTicker->addTicks(ticks, labels);
+        customPlot->xAxis->setLabel("eV");
+        customPlot->xAxis->setTicker(textTicker);
+        customPlot->xAxis->setTickLabelRotation(60);
+        customPlot->xAxis->setSubTicks(false);
+        customPlot->xAxis->setTickLength(0, 4);
+        customPlot->xAxis->setRange(0, Nbin);
+        customPlot->xAxis->setBasePen(QPen(Qt::white));
+        customPlot->xAxis->setTickPen(QPen(Qt::white));
+        customPlot->xAxis->grid()->setVisible(true);
+        customPlot->xAxis->grid()->setPen(QPen(QColor(130, 130, 130), 0, Qt::DotLine));
+        customPlot->xAxis->setTickLabelColor(Qt::white);
+        customPlot->xAxis->setLabelColor(Qt::white);
+
+
+        // prepare y axis:
+        customPlot->yAxis->setRange(0,max);
+        customPlot->yAxis->setPadding(5); // a bit more space to the left border
+        customPlot->yAxis->setLabel("Percentage of Particules");
+        customPlot->yAxis->setBasePen(QPen(Qt::white));
+        customPlot->yAxis->setTickPen(QPen(Qt::white));
+        customPlot->yAxis->setSubTickPen(QPen(Qt::white));
+        customPlot->yAxis->grid()->setSubGridVisible(true);
+        customPlot->yAxis->setTickLabelColor(Qt::white);
+        customPlot->yAxis->setLabelColor(Qt::white);
+        customPlot->yAxis->grid()->setPen(QPen(QColor(130, 130, 130), 0, Qt::SolidLine));
+        customPlot->yAxis->grid()->setSubGridPen(QPen(QColor(130, 130, 130), 0, Qt::DotLine));
+
+        // Add data:
+        energy_distrib->setData(ticks, Data);
+
+        customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+        customPlot->replot();
+        customPlot->show();
     }
-
-
-    QCustomPlot  *customPlot = new QCustomPlot;
-    customPlot->setMinimumSize(750,900);
-    QLinearGradient gradient(0, 0, 0, 400);
-    gradient.setColorAt(0, QColor(90, 90, 90));
-    gradient.setColorAt(0.38, QColor(105, 105, 105));
-    gradient.setColorAt(1, QColor(70, 70, 70));
-    customPlot->setBackground(QBrush(gradient));
-
-    // create empty bar chart objects:
-    QCPBars *energy_distrib = new QCPBars(customPlot->xAxis, customPlot->yAxis);
-    energy_distrib->setAntialiased(false);
-    energy_distrib->setStackingGap(1);
-    // set names and colors:
-    energy_distrib->setPen(QPen(QColor(111, 9, 176).lighter(170)));
-    energy_distrib->setBrush(QColor(111, 9, 176));
-
-    // prepare x axis with country labels:
-    QVector<double> ticks;
-    QVector<QString> labels;
-    for (int i=0;i<Nbin;i++)
-    {
-        ticks.push_back(i);
-        labels.push_back(QString::number(Emin+i*binWidth));
-    }
-    QSharedPointer<QCPAxisTickerText> textTicker(new QCPAxisTickerText);
-    textTicker->addTicks(ticks, labels);
-    customPlot->xAxis->setLabel("eV");
-    customPlot->xAxis->setTicker(textTicker);
-    customPlot->xAxis->setTickLabelRotation(60);
-    customPlot->xAxis->setSubTicks(false);
-    customPlot->xAxis->setTickLength(0, 4);
-    customPlot->xAxis->setRange(0, Nbin);
-    customPlot->xAxis->setBasePen(QPen(Qt::white));
-    customPlot->xAxis->setTickPen(QPen(Qt::white));
-    customPlot->xAxis->grid()->setVisible(true);
-    customPlot->xAxis->grid()->setPen(QPen(QColor(130, 130, 130), 0, Qt::DotLine));
-    customPlot->xAxis->setTickLabelColor(Qt::white);
-    customPlot->xAxis->setLabelColor(Qt::white);
-
-
-    // prepare y axis:
-    customPlot->yAxis->setRange(0,max);
-    customPlot->yAxis->setPadding(5); // a bit more space to the left border
-    customPlot->yAxis->setLabel("Percentage of Particules");
-    customPlot->yAxis->setBasePen(QPen(Qt::white));
-    customPlot->yAxis->setTickPen(QPen(Qt::white));
-    customPlot->yAxis->setSubTickPen(QPen(Qt::white));
-    customPlot->yAxis->grid()->setSubGridVisible(true);
-    customPlot->yAxis->setTickLabelColor(Qt::white);
-    customPlot->yAxis->setLabelColor(Qt::white);
-    customPlot->yAxis->grid()->setPen(QPen(QColor(130, 130, 130), 0, Qt::SolidLine));
-    customPlot->yAxis->grid()->setSubGridPen(QPen(QColor(130, 130, 130), 0, Qt::DotLine));
-
-    // Add data:
-    energy_distrib->setData(ticks, Data);
-
-    customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
-    customPlot->replot();
-    customPlot->show();
 
     QWidget *window = new QWidget();
     QLabel *label = new QLabel(instrument.getResults(), window);
+    label->show();
     window->setWindowTitle("Results");
-    window->setFixedSize(250,150);
+    window->setFixedSize(350,100);
     window->show();
 }
 
