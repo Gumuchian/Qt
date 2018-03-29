@@ -82,7 +82,7 @@ void MainWindow::displayresult()
         var/=(int)E.size();
         var=std::sqrt(var);
         Nbin=(int)std::ceil((Emax-Emin)/binWidth);
-        QVector<double> Data(100);
+        QVector<double> Data(Nbin);
         computeHist(Data, E, Nbin, binWidth, Em);
         for (int i=0;i<Data.size();i++)
         {
@@ -110,12 +110,12 @@ void MainWindow::displayresult()
         energy_distrib->setBrush(QColor(111, 9, 176));
 
         // prepare x axis with country labels:
-        QVector<double> ticks;
-        QVector<QString> labels;
+        QVector<double> ticks(Nbin);
+        QVector<QString> labels(Nbin);
         for (int i=0;i<Nbin;i++)
         {
-            ticks.push_back(i);
-            labels.push_back(QString::number(Emin+i*binWidth));
+            ticks[i]=i;
+            labels[i]=QString::number(Emin+i*binWidth);
         }
 
         QVector<double> gaussian(Nbin);
