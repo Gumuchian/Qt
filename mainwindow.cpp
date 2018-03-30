@@ -6,6 +6,7 @@
 #include <QThread>
 #include "qcustomplot.h"
 #include <math.h>
+#include <fstream>
 
 MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindow)
 {
@@ -164,6 +165,25 @@ void MainWindow::displayresult()
         customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
         customPlot->replot();
         customPlot->show();
+
+        QCustomPlot  *customPlotspec = new QCustomPlot;
+        customPlotspec->setMinimumSize(750,900);
+        customPlotspec->setWindowTitle("OF Transfer function");
+        customPlotspec->addGraph();
+        customPlotspec->graph(0)->setPen(QPen(Qt::blue));
+        customPlotspec->graph(0)->setBrush(QBrush(QColor(0, 0, 255, 20)));
+        QVector<double> x(Npat/2), y(Npat/2);
+        for (int i=0; i<Npat/2; ++i)
+        {
+          x[i] = i*fs/(decimation*Npat);
+        }
+        y = instrument.getSpectrum();
+        customPlotspec->xAxis->setLabel("Hz");
+        customPlotspec->yAxis->setLabel("dB");
+        customPlotspec->graph(0)->setData(x, y);
+        customPlotspec->graph(0)->rescaleAxes();
+        customPlotspec->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+        customPlotspec->show();
     }
 
     QWidget *window = new QWidget();
@@ -220,11 +240,11 @@ void MainWindow::computeHist(QVector<double> &hist, std::vector<double> data, in
 
         if (h>0)
         {
-            hist[(int)std::floor(h/binW)]+=1;
+            hist[(int)std::round(h/binW)]+=1;
         }
     }
     for (int i=0;i<(int)hist.size();i++)
     {
-        hist[i]=hist[i]*100/(int)data.size();
+        hist[i]*=100.0/(int)data.size();
     }
 }

@@ -18,6 +18,7 @@
 #include <QMessageBox>
 #include <importation.h>
 
+
 config::config()
 {
     this->setWindowTitle("Configuration");
@@ -221,7 +222,6 @@ config::config()
     Pattern_parameter->setFixedHeight(100);
 
 
-
     QGroupBox *Decimation_filter_parameter = new QGroupBox(tr(""));
     QLabel *decimationLabel = new QLabel(tr("Decimation factor:"));
     decimation_f = new QSpinBox;
@@ -239,7 +239,6 @@ config::config()
     filterLayout->addWidget(filter_order);
     Decimation_filter_parameter->setLayout(filterLayout);
     Decimation_filter_parameter->setFixedHeight(150);
-
 
 
     QGroupBox *BBFB_parameter = new QGroupBox(tr(""));

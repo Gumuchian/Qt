@@ -316,3 +316,20 @@ vector<double> xifu::getE()
 {
     return E;
 }
+
+QVector<double> xifu::getSpectrum()
+{
+    Complex cp[Npat];
+    for (int i=0;i<Npat;i++)
+    {
+        cp[i]=pattern[i];
+    }
+    CArray spectrum(cp,Npat);
+    fft(spectrum);
+    QVector<double> spec(Npat/2);
+    for (int i=0;i<Npat/2;i++)
+    {
+        spec[i]=20*log10(abs(spectrum[i]));
+    }
+    return spec;
+}

@@ -42,6 +42,7 @@ public:
     QString getResults();
     void setMode(int mod);
     vector<double> getE();
+    QVector<double> getSpectrum();
 public slots:
     void simulate();
 signals:
