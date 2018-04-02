@@ -24,6 +24,7 @@ public slots:
     void setmode1();
     void setmode2();
     void openConfig();
+    void Export();
     void computeHist(QVector<double> &hist, std::vector<double> data, int Nbin, double binW, double MidBin);
 
 private:

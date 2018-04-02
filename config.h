@@ -18,7 +18,7 @@ public:
     virtual ~config();
 public slots:
     void setVal();
-    void reset();
+    void load();
     void saved();
 private:
     QDoubleSpinBox *sampling_frequency;
@@ -66,7 +66,7 @@ private:
     QDoubleSpinBox *BSQUID;
 
     QPushButton *Valider;
-    QPushButton *Reset;
+    QPushButton *Load;
     QPushButton *Annuler;
     QPushButton *Save;
 };

@@ -16,6 +16,7 @@
 #include "tinyxml.h"
 #include <tinystr.h>
 #include <QMessageBox>
+#include <QFileDialog>
 #include <importation.h>
 
 
@@ -406,14 +407,14 @@ config::config()
     onglets->addTab(SQUID_parameter,"SQUID");
 
     Valider = new QPushButton("Valider",this);
-    Reset = new QPushButton("Reset",this);
+    Load = new QPushButton("Load",this);
     Annuler = new QPushButton("Annuler",this);
     connect(Valider,SIGNAL(clicked()), this, SLOT(setVal()));
-    connect(Reset,SIGNAL(clicked()), this, SLOT(reset()));
+    connect(Load,SIGNAL(clicked()), this, SLOT(load()));
     connect(Annuler,SIGNAL(clicked()), this, SLOT(close()));
     connect(Valider,SIGNAL(clicked()), this, SLOT(saved()));
     Valider->move(20,910);
-    Reset->move(127,910);
+    Load->move(127,910);
     Annuler->move(235,910);
 }
 
@@ -473,9 +474,10 @@ void config::setVal()
     binWidth=bin->value();
 }
 
-void config::reset()
-{
-    Importation::setGlobal();
+void config::load()
+{  
+    QString fichier = QFileDialog::getOpenFileName(this, "Ouvrir un fichier", QString());
+    Importation::setGlobal(fichier);
     sampling_frequency->setValue(fs);
     Npoint->setValue(N);
     Npixels->setValue(Npix);

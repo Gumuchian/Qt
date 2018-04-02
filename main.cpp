@@ -1,11 +1,13 @@
 #include "mainwindow.h"
 #include <QApplication>
 #include "importation.h"
+#include <QString>
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    Importation::setGlobal();
+    QString str="C:/Users/Paul/Documents/build-X-IFU_simulator-Desktop_Qt_5_8_0_MinGW_32bit-Release/global.xml";
+    Importation::setGlobal(str);
     app.setWindowIcon(QIcon(":/images/icon.jpg"));
     MainWindow w;
     w.show();

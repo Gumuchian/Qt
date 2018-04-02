@@ -7,6 +7,7 @@
 #include "qcustomplot.h"
 #include <math.h>
 #include <fstream>
+#include "importation.h"
 
 MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindow)
 {
@@ -23,6 +24,9 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
     QAction *actionConfig = new QAction("&Configuration", this);
     menuFichier->addAction(actionConfig);
     connect(actionConfig, SIGNAL(triggered()), this, SLOT(openConfig()));
+    QAction *actionExport = new QAction("&Export", this);
+    menuFichier->addAction(actionExport);
+    connect(actionExport, SIGNAL(triggered()), this, SLOT(Export()));
     QAction *actionQuitter = new QAction("&Quitter", this);
     menuFichier->addAction(actionQuitter);
     connect(actionQuitter, SIGNAL(triggered()), qApp, SLOT(quit()));
@@ -225,6 +229,12 @@ void MainWindow::openConfig()
 {
     config *conf = new config();
     conf->show();
+}
+
+void MainWindow::Export()
+{
+    QString fichier = QFileDialog::getSaveFileName(this, "Ouvrir un fichier", QString());
+    Importation::saveConfig(fichier);
 }
 
 void MainWindow::computeHist(QVector<double> &hist, std::vector<double> data, int Nbin, double binW, double MidBin)
