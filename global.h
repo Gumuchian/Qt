@@ -96,4 +96,10 @@ extern double I0;
 extern double TR;
 extern double L;
 
+extern bool saveIQ;
+extern bool saveError;
+extern bool saveFeedback;
+extern bool saveItes;
+
+
 #endif

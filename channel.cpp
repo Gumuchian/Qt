@@ -95,7 +95,7 @@ double Channel::computeBBFB()
     {
         feedback[i]=feedback[i-1];
     }
-    return input;
+    return adc;
 }
 
  double Channel::getinput()

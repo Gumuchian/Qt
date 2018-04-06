@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Global_var>
 	<var name="fs" value="20000000" unit="Hz"/>
 	<var name="N" value="10000000"/>
@@ -41,5 +41,6 @@
 	<var name="I0" value="51.5" unit="pArms"/>
 	<var name="TR" value="4.08"/>
 	<var name="L" value="2" unit="µH"/>
+	<var name="bin" value="0.1" unit="eV"/>
 	<var name="G_filter" value="1"/>
 </Global_var>

@@ -17,6 +17,7 @@
 #include <tinystr.h>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QRadioButton>
 #include <importation.h>
 
 
@@ -78,6 +79,18 @@ config::config()
     Simulation_parameter->setFixedHeight(320);
 
 
+    QGroupBox *Saving = new QGroupBox(tr(""));
+    Ites = new QCheckBox("I(TES)");
+    Error = new QCheckBox("Error signal");
+    Feedback = new QCheckBox("Feedback signal");
+    IQ = new QCheckBox("IQ module");
+    QVBoxLayout *SaveLayout = new QVBoxLayout;
+    SaveLayout->addWidget(Ites);
+    SaveLayout->addWidget(Error);
+    SaveLayout->addWidget(Feedback);
+    SaveLayout->addWidget(IQ);
+    Saving->setLayout(SaveLayout);
+    Saving->setFixedHeight(250);
 
     QGroupBox *DDS_parameter = new QGroupBox(tr(""));
     QLabel *NptLabel = new QLabel(tr("Number of value in table as a power of 2 :"));
@@ -396,6 +409,7 @@ config::config()
 
     onglets->setFixedSize(350,900);
     onglets->addTab(Simulation_parameter,"Simulation parameters");
+    onglets->addTab(Saving,"Data saving");
     onglets->addTab(DDS_parameter,"DDS");
     onglets->addTab(LC_TES_parameter,"LC/TES");
     onglets->addTab(Pattern_parameter,"Pattern");
@@ -472,53 +486,60 @@ void config::setVal()
     SQUID_dsl=(SQUIDdsl->value())*pow(10,-12);
     B_SQUID=BSQUID->value();
     binWidth=bin->value();
+    saveIQ=IQ->checkState();
+    saveItes=Ites->checkState();
+    saveError=Error->checkState();
+    saveFeedback=Feedback->checkState();
 }
 
 void config::load()
 {  
-    QString fichier = QFileDialog::getOpenFileName(this, "Ouvrir un fichier", QString());
-    Importation::setGlobal(fichier);
-    sampling_frequency->setValue(fs);
-    Npoint->setValue(N);
-    Npixels->setValue(Npix);
-    N_fit->setValue(Nfit);
-    N_pt->setValue((int)(std::log2(Npt)));
-    N_pr->setValue((int)(std::log2(Npr)));
-    interpol->setValue((int)(std::log2(interpolation)));
-    TESdsl->setValue(TES_dsl*pow(10,12));
-    B_TES->setValue(Btes);
-    f_c->setValue(fc);
-    N_pat->setValue(Npat);
-    pulse_energy->setValue(energy);
-    decimation_f->setValue(decimation);
-    filter_order->setValue(order);
-    gain_bbfb->setValue(G);
-    delay_step->setValue(delay);
-    full_scale->setValue(PE_DAC*pow(10,3));
-    DAC_bits->setValue(DAC_bit);
-    DAC_B->setValue(B_DAC);
-    DACdslf->setValue(DAC_dsl*pow(10,12));
-    DACdslb->setValue(-(std::log10(2*DAC_dsl_b))*20);
-    full_scale_adc->setValue(PE_ADC);
-    ADC_bits->setValue(ADC_bit);
-    ADCdsl->setValue(ADC_dsl*pow(10,9));
-    ADC_B->setValue(B_ADC);
-    GLNA->setValue(G_LNA);
-    LNAdsl->setValue(LNA_dsl*pow(10,9));
-    BLNA->setValue(B_LNA);
-    GSQUID->setValue(G_SQUID);
-    SQUIDdsl->setValue(SQUID_dsl*pow(10,12));
-    BSQUID->setValue(B_SQUID);
-    Res0->setValue(R0*pow(10,3));
-    Temp0->setValue(T0*pow(10,3));
-    Vpol->setValue(Vp*pow(10,9));
-    alpha_cst->setValue(alpha);
-    beta_cst->setValue(beta);
-    Rl_cst->setValue(Rl*pow(10,6));
-    C_therm->setValue(Ctherm*pow(10,12));
-    T_bath->setValue(Tbath*pow(10,3));
-    Int0->setValue(I0*pow(10,6));
-    TTR->setValue(TR);
-    LL->setValue(L*pow(10,6));
-    bin->setValue(binWidth);
+    QString fichier = QFileDialog::getOpenFileName(this, "Ouvrir un fichier", QString(),"XML (*.xml)");
+    if (fichier!="")
+    {
+        Importation::setGlobal(fichier);
+        sampling_frequency->setValue(fs);
+        Npoint->setValue(N);
+        Npixels->setValue(Npix);
+        N_fit->setValue(Nfit);
+        N_pt->setValue((int)(std::log2(Npt)));
+        N_pr->setValue((int)(std::log2(Npr)));
+        interpol->setValue((int)(std::log2(interpolation)));
+        TESdsl->setValue(TES_dsl*pow(10,12));
+        B_TES->setValue(Btes);
+        f_c->setValue(fc);
+        N_pat->setValue(Npat);
+        pulse_energy->setValue(energy);
+        decimation_f->setValue(decimation);
+        filter_order->setValue(order);
+        gain_bbfb->setValue(G);
+        delay_step->setValue(delay);
+        full_scale->setValue(PE_DAC*pow(10,3));
+        DAC_bits->setValue(DAC_bit);
+        DAC_B->setValue(B_DAC);
+        DACdslf->setValue(DAC_dsl*pow(10,12));
+        DACdslb->setValue(-(std::log10(2*DAC_dsl_b))*20);
+        full_scale_adc->setValue(PE_ADC);
+        ADC_bits->setValue(ADC_bit);
+        ADCdsl->setValue(ADC_dsl*pow(10,9));
+        ADC_B->setValue(B_ADC);
+        GLNA->setValue(G_LNA);
+        LNAdsl->setValue(LNA_dsl*pow(10,9));
+        BLNA->setValue(B_LNA);
+        GSQUID->setValue(G_SQUID);
+        SQUIDdsl->setValue(SQUID_dsl*pow(10,12));
+        BSQUID->setValue(B_SQUID);
+        Res0->setValue(R0*pow(10,3));
+        Temp0->setValue(T0*pow(10,3));
+        Vpol->setValue(Vp*pow(10,9));
+        alpha_cst->setValue(alpha);
+        beta_cst->setValue(beta);
+        Rl_cst->setValue(Rl*pow(10,6));
+        C_therm->setValue(Ctherm*pow(10,12));
+        T_bath->setValue(Tbath*pow(10,3));
+        Int0->setValue(I0*pow(10,6));
+        TTR->setValue(TR);
+        LL->setValue(L*pow(10,6));
+        bin->setValue(binWidth);
+    }
 }

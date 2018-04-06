@@ -14,6 +14,11 @@ Importation::Importation()
 
 }
 
+Importation::~Importation()
+{
+
+}
+
 void Importation::setGlobal(QString path)
 {
     const char *c=path.toStdString().c_str();

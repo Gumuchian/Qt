@@ -9,6 +9,7 @@
 #include <QSpinBox>
 #include <QVBoxLayout>
 #include <QPushButton>
+#include <QCheckBox>
 
 class config: public QWidget
 {
@@ -64,6 +65,10 @@ private:
     QDoubleSpinBox *GSQUID;
     QDoubleSpinBox *SQUIDdsl;
     QDoubleSpinBox *BSQUID;
+    QCheckBox *Ites;
+    QCheckBox *Error;
+    QCheckBox *Feedback;
+    QCheckBox *IQ;
 
     QPushButton *Valider;
     QPushButton *Load;

@@ -171,7 +171,7 @@ void MainWindow::displayresult()
         customPlot->show();
 
         QCustomPlot  *customPlotspec = new QCustomPlot;
-        customPlotspec->setMinimumSize(750,900);
+        customPlotspec->setMinimumSize(700,500);
         customPlotspec->setWindowTitle("OF Transfer function");
         customPlotspec->addGraph();
         customPlotspec->graph(0)->setPen(QPen(Qt::blue));
@@ -233,7 +233,7 @@ void MainWindow::openConfig()
 
 void MainWindow::Export()
 {
-    QString fichier = QFileDialog::getSaveFileName(this, "Ouvrir un fichier", QString());
+    QString fichier = QFileDialog::getSaveFileName(this, "Save a file", QString(),"XML (*.xml)");
     Importation::saveConfig(fichier);
 }
 

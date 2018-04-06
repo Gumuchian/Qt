@@ -40,3 +40,7 @@ double I0;
 double TR;
 double L;
 double binWidth;
+bool saveItes;
+bool saveError;
+bool saveFeedback;
+bool saveIQ;

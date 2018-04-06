@@ -6,6 +6,7 @@ class Importation
 {
 public:
     Importation();
+    ~Importation();
     static void setGlobal(QString path);
     static void saveConfig(QString path);
 };

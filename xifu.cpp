@@ -53,7 +53,7 @@ void xifu::simulate()
     {
         E.erase(E.begin(),E.end());
     }
-    double sum,Em=0,var=0,P=0,maxi=0,a=0,energy_mode,puls;
+    double sum,Em=0,var=0,P=0,maxi=0,a=0,energy_mode,puls,error=0;
     ublas::matrix<double> X(Nfit,order_fit+1),Z(order_fit+1,order_fit+1);
     for (i=0;i<Nfit;i++)
     {
@@ -65,9 +65,7 @@ void xifu::simulate()
     ublas::vector<double> Y(Nfit),poly_max(order_fit+1);
     fstream file1,file2,file3;
     file3.open("test.txt",ios::out);
-    CArray sig_fft (Npat);
-    CArray sig_ph (Npat);
-    CArray noise_fft (Npat);
+    CArray sig_fft (Npat),sig_ph (Npat),noise_fft (Npat);
     for (i=0;i<Npat;i++)
     {
         noise_fft[i]=0;
@@ -116,6 +114,26 @@ void xifu::simulate()
 
     for (long i=0;i<N;i++)
     {
+        if (saveItes)
+        {
+            file3 << ch0.getinput() << "\t";
+        }
+        if (saveError)
+        {
+            file3 << error << "\t";
+        }
+        if (saveFeedback)
+        {
+            file3 << ch0.getfck() << "\t";
+        }
+        if (saveIQ)
+        {
+            file3 << ch0.getmod() << "\t";
+        }
+        if (saveItes || saveError || saveFeedback || saveIQ)
+        {
+            file3 << std::endl;
+        }
         if (i%10000==0)
         {
             progress=(int)(100*(double)i/N);
@@ -138,7 +156,7 @@ void xifu::simulate()
         }
 
         ch0.computeLC_TES();
-        ch0.computeBBFB();
+        error=ch0.computeBBFB();
 
         if (i==Npat*decimation)
         {
