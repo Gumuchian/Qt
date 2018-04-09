@@ -11,7 +11,7 @@ class Channel
         Channel();
         virtual ~Channel();
         double sumPolar();
-        void computeLC_TES();
+        double computeLC_TES();
         double computeBBFB();
         double getinput();
         double getfck();

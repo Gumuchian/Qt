@@ -53,7 +53,7 @@ void xifu::simulate()
     {
         E.erase(E.begin(),E.end());
     }
-    double sum,Em=0,var=0,P=0,maxi=0,a=0,energy_mode,puls,error=0;
+    double sum,Em=0,var=0,P=0,maxi=0,a=0,energy_mode,puls,error=0,I=0;
     ublas::matrix<double> X(Nfit,order_fit+1),Z(order_fit+1,order_fit+1);
     for (i=0;i<Nfit;i++)
     {
@@ -117,6 +117,7 @@ void xifu::simulate()
         if (saveItes)
         {
             file3 << ch0.getinput() << "\t";
+            //file3 << I << "\t";
         }
         if (saveError)
         {
@@ -155,7 +156,7 @@ void xifu::simulate()
             }
         }
 
-        ch0.computeLC_TES();
+        I=ch0.computeLC_TES();
         error=ch0.computeBBFB();
 
         if (i==Npat*decimation)

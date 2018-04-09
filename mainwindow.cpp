@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
 
     QMenu *menuFichier = menuBar()->addMenu("&Fichier");
     QAction *actionConfig = new QAction("&Configuration", this);
+    actionConfig->setShortcut(QKeySequence("Ctrl+Q"));
     menuFichier->addAction(actionConfig);
     connect(actionConfig, SIGNAL(triggered()), this, SLOT(openConfig()));
     QAction *actionExport = new QAction("&Export", this);
