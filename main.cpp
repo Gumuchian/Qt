@@ -10,8 +10,7 @@ int main(int argc, char *argv[])
     saveIQ=false;
     saveFeedback=false;
     QApplication app(argc, argv);
-    QString str="C://Users/Paul/Documents/build-X-IFU_simulator-Desktop_Qt_5_8_0_MinGW_32bit-Release/global.xml";
-    Importation::setGlobal(str);
+    Importation::setInitial();
     app.setWindowIcon(QIcon(":/images/icon.jpg"));
     MainWindow w;
     w.show();

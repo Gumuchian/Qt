@@ -37,7 +37,7 @@ config::config()
 
     QLabel *NLabel = new QLabel(tr("Step number"));
     Npoint = new QSpinBox;
-    Npoint->setRange(0, 300000000);
+    Npoint->setRange(0, 500000000);
     Npoint->setValue(N);
 
     QLabel *Npixel = new QLabel(tr("Number of pixels"));

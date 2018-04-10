@@ -299,3 +299,49 @@ void Importation::saveConfig(QString path)
     const char *c=path.toStdString().c_str();
     doc.SaveFile(c);
 }
+
+void Importation::setInitial()
+{
+    fs=20000000;
+    N=50000000;
+    Npix=1;
+    Nfit=3;
+    Npt=pow(2,9);
+    Npr=pow(2,18);
+    interpolation=pow(2,11);
+    TES_dsl=105*pow(10,-12);
+    Btes=20000000;
+    fc=560;
+    Npat=2048;
+    energy=3600;
+    decimation=128;
+    G=0.0001549644569;
+    delay=1;
+    PE_DAC=0.02;
+    DAC_bit=16;
+    B_DAC=20000000;
+    DAC_dsl=28*pow(10,-12);
+    DAC_dsl_b=0.5*pow(10,-160/20);
+    PE_ADC=1.0;
+    ADC_bit=12;
+    ADC_dsl=6.448*pow(10,-9);
+    B_ADC=20000000;
+    G_LNA=83;
+    LNA_dsl=258*pow(10,-9);
+    B_LNA=20000000;
+    G_SQUID=2931.0;
+    SQUID_dsl=2.2*pow(10,-12);
+    B_SQUID=20000000;
+    R0=0.001;
+    T0=0.09;
+    Vp=51.5*pow(10,-9);
+    alpha=75;
+    beta=1.25;
+    Rl=60*pow(10,-6);
+    Ctherm=0.8*pow(10,-12);
+    Tbath=0.055;
+    I0=51.5*pow(10,-6);
+    TR=4.08;
+    L=2*pow(10,-6);
+    binWidth=0.7;
+}

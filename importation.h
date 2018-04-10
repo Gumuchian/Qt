@@ -9,6 +9,7 @@ public:
     ~Importation();
     static void setGlobal(QString path);
     static void saveConfig(QString path);
+    static void setInitial();
 };
 
 #endif // IMPORTATION_H

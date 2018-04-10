@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
 
     QMenu *menuFichier = menuBar()->addMenu("&Fichier");
     QAction *actionConfig = new QAction("&Configuration", this);
-    actionConfig->setShortcut(QKeySequence("Ctrl+Q"));
+    actionConfig->setShortcut(QKeySequence("Ctrl+U"));
     menuFichier->addAction(actionConfig);
     connect(actionConfig, SIGNAL(triggered()), this, SLOT(openConfig()));
     QAction *actionExport = new QAction("&Export", this);
@@ -52,7 +52,6 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
     Resolution_mode->setFixedSize(150,50);
     connect(Resolution_mode, SIGNAL(clicked()), this, SLOT(setmode2()));
     mode=2;
-
 }
 
 MainWindow::~MainWindow()
@@ -62,7 +61,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::displayresult()
 {
-    std::vector<double> E = instrument.getE();
+    std::vector<double> E(Npat);
+    instrument.getE(E);
     if (E.size()!=0)
     {
         E.erase(E.begin(),E.begin()+2);
@@ -182,7 +182,7 @@ void MainWindow::displayresult()
         {
           x[i] = i*fs/(decimation*Npat);
         }
-        y = instrument.getSpectrum();
+        instrument.getSpectrum(y);
         customPlotspec->xAxis->setLabel("Hz");
         customPlotspec->yAxis->setLabel("dB");
         customPlotspec->graph(0)->setData(x, y);
@@ -190,7 +190,6 @@ void MainWindow::displayresult()
         customPlotspec->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
         customPlotspec->show();
     }
-
     QWidget *window = new QWidget();
     QLabel *label = new QLabel(instrument.getResults(), window);
     label->show();

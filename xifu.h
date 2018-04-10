@@ -41,8 +41,8 @@ public:
     template<class T> bool InvertMatrix(const ublas::matrix<T>& input, ublas::matrix<T>& inverse);
     QString getResults();
     void setMode(int mod);
-    vector<double> getE();
-    QVector<double> getSpectrum();
+    void getE(vector<double> &En);
+    void getSpectrum(QVector<double> &Spect);
 public slots:
     void simulate();
 signals:
