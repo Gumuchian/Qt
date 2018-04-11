@@ -97,7 +97,7 @@ void Importation::setGlobal(QString path)
     elem = elem->NextSiblingElement();
     elem->QueryDoubleAttribute("value", &T0);T0=T0*pow(10,-3);
     elem = elem->NextSiblingElement();
-    elem->QueryDoubleAttribute("value", &Vp);Vp=Vp*pow(10,-9);
+    elem->QueryDoubleAttribute("value", &Gb);Gb=Gb*pow(10,-12);
     elem = elem->NextSiblingElement();
     elem->QueryDoubleAttribute("value", &alpha);
     elem = elem->NextSiblingElement();
@@ -113,7 +113,7 @@ void Importation::setGlobal(QString path)
     elem = elem->NextSiblingElement();
     elem->QueryDoubleAttribute("value", &TR);
     elem = elem->NextSiblingElement();
-    elem->QueryDoubleAttribute("value", &L);L=L*pow(10,-6);
+    elem->QueryDoubleAttribute("value", &Lcrit);Lcrit=Lcrit*pow(10,-9);
     elem = elem->NextSiblingElement();
     elem->QueryDoubleAttribute("value", &binWidth);
     elem = elem->NextSiblingElement();
@@ -260,8 +260,8 @@ void Importation::saveConfig(QString path)
     var31->SetDoubleAttribute("value", T0*pow(10,3));
     TiXmlElement *var32 = new TiXmlElement( "var" );
     global->LinkEndChild(var32);
-    var32->SetAttribute("name", "Vp");
-    var32->SetDoubleAttribute("value", Vp*pow(10,9));
+    var32->SetAttribute("name", "Gb");
+    var32->SetDoubleAttribute("value", Gb*pow(10,12));
     TiXmlElement *var33 = new TiXmlElement( "var" );
     global->LinkEndChild(var33);
     var33->SetAttribute("name", "alpha");
@@ -292,8 +292,8 @@ void Importation::saveConfig(QString path)
     var39->SetDoubleAttribute("value", TR);
     TiXmlElement *var40 = new TiXmlElement( "var" );
     global->LinkEndChild(var40);
-    var40->SetAttribute("name", "L");
-    var40->SetDoubleAttribute("value", L*pow(10,6));
+    var40->SetAttribute("name", "Lcrit");
+    var40->SetDoubleAttribute("value", Lcrit*pow(10,9));
     TiXmlElement *var41 = new TiXmlElement( "var" );
     global->LinkEndChild(var41);
     var41->SetAttribute("name", "binWidth");
@@ -340,7 +340,7 @@ void Importation::setInitial()
     B_SQUID=20000000;
     R0=0.001;
     T0=0.09;
-    Vp=51.5*pow(10,-9);
+    Gb=115*pow(10,-12);
     alpha=75;
     beta=1.25;
     Rl=60*pow(10,-6);
@@ -348,7 +348,7 @@ void Importation::setInitial()
     Tbath=0.055;
     I0=51.5*pow(10,-6);
     TR=4.08;
-    L=2*pow(10,-6);
+    Lcrit=121*pow(10,-9);
     binWidth=0.7;
     ntherm=3;
 }

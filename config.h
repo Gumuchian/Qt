@@ -34,14 +34,14 @@ private:
     QDoubleSpinBox *Int0;
     QDoubleSpinBox *Res0;
     QDoubleSpinBox *Temp0;
-    QDoubleSpinBox *Vpol;
+    QDoubleSpinBox *G_b;
     QDoubleSpinBox *alpha_cst;
     QDoubleSpinBox *beta_cst;
     QDoubleSpinBox *Rl_cst;
     QDoubleSpinBox *C_therm;
     QDoubleSpinBox *T_bath;
     QDoubleSpinBox *TTR;
-    QDoubleSpinBox *LL;
+    QDoubleSpinBox *L_crit;
     QDoubleSpinBox *TESdsl;
     QDoubleSpinBox *B_TES;
     QDoubleSpinBox *f_c;

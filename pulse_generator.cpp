@@ -14,12 +14,12 @@ Pulse_generator::Pulse_generator()
 
 double Pulse_generator::dT(double T, double Pj, double Po)
 {
-    return (Po+Pj-Gtes/(3*pow(T,2))*(pow(T,ntherm)-pow(Tbath,ntherm)))/Ctherm;
+    return (Po+Pj-Gb/(3*pow(T,2))*(pow(T,ntherm)-pow(Tbath,ntherm)))/Ctherm;
 }
 
 double Pulse_generator::dI(double I, double V, double R)
 {
-    return (V-I*Rl-I*R)/(L/pow(TR,2));
+    return (V-I*Rl-I*R)/(Lcrit*pow(TR,2)/pow(TR,2));
 }
 
 double Pulse_generator::RK4(ptrm f, double dt, double y0, double y1, double y2)
@@ -37,8 +37,8 @@ double Pulse_generator::compute()
     ptrm ptrdT,ptrdI;
     ptrdT=&Pulse_generator::dT;
     ptrdI=&Pulse_generator::dI;
-    Ites=RK4(ptrdI,1.0/fs,Ites,Vp,Rtes);
-    Ttes=RK4(ptrdT,1.0/fs,Ttes,pow(Vp,2)/Rtes,Popt);
+    Ites=RK4(ptrdI,1.0/fs,Ites,R0*I0,Rtes);
+    Ttes=RK4(ptrdT,1.0/fs,Ttes,pow(R0*I0,2)/Rtes,Popt);
     Rtes=R0+alpha*R0/T0*(Ttes-T0)+beta*R0/I0*(Ites-I0);
     Popt=0;
     return Ites;

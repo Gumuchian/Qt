@@ -38,7 +38,7 @@
 	<var name="Rl" value="60" unit="µOhms"/>
 	<var name="Ctherm" value="0.8" unit=""/>
 	<var name="Tbath" value="55" unit="mK"/>
-	<var name="I0" value="51.5" unit="pArms"/>
+	<var name="I0" value="51.5" unit="µArms"/>
 	<var name="TR" value="4.08"/>
 	<var name="L" value="2" unit="µH"/>
 	<var name="binWidth" value="0.7" unit="eV"/>

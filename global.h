@@ -85,16 +85,15 @@ extern double B_SQUID; // SQUID noise bandwidth
 // LC-TES parameters
 extern double R0;
 extern double T0;
-extern double Vp;
+extern double Gb;
 extern double alpha;
 extern double beta;
-const double Gtes=115.0*pow(10,-12);
 extern double Rl;
 extern double Ctherm;
 extern double Tbath;
 extern double I0;
 extern double TR;
-extern double L;
+extern double Lcrit;
 extern double ntherm;
 
 extern bool saveIQ;

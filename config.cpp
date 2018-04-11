@@ -124,25 +124,31 @@ config::config()
     Int0 = new QDoubleSpinBox;
     Int0->setSuffix(" µA");
     Int0->setValue(I0*pow(10,6));
+    Int0->setDecimals(3);
 
     QLabel *R0Label = new QLabel(tr("R0 :"));
     Res0 = new QDoubleSpinBox;
     Res0->setSuffix(" mOhms");
     Res0->setValue(R0*pow(10,3));
+    Res0->setDecimals(3);
 
     QLabel *T0Label = new QLabel(tr("T0 :"));
     Temp0 =new QDoubleSpinBox;
     Temp0->setSuffix(" mK");
     Temp0->setValue(T0*pow(10,3));
+    Temp0->setDecimals(3);
 
-    QLabel *VpLabel = new QLabel(tr("Vp :"));
-    Vpol = new QDoubleSpinBox;
-    Vpol->setSuffix(" nV");
-    Vpol->setValue(Vp*pow(10,9));
+    QLabel *GbLabel = new QLabel(tr("Gb :"));
+    G_b = new QDoubleSpinBox;
+    G_b->setSuffix(" pW/K");
+    G_b->setValue(Gb*pow(10,12));
+    G_b->setRange(0,1000);
+    G_b->setDecimals(3);
 
     QLabel *alphaLabel = new QLabel(tr("alpha :"));
     alpha_cst = new QDoubleSpinBox;
     alpha_cst->setValue(alpha);
+    alpha_cst->setRange(0,10000);
 
     QLabel *betaLabel = new QLabel(tr("beta :"));
     beta_cst = new QDoubleSpinBox;
@@ -152,25 +158,29 @@ config::config()
     Rl_cst = new QDoubleSpinBox;
     Rl_cst->setSuffix(" µOhms");
     Rl_cst->setValue(Rl*pow(10,6));
+    Rl_cst->setDecimals(3);
 
     QLabel *CthermLabel = new QLabel(tr("C_therm :"));
     C_therm = new QDoubleSpinBox;
     C_therm->setSuffix(" pJ/K");
     C_therm->setValue(Ctherm*pow(10,12));
+    C_therm->setDecimals(3);
 
     QLabel *Tbathlabel = new QLabel(tr("Tbath :"));
     T_bath = new QDoubleSpinBox;
     T_bath->setSuffix(" mK");
     T_bath->setValue(Tbath*pow(10,3));
+    T_bath->setDecimals(3);
 
     QLabel *TRLabel = new QLabel(tr("TR :"));
     TTR = new QDoubleSpinBox;
     TTR->setValue(TR);
 
-    QLabel *LLabel = new QLabel(tr("L :"));
-    LL = new QDoubleSpinBox;
-    LL->setSuffix(" µH");
-    LL->setValue(L*pow(10,6));
+    QLabel *LLabel = new QLabel(tr("Lcrit :"));
+    L_crit = new QDoubleSpinBox;
+    L_crit->setSuffix(" nH");
+    L_crit->setValue(Lcrit*pow(10,9));
+    L_crit->setRange(0,1000);
 
     QLabel *TESdslLabel = new QLabel(tr("Spectral linear density of TES :"));
     TESdsl = new QDoubleSpinBox;
@@ -202,8 +212,8 @@ config::config()
     LCTESLayout->addWidget(Res0);
     LCTESLayout->addWidget(T0Label);
     LCTESLayout->addWidget(Temp0);
-    LCTESLayout->addWidget(VpLabel);
-    LCTESLayout->addWidget(Vpol);
+    LCTESLayout->addWidget(GbLabel);
+    LCTESLayout->addWidget(G_b);
     LCTESLayout->addWidget(alphaLabel);
     LCTESLayout->addWidget(alpha_cst);
     LCTESLayout->addWidget(betaLabel);
@@ -217,7 +227,7 @@ config::config()
     LCTESLayout->addWidget(TRLabel);
     LCTESLayout->addWidget(TTR);
     LCTESLayout->addWidget(LLabel);
-    LCTESLayout->addWidget(LL);
+    LCTESLayout->addWidget(L_crit);
     LCTESLayout->addWidget(TESdslLabel);
     LCTESLayout->addWidget(TESdsl);
     LCTESLayout->addWidget(BTESLabel);
@@ -462,14 +472,14 @@ void config::setVal()
     I0=(Int0->value())*pow(10,-6);
     R0=(Res0->value())*pow(10,-3);
     T0=(Temp0->value())*pow(10,-3);
-    Vp=(Vpol->value())*pow(10,-9);
+    Gb=(G_b->value())*pow(10,-9);
     alpha=alpha_cst->value();
     beta=beta_cst->value();
     Rl=(Rl_cst->value())*pow(10,-6);
     Ctherm=(C_therm->value())*pow(10,-12);
     Tbath=T_bath->value()*pow(10,-3);
     TR=TTR->value();
-    L=(LL->value())*pow(10,-6);
+    Lcrit=(L_crit->value())*pow(10,-9);
     TES_dsl=(TESdsl->value())*pow(10,-12);
     Btes=B_TES->value();
     fc=f_c->value();
@@ -539,7 +549,7 @@ void config::load()
         BSQUID->setValue(B_SQUID);
         Res0->setValue(R0*pow(10,3));
         Temp0->setValue(T0*pow(10,3));
-        Vpol->setValue(Vp*pow(10,9));
+        G_b->setValue(Gb*pow(10,9));
         alpha_cst->setValue(alpha);
         beta_cst->setValue(beta);
         Rl_cst->setValue(Rl*pow(10,6));
@@ -547,7 +557,7 @@ void config::load()
         T_bath->setValue(Tbath*pow(10,3));
         Int0->setValue(I0*pow(10,6));
         TTR->setValue(TR);
-        LL->setValue(L*pow(10,6));
+        L_crit->setValue(Lcrit*pow(10,9));
         bin->setValue(binWidth);
         n_therm->setValue(ntherm);
     }
