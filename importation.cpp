@@ -116,6 +116,8 @@ void Importation::setGlobal(QString path)
     elem->QueryDoubleAttribute("value", &L);L=L*pow(10,-6);
     elem = elem->NextSiblingElement();
     elem->QueryDoubleAttribute("value", &binWidth);
+    elem = elem->NextSiblingElement();
+    elem->QueryDoubleAttribute("value", &ntherm);
 }
 
 void Importation::saveConfig(QString path)
@@ -296,6 +298,10 @@ void Importation::saveConfig(QString path)
     global->LinkEndChild(var41);
     var41->SetAttribute("name", "binWidth");
     var41->SetDoubleAttribute("value", binWidth);
+    TiXmlElement *var42 = new TiXmlElement( "var" );
+    global->LinkEndChild(var42);
+    var42->SetAttribute("name", "ntherm");
+    var42->SetDoubleAttribute("value", ntherm);
     const char *c=path.toStdString().c_str();
     doc.SaveFile(c);
 }
@@ -344,4 +350,5 @@ void Importation::setInitial()
     TR=4.08;
     L=2*pow(10,-6);
     binWidth=0.7;
+    ntherm=3;
 }

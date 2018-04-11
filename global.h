@@ -95,6 +95,7 @@ extern double Tbath;
 extern double I0;
 extern double TR;
 extern double L;
+extern double ntherm;
 
 extern bool saveIQ;
 extern bool saveError;

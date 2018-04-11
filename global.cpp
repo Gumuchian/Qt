@@ -40,6 +40,7 @@ double I0;
 double TR;
 double L;
 double binWidth;
+double ntherm;
 bool saveItes;
 bool saveError;
 bool saveFeedback;

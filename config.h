@@ -45,6 +45,7 @@ private:
     QDoubleSpinBox *TESdsl;
     QDoubleSpinBox *B_TES;
     QDoubleSpinBox *f_c;
+    QDoubleSpinBox *n_therm;
     QSpinBox *N_pat;
     QSpinBox *decimation_f;
     QSpinBox *filter_order;

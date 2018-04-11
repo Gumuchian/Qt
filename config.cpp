@@ -190,6 +190,11 @@ config::config()
     f_c->setSuffix(" Hz");
     f_c->setValue(fc);
 
+    QLabel *nLabel = new QLabel(tr("Thermal exponent:"));
+    n_therm = new QDoubleSpinBox;
+    n_therm->setRange(2,10);
+    n_therm->setValue(ntherm);
+
     QVBoxLayout *LCTESLayout = new QVBoxLayout;
     LCTESLayout->addWidget(I0Label);
     LCTESLayout->addWidget(Int0);
@@ -219,8 +224,10 @@ config::config()
     LCTESLayout->addWidget(B_TES);
     LCTESLayout->addWidget(fcLabel);
     LCTESLayout->addWidget(f_c);
+    LCTESLayout->addWidget(nLabel);
+    LCTESLayout->addWidget(n_therm);
     LC_TES_parameter->setLayout(LCTESLayout);
-    LC_TES_parameter->setFixedHeight(800);
+    LC_TES_parameter->setFixedHeight(820);
 
 
     QGroupBox *Pattern_parameter = new QGroupBox(tr(""));
@@ -466,6 +473,7 @@ void config::setVal()
     TES_dsl=(TESdsl->value())*pow(10,-12);
     Btes=B_TES->value();
     fc=f_c->value();
+    ntherm=n_therm->value();
     Npat=N_pat->value();
     decimation=decimation_f->value();
     G=gain_bbfb->value();
@@ -541,5 +549,6 @@ void config::load()
         TTR->setValue(TR);
         LL->setValue(L*pow(10,6));
         bin->setValue(binWidth);
+        n_therm->setValue(ntherm);
     }
 }
