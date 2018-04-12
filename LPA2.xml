@@ -32,7 +32,7 @@
 	<var name="B_SQUID" value="20000000" unit="Hz"/>
 	<var name="R0" value="1" unit="mOhms"/>
 	<var name="T0" value="90" unit="mK"/>
-	<var name="Vp" value="51.5" unit="nVrms"/>
+	<var name="Gb" value="115" unit="nVrms"/>
 	<var name="alpha" value="75"/>
 	<var name="beta" value="1.25"/>
 	<var name="Rl" value="60" unit="µOhms"/>
@@ -40,7 +40,7 @@
 	<var name="Tbath" value="55" unit="mK"/>
 	<var name="I0" value="51.5" unit="µArms"/>
 	<var name="TR" value="4.08"/>
-	<var name="L" value="2" unit="µH"/>
+	<var name="Lcrit" value="121" unit="nH"/>
 	<var name="binWidth" value="0.7" unit="eV"/>
 	<var name="ntherm" value="3"/>
 </Global_var>
