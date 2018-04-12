@@ -19,7 +19,7 @@ double Pulse_generator::dT(double T, double Pj, double Po)
 
 double Pulse_generator::dI(double I, double V, double R)
 {
-    return (V-I*Rl-I*R)/(Lcrit*pow(TR,2)/pow(TR,2));
+    return (V-I*Rl-I*R)/Lcrit;
 }
 
 double Pulse_generator::RK4(ptrm f, double dt, double y0, double y1, double y2)

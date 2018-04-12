@@ -141,9 +141,9 @@ config::config()
     QLabel *GbLabel = new QLabel(tr("Gb :"));
     G_b = new QDoubleSpinBox;
     G_b->setSuffix(" pW/K");
-    G_b->setValue(Gb*pow(10,12));
     G_b->setRange(0,1000);
     G_b->setDecimals(3);
+    G_b->setValue(Gb*pow(10,12));   
 
     QLabel *alphaLabel = new QLabel(tr("alpha :"));
     alpha_cst = new QDoubleSpinBox;
@@ -179,8 +179,9 @@ config::config()
     QLabel *LLabel = new QLabel(tr("Lcrit :"));
     L_crit = new QDoubleSpinBox;
     L_crit->setSuffix(" nH");
-    L_crit->setValue(Lcrit*pow(10,9));
     L_crit->setRange(0,1000);
+    L_crit->setValue(Lcrit*pow(10,9));
+
 
     QLabel *TESdslLabel = new QLabel(tr("Spectral linear density of TES :"));
     TESdsl = new QDoubleSpinBox;
@@ -472,7 +473,7 @@ void config::setVal()
     I0=(Int0->value())*pow(10,-6);
     R0=(Res0->value())*pow(10,-3);
     T0=(Temp0->value())*pow(10,-3);
-    Gb=(G_b->value())*pow(10,-9);
+    Gb=(G_b->value())*pow(10,-12);
     alpha=alpha_cst->value();
     beta=beta_cst->value();
     Rl=(Rl_cst->value())*pow(10,-6);
@@ -549,7 +550,7 @@ void config::load()
         BSQUID->setValue(B_SQUID);
         Res0->setValue(R0*pow(10,3));
         Temp0->setValue(T0*pow(10,3));
-        G_b->setValue(Gb*pow(10,9));
+        G_b->setValue(Gb*pow(10,12));
         alpha_cst->setValue(alpha);
         beta_cst->setValue(beta);
         Rl_cst->setValue(Rl*pow(10,6));

@@ -127,7 +127,8 @@ void MainWindow::displayresult()
         QVector<double> gaussian(Nbin);
         for (int i=0;i<(int)gaussian.size();i++)
         {
-            gaussian[i]=100/(std::sqrt(2*PI)*var)*std::exp(-pow(Emin+i*binWidth-Em,2)/(2*pow(var,2)));
+            //gaussian[i]=100/(std::sqrt(2*PI)*var)*std::exp(-pow(Emin+i*binWidth-Em,2)/(2*pow(var,2)));
+            gaussian[i]=max*std::exp(-pow(Emin+i*binWidth-Em,2)/(2*pow(var,2)));
         }
 
         QCPGraph *fit = customPlot->addGraph();
