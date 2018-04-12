@@ -32,11 +32,11 @@
 	<var name="B_SQUID" value="20000000" unit="Hz"/>
 	<var name="R0" value="1" unit="mOhms"/>
 	<var name="T0" value="90" unit="mK"/>
-	<var name="Gb" value="115" unit="nVrms"/>
+	<var name="Gb" value="115" unit="pW/K"/>
 	<var name="alpha" value="75"/>
 	<var name="beta" value="1.25"/>
 	<var name="Rl" value="60" unit="µOhms"/>
-	<var name="Ctherm" value="0.8" unit=""/>
+	<var name="Ctherm" value="0.8" unit="pJ/K"/>
 	<var name="Tbath" value="55" unit="mK"/>
 	<var name="I0" value="51.5" unit="µArms"/>
 	<var name="TR" value="4.08"/>

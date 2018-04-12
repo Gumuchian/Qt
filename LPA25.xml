@@ -1,46 +1,46 @@
 <?xml version="1.0" ?>
 <Global_var>
-    <var name="fs" value="20000000" />
-    <var name="N" value="50000000" />
-    <var name="Npix" value="1" />
-    <var name="Nfit" value="3" />
-    <var name="Npt" value="9" />
-    <var name="Npr" value="18" />
-    <var name="interpolation" value="11" />
-    <var name="TES_dsl" value="105" />
-    <var name="Btes" value="20000000" />
-    <var name="fc" value="560" />
-    <var name="Npat" value="2048" />
-    <var name="energy" value="3600" />
-    <var name="decimation" value="128" />
-    <var name="G" value="0.000154965" />
-    <var name="delay" value="1" />
-    <var name="PE_DAC" value="20" />
-    <var name="DAC_bit" value="16" />
-    <var name="B_DAC" value="20000000" />
-    <var name="DAC_dsl" value="28" />
-    <var name="DAC_dsl_b" value="160" />
-    <var name="PE_ADC" value="1" />
-    <var name="ADC_bit" value="12" />
-    <var name="ADC_dsl" value="6.45" />
-    <var name="B_ADC" value="20000000" />
-    <var name="G_LNA" value="83" />
-    <var name="LNA_dsl" value="258" />
-    <var name="B_LNA" value="20000000" />
-    <var name="G_SQUID" value="3000" />
-    <var name="SQUID_dsl" value="2.2" />
-    <var name="B_SQUID" value="20000000" />
-    <var name="R0" value="1.26" />
-    <var name="T0" value="93.2" />
-    <var name="Vp" value="51.5" />
+	<var name="fs" value="20000000" unit="Hz"/>
+	<var name="N" value="50000000"/>
+	<var name="Npix" value="1"/>
+	<var name="Nfit" value="3"/>
+	<var name="Npt" value="9"/>
+	<var name="Npr" value="18"/>
+	<var name="interpolation" value="11"/>
+	<var name="TES_dsl" value="105" unit="pA/sqrt(Hz)"/>
+	<var name="Btes" value="20000000" unit="Hz"/>
+	<var name="fc" value="560" unit="Hz"/>
+	<var name="Npat" value="2048"/>
+	<var name="energy" value="3600" unit="eV"/>
+	<var name="decimation" value="128"/>
+	<var name="G" value="0.0001549644569"/>
+	<var name="delay" value="1"/>
+	<var name="PE_DAC" value="20" unit="mA"/>
+	<var name="DAC_bit" value="16"/>
+	<var name="B_DAC" value="20000000" unit="Hz"/>
+	<var name="DAC_dsl" value="28" unit="pA/sqrt(Hz)"/>
+	<var name="DAC_dsl_b" value="160" unit="dB"/>
+	<var name="PE_ADC" value="1.0" unit="V"/>
+	<var name="ADC_bit" value="12"/>
+	<var name="ADC_dsl" value="6.448" unit="nV/sqrt(Hz)"/>
+	<var name="B_ADC" value="20000000" unit="Hz"/>
+	<var name="G_LNA" value="83"/>
+	<var name="LNA_dsl" value="258" unit="nV/sqrt(Hz)"/>
+	<var name="B_LNA" value="20000000" unit="Hz"/>
+	<var name="G_SQUID" value="3000"/>
+	<var name="SQUID_dsl" value="2.2" unit="pA/sqrt(Hz)"/>
+	<var name="B_SQUID" value="20000000" unit="Hz"/>
+    <var name="R0" value="1.26" unit="mOhms"/>
+    <var name="T0" value="93.2" unit="mK"/>
+    <var name="Gb" value="79.93" unit="nVrms"/>
     <var name="alpha" value="395.91" />
     <var name="beta" value="13.3" />
-    <var name="Rl" value="60" />
-    <var name="Ctherm" value="0.757" />
-    <var name="Tbath" value="55" />
-    <var name="I0" value="38.142" />
-    <var name="TR" value="4.08" />
-    <var name="L" value="4" />
-    <var name="binWidth" value="0.7" />
-	<var name="ntherm" value="3.377" />
+    <var name="Rl" value="60" unit="µOhms"/>
+	<var name="Ctherm" value="0.757" unit="pJ/K"/>
+	<var name="Tbath" value="55" unit="mK"/>
+	<var name="I0" value="38.142" unit="µArms"/>
+	<var name="TR" value="2.88"/>
+	<var name="Lcrit" value="240.8" unit="nH"/>
+	<var name="binWidth" value="0.7" unit="eV"/>
+	<var name="ntherm" value="3.377"/>
 </Global_var>
