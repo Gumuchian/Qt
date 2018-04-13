@@ -50,6 +50,7 @@ private:
     QSpinBox *decimation_f;
     QSpinBox *filter_order;
     QDoubleSpinBox *gain_bbfb;
+    QLabel *BandLabel;
     QSpinBox *delay_step;
     QDoubleSpinBox *full_scale;
     QSpinBox *DAC_bits;

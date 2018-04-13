@@ -279,6 +279,8 @@ config::config()
     gain_bbfb->setDecimals(10);
     gain_bbfb->setValue(G);
 
+    BandLabel = new QLabel(tr("GBW product:"));
+
     QLabel *delayLabel = new QLabel(tr("Delay step:"));
     delay_step = new QSpinBox;
     delay_step->setValue(delay);
@@ -286,6 +288,7 @@ config::config()
     QVBoxLayout *bbfbLayout = new QVBoxLayout;
     bbfbLayout->addWidget(GainLabel);
     bbfbLayout->addWidget(gain_bbfb);
+    bbfbLayout->addWidget(BandLabel);
     bbfbLayout->addWidget(delayLabel);
     bbfbLayout->addWidget(delay_step);
     BBFB_parameter->setLayout(bbfbLayout);
@@ -488,6 +491,7 @@ void config::setVal()
     Npat=N_pat->value();
     decimation=decimation_f->value();
     G=gain_bbfb->value();
+    BandLabel->setText("GBW product: "+QString::number(fs*G_SQUID*pow(2,ADC_bit-DAC_bit)*PE_DAC/PE_ADC*0.1*G*G_LNA/(2*PI))+" Hz");
     delay=delay_step->value();
     PE_DAC=(full_scale->value())*pow(10,-3);
     DAC_bit=DAC_bits->value();

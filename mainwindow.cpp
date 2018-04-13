@@ -124,15 +124,17 @@ void MainWindow::displayresult()
             labels[i]=QString::number(Emin+i*binWidth);
         }
 
-        QVector<double> gaussian(Nbin);
+        QVector<double> abs_gaussian(10*Nbin);
+        QVector<double> gaussian(10*Nbin);
         for (int i=0;i<(int)gaussian.size();i++)
         {
             //gaussian[i]=100/(std::sqrt(2*PI)*var)*std::exp(-pow(Emin+i*binWidth-Em,2)/(2*pow(var,2)));
-            gaussian[i]=max*std::exp(-pow(Emin+i*binWidth-Em,2)/(2*pow(var,2)));
+            abs_gaussian[i]=i/10.0;
+            gaussian[i]=max*std::exp(-pow(Emin+i*binWidth/10-Em,2)/(2*pow(var,2)));
         }
 
         QCPGraph *fit = customPlot->addGraph();
-        fit->setData(ticks, gaussian);
+        fit->setData(abs_gaussian, gaussian);
         fit->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, QPen(Qt::black, 1.5), QBrush(Qt::white), 9));
         fit->setPen(QPen(QColor(120, 120, 120), 2));
 
@@ -154,8 +156,8 @@ void MainWindow::displayresult()
 
         // prepare y axis:
         customPlot->yAxis->setRange(0,max);
-        customPlot->yAxis->setPadding(5); // a bit more space to the left border
-        customPlot->yAxis->setLabel("Percentage of Particules");
+        customPlot->yAxis->setPadding(5);
+        customPlot->yAxis->setLabel("Number of Particules");
         customPlot->yAxis->setBasePen(QPen(Qt::white));
         customPlot->yAxis->setTickPen(QPen(Qt::white));
         customPlot->yAxis->setSubTickPen(QPen(Qt::white));
@@ -253,9 +255,5 @@ void MainWindow::computeHist(QVector<double> &hist, std::vector<double> data, in
         {
             hist[(int)std::round(h/binW)]+=1;
         }
-    }
-    for (int i=0;i<(int)hist.size();i++)
-    {
-        hist[i]*=100.0/(int)data.size();
     }
 }
