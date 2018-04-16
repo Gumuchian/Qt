@@ -264,7 +264,6 @@ void xifu::simulate()
             var+=pow(abs(E[i]-Em),2);
         }
         var=energy/Em*2.35*sqrt(var/(E.size()-3));
-        //computeHist(E, 100, binWidth, Em);
         results=QString::fromStdString("Input energy: "+to_string(energy)+" eV\n"
                +"Number of estimations: "+to_string(E.size()-3)+"\n"
                +"pattern @ "+to_string(1000)+" eV"+"\n"
