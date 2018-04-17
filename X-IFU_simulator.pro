@@ -59,6 +59,8 @@ HEADERS  += mainwindow.h \
     qcustomplot.h
 
 INCLUDEPATH += C:\Users\Paul\Downloads\Boost\boost_1_66_0
+#INCLUDEPATH += /usr/local/Cellar/boost/1.66.0/include
+
 
 FORMS    += mainwindow.ui
 

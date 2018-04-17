@@ -20,6 +20,7 @@
 #include <QRadioButton>
 #include <importation.h>
 
+using namespace std;
 
 config::config()
 {
@@ -96,17 +97,17 @@ config::config()
     QLabel *NptLabel = new QLabel(tr("Number of value in table as a power of 2 :"));
     N_pt = new QSpinBox;
     N_pt->setRange(1,15);
-    N_pt->setValue((int)(std::log2(Npt)));
+    N_pt->setValue((int)(log2(Npt)));
 
     QLabel *NprLabel = new QLabel(tr("Number of bits to encode a value:"));
     N_pr = new QSpinBox;
     N_pr->setRange(1,26);
-    N_pr->setValue((int)(std::log2(Npr)));
+    N_pr->setValue((int)(log2(Npr)));
 
     QLabel *interpolLabel = new QLabel(tr("Power of 2 as interpolation factor:"));
     interpol = new QSpinBox;
     interpol->setRange(1,15);
-    interpol->setValue((int)(std::log2(interpolation)));
+    interpol->setValue((int)(log2(interpolation)));
 
     QVBoxLayout *DDSLayout = new QVBoxLayout;
     DDSLayout->addWidget(NptLabel);
@@ -321,7 +322,7 @@ config::config()
     DACdslb = new QDoubleSpinBox;
     DACdslb->setSuffix(" dB");
     DACdslb->setRange(0,1000);
-    DACdslb->setValue(-(std::log10(2*DAC_dsl_b))*20);
+    DACdslb->setValue(-(log10(2*DAC_dsl_b))*20);
 
     QVBoxLayout *dacLayout = new QVBoxLayout;
     dacLayout->addWidget(FSLabel);
@@ -525,9 +526,9 @@ void config::load()
         Npoint->setValue(N);
         Npixels->setValue(Npix);
         N_fit->setValue(Nfit);
-        N_pt->setValue((int)(std::log2(Npt)));
-        N_pr->setValue((int)(std::log2(Npr)));
-        interpol->setValue((int)(std::log2(interpolation)));
+        N_pt->setValue((int)(log2(Npt)));
+        N_pr->setValue((int)(log2(Npr)));
+        interpol->setValue((int)(log2(interpolation)));
         TESdsl->setValue(TES_dsl*pow(10,12));
         B_TES->setValue(Btes);
         f_c->setValue(fc);
@@ -541,7 +542,7 @@ void config::load()
         DAC_bits->setValue(DAC_bit);
         DAC_B->setValue(B_DAC);
         DACdslf->setValue(DAC_dsl*pow(10,12));
-        DACdslb->setValue(-(std::log10(2*DAC_dsl_b))*20);
+        DACdslb->setValue(-(log10(2*DAC_dsl_b))*20);
         full_scale_adc->setValue(PE_ADC);
         ADC_bits->setValue(ADC_bit);
         ADCdsl->setValue(ADC_dsl*pow(10,9));
