@@ -44,13 +44,18 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
 
     Calibration_mode = new QPushButton("Calibration",this);
     Calibration_mode->move(60,150);
-    Calibration_mode->setFixedSize(150,50);
+    Calibration_mode->setFixedSize(100,50);
     connect(Calibration_mode, SIGNAL(clicked()), this, SLOT(setmode1()));
 
     Resolution_mode = new QPushButton("Resolution",this);
-    Resolution_mode->move(210,150);
-    Resolution_mode->setFixedSize(150,50);
+    Resolution_mode->move(160,150);
+    Resolution_mode->setFixedSize(100,50);
     connect(Resolution_mode, SIGNAL(clicked()), this, SLOT(setmode2()));
+
+    Gain = new QPushButton("Gain",this);
+    Gain->move(260,150);
+    Gain->setFixedSize(100,50);
+    connect(Gain, SIGNAL(clicked()), this, SLOT(setmode2()));
     mode=2;
 }
 

@@ -34,6 +34,7 @@ private:
     QPushButton *bouton_launch;
     QPushButton *Calibration_mode;
     QPushButton *Resolution_mode;
+    QPushButton *Gain;
     QWidget *fenetre;
     QProgressBar *progress;
     int mode;

@@ -89,187 +89,244 @@ void xifu::simulate()
         file2 >> P;
     }
 
-    for (i=0;i<3000000;i++)
+    if (mode==3)
     {
-        if (i==1000000)
+        for (int i=0;i<13;i++)
         {
-            pulse_generator.setPopt(energy_mode);
-        }
-        puls=pulse_generator.compute();
-        if (i>=1000000 && i<1000000+Npul)
-        {
-        pulse[ip]=puls;
-        ip++;
-        }
-    }
-    ip=0;
-
-    if (mode==2)
-    {
-       for (i=0;i<Npat;i++)
-       {
-           file1 >> pattern[i];
-       }
-    }
-
-    for (long i=0;i<N;i++)
-    {
-        if (saveItes)
-        {
-            file3 << ch0.getinput() << "\t";
-        }
-        if (saveError)
-        {
-            file3 << error << "\t";
-        }
-        if (saveFeedback)
-        {
-            file3 << ch0.getfck() << "\t";
-        }
-        if (saveIQ)
-        {
-            file3 << ch0.getmod() << "\t";
-        }
-        if (saveItes || saveError || saveFeedback || saveIQ)
-        {
-            file3 << std::endl;
-        }
-        if (i%10000==0)
-        {
-            progress=(int)(100*(double)i/N);
-            emit getProgress(progress);
-        }
-        ch0.sumPolar();
-        if (mode==2)
-        {
-           if (ip>=n_alea+decimation && ip<Npul+n_alea+decimation)
-           {
-              ch0.setI(pulse[ip-n_alea-decimation]);
-           }
-        }
-        else
-        {
-            if (i<N/2 && ip<Npul)
+            energy=200+i*500;
+            for (i=0;i<3000000;i++)
             {
-                 ch0.setI(pulse[ip]);
-            }
-        }
-
-        ch0.computeLC_TES();
-        error=ch0.computeBBFB();
-
-        if (i==Npat*decimation)
-        {
-            maxi=ch0.getmod();
-        }
-
-        if (mode==2)
-        {
-            if (i>Npat*decimation-Nfit/2*decimation+decimation)
-            {
-                a=Butter.compute(maxi-ch0.getmod());
-                if (Butter.getaccess())
+                if (i==1000000)
                 {
-                    module.push_back(a);
-                    module.erase(module.begin());
-                    if (l<Nfit)
+                    pulse_generator.setPopt(energy_mode);
+                }
+                puls=pulse_generator.compute();
+                if (i>=1000000 && i<1000000+Npul)
+                {
+                pulse[ip]=puls;
+                ip++;
+                }
+            }
+
+            for (int j=0;j<5*Npat*decimation;j++)
+            {
+                ch0.sumPolar();
+                ch0.setI(pulse[ip]);
+                ch0.computeLC_TES();
+                ch0.computeBBFB();
+                if (i==Npat*decimation)
+                {
+                    maxi=ch0.getmod();
+                }
+                if (i>Npat*decimation+decimation)
+                {
+                    a=Butter.compute(maxi-ch0.getmod());
+                    if (Butter.getaccess())
                     {
+                        module.push_back(a);
+                        module.erase(module.begin());
                         if (l==0)
                         {
-                            n_alea=rand()%decimation-decimation/2;
-                        }
-                        sum=0;
-                        for (k=0;k<Npat;k++)
-                        {
-                            sum+=module[k]*pattern[k];
-                        }
-                        Y(l)=sum;
-                    }
-                    if (l==Nfit)
-                    {
-                        InvertMatrix(ublas::matrix<double> (ublas::prod(ublas::trans(X),X)),Z);
-                        poly_max=ublas::prod(ublas::prod(Z,ublas::trans(X)),Y);
-                        E.push_back(1000.0*(poly_max(2)-pow(poly_max(1),2)/(2*poly_max(0)))/P);
-                    }
-                    l++;
-                    l=l%Npat;
-                }
-            }
-        }
-        else
-        {
-            if (i>Npat*decimation+decimation)
-            {
-                a=Butter.compute(maxi-ch0.getmod());
-                if (Butter.getaccess())
-                {
-                    module.push_back(a);
-                    module.erase(module.begin());
-                    if (l==0)
-                    {
-                        for (k=0;k<Npat;k++)
-                        {
-                            c[k]=module[k];
-                        }
-                        CArray mod(c,Npat);
-                        fft(mod);
-                        if (i<N/2)
-                        {
-                            sig_fft+=abs(mod);
-                            for (m=0;m<Npat;m++)
+                            sum=0;
+                            for (k=0;k<Npat;k++)
                             {
-                                sig_ph[m]=arg(mod[m]);
-                                puls_inter[m]=module[m];
+                                sum+=module[k]*pattern[k];
                             }
                         }
-                        else
-                        {
-                            noise_fft+=abs(mod);
-                        }
+                        l++;
+                        l=l%Npat;
                     }
-                    l++;
-                    l=l%Npat;
                 }
+            ip++;
+            ip=ip%(Npat*decimation);
             }
-        }
-        ip++;
-        ip=ip%(Npat*decimation);
-    }
 
-    if (mode==1)
-    {
-        div_fft=sig_fft/noise_fft;
-        for (i=0;i<Npat;i++)
-        {
-            div_fft[i]*=exp(const_i*sig_ph[i]);
         }
-        ifft(div_fft);
-        for (i=0;i<Npat;i++)
-        {
-            file1 << real(div_fft[i]) << "\n";
-            P+=puls_inter[i]*real(div_fft[i]);
-        }
-        file2 << P;
     }
     else
     {
-        for (i=3;i<(int)E.size();i++)
+        for (i=0;i<3000000;i++)
         {
-            Em+=abs(E[i]);
+            if (i==1000000)
+            {
+                pulse_generator.setPopt(energy_mode);
+            }
+            puls=pulse_generator.compute();
+            if (i>=1000000 && i<1000000+Npul)
+            {
+            pulse[ip]=puls;
+           ip++;
+            }
         }
-        Em/=(E.size()-3);
+        ip=0;
 
-        for (i=3;i<(int)E.size();i++)
+        if (mode==2)
         {
-            var+=pow(abs(E[i]-Em),2);
+           for (i=0;i<Npat;i++)
+           {
+               file1 >> pattern[i];
+           }
         }
-        var=energy/Em*2.35*sqrt(var/(E.size()-3));
-        results=QString::fromStdString("Input energy: "+to_string(energy)+" eV\n"
+
+        for (long i=0;i<N;i++)
+        {
+            if (saveItes)
+            {
+                file3 << ch0.getinput() << "\t";
+            }
+            if (saveError)
+            {
+                file3 << error << "\t";
+            }
+            if (saveFeedback)
+            {
+                file3 << ch0.getfck() << "\t";
+            }
+            if (saveIQ)
+            {
+                file3 << ch0.getmod() << "\t";
+            }
+            if (saveItes || saveError || saveFeedback || saveIQ)
+            {
+                file3 << std::endl;
+            }
+            if (i%10000==0)
+            {
+                progress=(int)(100*(double)i/N);
+                emit getProgress(progress);
+            }
+            ch0.sumPolar();
+            if (mode==2)
+            {
+                if (ip>=n_alea+decimation && ip<Npul+n_alea+decimation)
+                {
+                    ch0.setI(pulse[ip-n_alea-decimation]);
+                }
+            }
+            else
+            {
+                if (i<N/2 && ip<Npul)
+                {
+                    ch0.setI(pulse[ip]);
+                }
+            }
+
+            ch0.computeLC_TES();
+            error=ch0.computeBBFB();
+
+            if (i==Npat*decimation)
+            {
+                maxi=ch0.getmod();
+            }
+
+            if (mode==2)
+            {
+                if (i>Npat*decimation-Nfit/2*decimation+decimation)
+                {
+                    a=Butter.compute(maxi-ch0.getmod());
+                    if (Butter.getaccess())
+                    {
+                        module.push_back(a);
+                        module.erase(module.begin());
+                        if (l<Nfit)
+                        {
+                            if (l==0)
+                            {
+                                n_alea=rand()%decimation-decimation/2;
+                            }
+                            sum=0;
+                            for (k=0;k<Npat;k++)
+                            {
+                                sum+=module[k]*pattern[k];
+                            }
+                            Y(l)=sum;
+                        }
+                        if (l==Nfit)
+                        {
+                            InvertMatrix(ublas::matrix<double> (ublas::prod(ublas::trans(X),X)),Z);
+                            poly_max=ublas::prod(ublas::prod(Z,ublas::trans(X)),Y);
+                            E.push_back(1000.0*(poly_max(2)-pow(poly_max(1),2)/(2*poly_max(0)))/P);
+                        }
+                        l++;
+                        l=l%Npat;
+                    }
+                }
+            }
+            else
+            {
+                if (i>Npat*decimation+decimation)
+                {
+                    a=Butter.compute(maxi-ch0.getmod());
+                    if (Butter.getaccess())
+                    {
+                        module.push_back(a);
+                        module.erase(module.begin());
+                        if (l==0)
+                        {
+                            for (k=0;k<Npat;k++)
+                            {
+                                c[k]=module[k];
+                            }
+                            CArray mod(c,Npat);
+                            fft(mod);
+                            if (i<N/2)
+                            {
+                                sig_fft+=abs(mod);
+                                for (m=0;m<Npat;m++)
+                                {
+                                    sig_ph[m]=arg(mod[m]);
+                                    puls_inter[m]=module[m];
+                                }
+                            }
+                            else
+                            {
+                                noise_fft+=abs(mod);
+                            }
+                        }
+                        l++;
+                        l=l%Npat;
+                    }
+                }
+            }
+            ip++;
+            ip=ip%(Npat*decimation);
+        }
+
+        if (mode==1)
+        {
+            div_fft=sig_fft/noise_fft;
+            for (i=0;i<Npat;i++)
+            {
+                div_fft[i]*=exp(const_i*sig_ph[i]);
+            }
+            ifft(div_fft);
+            for (i=0;i<Npat;i++)
+            {
+                file1 << real(div_fft[i]) << "\n";
+                P+=puls_inter[i]*real(div_fft[i]);
+            }
+            file2 << P;
+        }
+        else
+        {
+            for (i=3;i<(int)E.size();i++)
+            {
+                Em+=abs(E[i]);
+            }
+            Em/=(E.size()-3);
+
+            for (i=3;i<(int)E.size();i++)
+            {
+                var+=pow(abs(E[i]-Em),2);
+            }
+            var=energy/Em*2.35*sqrt(var/(E.size()-3));
+            results=QString::fromStdString("Input energy: "+to_string(energy)+" eV\n"
                +"Number of estimations: "+to_string(E.size()-3)+"\n"
                +"pattern @ "+to_string(1000)+" eV"+"\n"
                +"Energy estimation: "+to_string(Em)+" eV\n"
                +"Relative error: "+to_string(abs(energy-Em)/energy)+"\n"
                +"Resolution: "+to_string(var)+" eV\n");
+        }
     }
     file1.close();
     file2.close();
