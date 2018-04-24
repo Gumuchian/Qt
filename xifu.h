@@ -52,6 +52,7 @@ private:
     int mode;
     QString results;
     vector<double> E;
+    ublas::vector<double> energy_gain;
     double *pulse;
     double *puls_inter;
     double *pattern;

@@ -55,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
     Gain = new QPushButton("Gain",this);
     Gain->move(260,150);
     Gain->setFixedSize(100,50);
-    connect(Gain, SIGNAL(clicked()), this, SLOT(setmode2()));
+    connect(Gain, SIGNAL(clicked()), this, SLOT(setmode3()));
     mode=2;
 }
 
@@ -231,6 +231,12 @@ void MainWindow::setmode2()
 {
     instrument.setMode(2);
     QMessageBox::information(this, "Mode", "Resolution estimation mode selected");
+}
+
+void MainWindow::setmode3()
+{
+    instrument.setMode(3);
+    QMessageBox::information(this, "Mode", "Gain computation");
 }
 
 void MainWindow::openConfig()

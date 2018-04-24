@@ -28,7 +28,7 @@ using namespace boost::numeric;
 typedef complex<double> Complex;
 typedef valarray<Complex> CArray;
 
-xifu::xifu()
+xifu::xifu():energy_gain(4)
 {
     pulse = new double[Npul];
     puls_inter = new double[Npat];
@@ -91,34 +91,47 @@ void xifu::simulate()
 
     if (mode==3)
     {
-        for (int i=0;i<13;i++)
+        sum=0;
+        int l=0;
+        ublas::matrix<double> UA(7,4),M(4,4);
+        ublas::vector<double> energies(7);
+        for (int i=0;i<Npat;i++)
         {
-            energy=200+i*500;
-            for (i=0;i<3000000;i++)
+            file1 >> pattern[i];
+        }
+        for (int i=0;i<7;i++)
+        {
+            energy=200+i*1000;
+            energies(i)=energy;
+            ip=0;
+            for (int j=0;j<3000000;j++)
             {
-                if (i==1000000)
+                if (j==1000000)
                 {
-                    pulse_generator.setPopt(energy_mode);
+                    pulse_generator.setPopt(energy);
                 }
                 puls=pulse_generator.compute();
-                if (i>=1000000 && i<1000000+Npul)
+                if (j>=1000000 && j<1000000+Npul)
                 {
-                pulse[ip]=puls;
-                ip++;
+                    pulse[ip]=puls;
+                    ip++;
                 }
             }
-
-            for (int j=0;j<5*Npat*decimation;j++)
+            ip=0;
+            for (int k=0;k<3*Npat*decimation;k++)
             {
                 ch0.sumPolar();
-                ch0.setI(pulse[ip]);
+                if (ip<Npul)
+                {
+                    ch0.setI(pulse[ip]);
+                }
                 ch0.computeLC_TES();
                 ch0.computeBBFB();
-                if (i==Npat*decimation)
+                if (k==Npat*decimation)
                 {
                     maxi=ch0.getmod();
                 }
-                if (i>Npat*decimation+decimation)
+                if (k>=Npat*decimation+2*decimation)
                 {
                     a=Butter.compute(maxi-ch0.getmod());
                     if (Butter.getaccess())
@@ -128,20 +141,25 @@ void xifu::simulate()
                         if (l==0)
                         {
                             sum=0;
-                            for (k=0;k<Npat;k++)
+                            for (m=0;m<Npat;m++)
                             {
-                                sum+=module[k]*pattern[k];
+                                sum+=module[m]*pattern[m];
                             }
                         }
                         l++;
                         l=l%Npat;
                     }
                 }
-            ip++;
-            ip=ip%(Npat*decimation);
+                ip++;
+                ip=ip%(Npat*decimation);
             }
-
+            for (int n=0;n<4;n++)
+            {
+                UA(i,n)=pow(sum/1000,3-n);
+            }
         }
+        InvertMatrix(ublas::matrix<double> (ublas::prod(ublas::trans(UA),UA)),M);
+        energy_gain=ublas::prod(ublas::prod(M,ublas::trans(UA)),energies);
     }
     else
     {
@@ -155,7 +173,7 @@ void xifu::simulate()
             if (i>=1000000 && i<1000000+Npul)
             {
             pulse[ip]=puls;
-           ip++;
+            ip++;
             }
         }
         ip=0;
