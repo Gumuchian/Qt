@@ -70,21 +70,9 @@ void MainWindow::displayresult()
     instrument.getE(E);
     if (E.size()!=0)
     {
-        E.erase(E.begin(),E.begin()+2);
+        E.erase(E.begin(),E.begin()+3);
         double Em=0,max=0,Emax=0,Emin=energy,var=0,integral=0;
         int Nbin;
-        for (int i=0;i<(int)E.size();i++)
-        {
-            Em+=E[i];
-            if (Emax<E[i])
-            {
-                Emax=E[i];
-            }
-            if (Emin>E[i])
-            {
-                Emin=E[i];
-            }
-        }
         Em/=((int)E.size());
         for (int i=0;i<(int)E.size();i++)
         {
@@ -92,7 +80,7 @@ void MainWindow::displayresult()
         }
         var/=(int)E.size();
         var=std::sqrt(var);
-        Nbin=(int)std::ceil((Emax-Emin)/binWidth);
+        Nbin=(int)std::ceil((6*var)/binWidth);
         QVector<double> Data(Nbin);
         computeHist(Data, E, Nbin, binWidth, Em);
         for (int i=0;i<Data.size();i++)
@@ -126,8 +114,8 @@ void MainWindow::displayresult()
         for (int i=0;i<Nbin;i++)
         {
             ticks[i]=i;
-            labels[i]=QString::number(Emin+i*binWidth);
-            integral+=std::exp(-pow(Emin+i*binWidth-Em,2)/(2*pow(var,2)));
+            labels[i]=QString::number(Em-3*var+i*binWidth);
+            integral+=std::exp(-pow(Em-3*var+i*binWidth-Em,2)/(2*pow(var,2)));
         }
 
         QVector<double> abs_gaussian(10*Nbin);
@@ -135,7 +123,7 @@ void MainWindow::displayresult()
         for (int i=0;i<(int)gaussian.size();i++)
         {
             abs_gaussian[i]=i/10.0;
-            gaussian[i]=(int)E.size()/integral*std::exp(-pow(Emin+i*binWidth/10-Em,2)/(2*pow(var,2)));
+            gaussian[i]=(int)E.size()/integral*std::exp(-pow(Em-3*var+i*binWidth/10-Em,2)/(2*pow(var,2)));
         }
 
         QCPGraph *fit = customPlot->addGraph();

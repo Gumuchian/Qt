@@ -28,7 +28,7 @@ using namespace boost::numeric;
 typedef complex<double> Complex;
 typedef valarray<Complex> CArray;
 
-xifu::xifu():energy_gain(4)
+xifu::xifu():energy_gain(6)
 {
     pulse = new double[Npul];
     puls_inter = new double[Npat];
@@ -53,7 +53,7 @@ void xifu::simulate()
     {
         E.erase(E.begin(),E.end());
     }
-    double sum,Em=0,var=0,P=0,maxi=0,a=0,energy_mode,puls,error=0;
+    double sum,Em=0,var=0,maxi=0,a=0,energy_mode,puls,error=0;
     ublas::matrix<double> X(Nfit,order_fit+1),Z(order_fit+1,order_fit+1);
     for (i=0;i<Nfit;i++)
     {
@@ -78,22 +78,19 @@ void xifu::simulate()
     if (mode==1)
     {
         file1.open("Pattern.txt",ios::out);
-        file2.open("Facteur.txt",ios::out);
         energy_mode=1000;
     }
     else
     {
         file1.open("Pattern.txt",ios::in);
-        file2.open("Facteur.txt",ios::in);
         energy_mode=energy;
-        file2 >> P;
     }
 
     if (mode==3)
     {
         sum=0;
         int l=0;
-        ublas::matrix<double> UA(7,4),M(4,4);
+        ublas::matrix<double> UA(7,6),M(6,6);
         ublas::vector<double> energies(7);
         for (int i=0;i<Npat;i++)
         {
@@ -101,6 +98,8 @@ void xifu::simulate()
         }
         for (int i=0;i<7;i++)
         {
+            progress=(int)(100*(double)i/7);
+            emit getProgress(progress);
             energy=200+i*1000;
             energies(i)=energy;
             ip=0;
@@ -131,7 +130,7 @@ void xifu::simulate()
                 {
                     maxi=ch0.getmod();
                 }
-                if (k>=Npat*decimation+2*decimation)
+                if (k>Npat*decimation)
                 {
                     a=Butter.compute(maxi-ch0.getmod());
                     if (Butter.getaccess())
@@ -153,9 +152,9 @@ void xifu::simulate()
                 ip++;
                 ip=ip%(Npat*decimation);
             }
-            for (int n=0;n<4;n++)
+            for (int n=0;n<6;n++)
             {
-                UA(i,n)=pow(sum/1000,3-n);
+                UA(i,n)=pow(sum/10000,5-n);
             }
         }
         InvertMatrix(ublas::matrix<double> (ublas::prod(ublas::trans(UA),UA)),M);
@@ -263,7 +262,12 @@ void xifu::simulate()
                         {
                             InvertMatrix(ublas::matrix<double> (ublas::prod(ublas::trans(X),X)),Z);
                             poly_max=ublas::prod(ublas::prod(Z,ublas::trans(X)),Y);
-                            E.push_back(1000.0*(poly_max(2)-pow(poly_max(1),2)/(2*poly_max(0)))/P);
+                            double ua=poly_max(2)-pow(poly_max(1),2)/(2*poly_max(0)),en=0;
+                            for(int u=0;u<6;u++)
+                            {
+                                en+=energy_gain(u)*pow(ua/10000,5-u);
+                            }
+                            E.push_back(en);
                         }
                         l++;
                         l=l%Npat;
@@ -321,9 +325,7 @@ void xifu::simulate()
             for (i=0;i<Npat;i++)
             {
                 file1 << real(div_fft[i]) << "\n";
-                P+=puls_inter[i]*real(div_fft[i]);
             }
-            file2 << P;
         }
         else
         {
@@ -337,7 +339,7 @@ void xifu::simulate()
             {
                 var+=pow(abs(E[i]-Em),2);
             }
-            var=energy/Em*2.35*sqrt(var/(E.size()-3));
+            var=2.35*sqrt(var/(E.size()-3));
             results=QString::fromStdString("Input energy: "+to_string(energy)+" eV\n"
                +"Number of estimations: "+to_string(E.size()-3)+"\n"
                +"pattern @ "+to_string(1000)+" eV"+"\n"
