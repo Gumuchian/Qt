@@ -71,8 +71,12 @@ void MainWindow::displayresult()
     if (E.size()!=0)
     {
         E.erase(E.begin(),E.begin()+3);
-        double Em=0,max=0,Emax=0,Emin=energy,var=0,integral=0;
+        double Em=0,max=0,var=0,integral=0;
         int Nbin;
+        for (int i=0;i<(int)E.size();i++)
+        {
+            Em+=E[i];
+        }
         Em/=((int)E.size());
         for (int i=0;i<(int)E.size();i++)
         {
@@ -80,6 +84,7 @@ void MainWindow::displayresult()
         }
         var/=(int)E.size();
         var=std::sqrt(var);
+
         Nbin=(int)std::ceil((6*var)/binWidth);
         QVector<double> Data(Nbin);
         computeHist(Data, E, Nbin, binWidth, Em);
@@ -90,7 +95,6 @@ void MainWindow::displayresult()
                 max=Data[i];
             }
         }
-
 
         QCustomPlot  *customPlot = new QCustomPlot;
         customPlot->setMinimumSize(750,900);

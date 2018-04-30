@@ -80,7 +80,7 @@ double Channel::computeBBFB()
     {
         feedback[0]+=ch[i].getfeedback();
     }
-    feedback[0]=pow(2,2)*round(feedback[0]/pow(2,2))*G_filter*PE_DAC/pow(2,DAC_bit);
+    feedback[0]*=G_filter*PE_DAC/pow(2,DAC_bit);
     adc=G_filter*(G_LNA*G_SQUID*(input+SQUID_noise(gen)-0.1*(feedback[delay]+dac_f_noise(gen)))+lna_noise(gen))+adc_noise(gen);
 
     for (i=0;i<Npix;i++)
