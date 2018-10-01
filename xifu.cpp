@@ -47,13 +47,13 @@ void xifu::simulate()
     Butterworth Butter;
     Pulse_generator pulse_generator;
     progress=0; 
-    int i,k,ip=0,l=0,n_alea=0,m;
+    int i,k,l=0,n_alea=0,m;
     vector<double> module(Npat,0);
     if (E.size()!=0)
     {
         E.erase(E.begin(),E.end());
     }
-    double sum,Em=0,var=0,maxi=0,a=0,energy_mode,puls,error=0;
+    double sum,Em=0,var=0,maxi=0,a=0,energy_mode,error=0;
     ublas::matrix<double> X(Nfit,order_fit+1),Z(order_fit+1,order_fit+1);
     for (i=0;i<Nfit;i++)
     {
@@ -83,6 +83,10 @@ void xifu::simulate()
     else
     {
         file1.open("Pattern.txt",ios::in);
+        for (i=0;i<Npat;i++)
+        {
+            file1 >> pattern[i];
+        }
         energy_mode=energy;
     }
 
@@ -102,28 +106,11 @@ void xifu::simulate()
             emit getProgress(progress);
             energy=200+i*1000;
             energies(i)=energy;
-            ip=0;
-            for (int j=0;j<3000000;j++)
-            {
-                if (j==1000000)
-                {
-                    pulse_generator.setPopt(energy);
-                }
-                puls=pulse_generator.compute();
-                if (j>=1000000 && j<1000000+Npul)
-                {
-                    pulse[ip]=puls;
-                    ip++;
-                }
-            }
-            ip=0;
+
             for (int k=0;k<3*Npat*decimation;k++)
             {
                 ch0.sumPolar();
-                if (ip<Npul)
-                {
-                    ch0.setI(pulse[ip]);
-                }
+                ch0.setI(pulse_generator.compute());
                 ch0.computeLC_TES();
                 ch0.computeBBFB();
                 if (k==Npat*decimation)
@@ -139,6 +126,7 @@ void xifu::simulate()
                         module.erase(module.begin());
                         if (l==0)
                         {
+                            pulse_generator.setPopt(energy);
                             sum=0;
                             for (m=0;m<Npat;m++)
                             {
@@ -149,8 +137,6 @@ void xifu::simulate()
                         l=l%Npat;
                     }
                 }
-                ip++;
-                ip=ip%(Npat*decimation);
             }
             for (int n=0;n<6;n++)
             {
@@ -162,29 +148,6 @@ void xifu::simulate()
     }
     else
     {
-        for (i=0;i<3000000;i++)
-        {
-            if (i==1000000)
-            {
-                pulse_generator.setPopt(energy_mode);
-            }
-            puls=pulse_generator.compute();
-            if (i>=1000000 && i<1000000+Npul)
-            {
-            pulse[ip]=puls;
-            ip++;
-            }
-        }
-        ip=0;
-
-        if (mode==2)
-        {
-           for (i=0;i<Npat;i++)
-           {
-               file1 >> pattern[i];
-           }
-        }
-
         for (long i=0;i<N;i++)
         {
             if (saveItes)
@@ -215,16 +178,13 @@ void xifu::simulate()
             ch0.sumPolar();
             if (mode==2)
             {
-                if (ip>=n_alea+decimation && ip<Npul+n_alea+decimation)
-                {
-                    ch0.setI(pulse[ip-n_alea-decimation]);
-                }
+                ch0.setI(pulse_generator.compute());
             }
             else
             {
-                if (i<N/2 && ip<Npul)
+                if (i<N/2)
                 {
-                    ch0.setI(pulse[ip]);
+                    ch0.setI(pulse_generator.compute());
                 }
             }
 
@@ -250,6 +210,7 @@ void xifu::simulate()
                             if (l==0)
                             {
                                 n_alea=rand()%decimation-decimation/2;
+                                pulse_generator.setPopt(energy_mode);
                             }
                             sum=0;
                             for (k=0;k<Npat;k++)
@@ -285,6 +246,7 @@ void xifu::simulate()
                         module.erase(module.begin());
                         if (l==0)
                         {
+                            pulse_generator.setPopt(energy_mode);
                             for (k=0;k<Npat;k++)
                             {
                                 c[k]=module[k];
@@ -310,8 +272,6 @@ void xifu::simulate()
                     }
                 }
             }
-            ip++;
-            ip=ip%(Npat*decimation);
         }
 
         if (mode==1)

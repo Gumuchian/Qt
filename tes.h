@@ -19,8 +19,6 @@ class TES
         double I;
         double biasm[3];
         double bias[3];
-        double bbfi[2];
-        double bbfo[2];
         std::mt19937 gen;
 };
 

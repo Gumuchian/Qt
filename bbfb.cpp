@@ -31,6 +31,5 @@ double BBFB::getfeedback()
 
 double BBFB::module()
 {
-    //return trunc(sqrt(pow(I,2)+pow(Q,2)));
     return (sqrt(pow(I,2)+pow(Q,2)));
 }

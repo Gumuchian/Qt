@@ -19,7 +19,7 @@ Pixel::Pixel(double frequency, double real_frequency, int phase):frequency(frequ
 {
     comptR_I=phase%(Npt*interpolation);
     comptR_Q=(comptR_I+(Npt*interpolation)/4)%(Npt*interpolation);
-    comptD_I=((Npt*interpolation-((int)(Npt*interpolation*delay*real_frequency/fs))%(Npt*interpolation))+phase)%(Npt*interpolation);
+    comptD_I=(comptR_I+(((int)(Npt*interpolation*delay*real_frequency/fs))%(Npt*interpolation)))%(Npt*interpolation);
     comptD_Q=(comptD_I+(Npt*interpolation)/4)%(Npt*interpolation);
     step=(int)round((Npt*interpolation)*(real_frequency/fs));
     feedback=0;
