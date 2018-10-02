@@ -40,6 +40,7 @@ public:
     void ifft(CArray& x);
     template<class T> bool InvertMatrix(const ublas::matrix<T>& input, ublas::matrix<T>& inverse);
     QString getResults();
+    void sweepLC(Channel &ch, CArray &TF);
     void setMode(int mod);
     void getE(vector<double> &En);
     void getSpectrum(QVector<double> &Spect);

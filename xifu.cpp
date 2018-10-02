@@ -48,13 +48,21 @@ void xifu::simulate()
     Pulse_generator pulse_generator;
     progress=0; 
     int i,k,l=0,n_alea=0,m;
+    double sum,Em=0,var=0,maxi=0,a=0,energy_mode,error=0;
     vector<double> module(Npat,0);
+    ublas::vector<double> Y(Nfit),poly_max(order_fit+1);
+    ublas::matrix<double> X(Nfit,order_fit+1),Z(order_fit+1,order_fit+1);
+    CArray sig_fft (Npat), sig_ph (Npat), noise_fft (Npat), div_fft (Npat), transfer_function((int)pow(2,20));
+    Complex *c = new Complex[Npat];
+    const Complex const_i(0,1);
+    fstream file1,file2,file3;
+    file3.open("test.txt",ios::out);
+
     if (E.size()!=0)
     {
         E.erase(E.begin(),E.end());
     }
-    double sum,Em=0,var=0,maxi=0,a=0,energy_mode,error=0;
-    ublas::matrix<double> X(Nfit,order_fit+1),Z(order_fit+1,order_fit+1);
+
     for (i=0;i<Nfit;i++)
     {
         for (int j=0;j<order_fit+1;j++)
@@ -62,18 +70,12 @@ void xifu::simulate()
             X(i,j)=pow(i-Nfit/2,order_fit-j);
         }
     }
-    ublas::vector<double> Y(Nfit),poly_max(order_fit+1);
-    fstream file1,file2,file3;
-    file3.open("test.txt",ios::out);
-    CArray sig_fft (Npat),sig_ph (Npat),noise_fft (Npat);
+
     for (i=0;i<Npat;i++)
     {
         noise_fft[i]=0;
         sig_fft[i]=0;
     }
-    CArray div_fft (Npat);
-    Complex *c = new Complex[Npat];
-    const Complex const_i(0,1);
 
     if (mode==1)
     {
@@ -90,6 +92,8 @@ void xifu::simulate()
         energy_mode=energy;
     }
 
+    sweepLC(ch0,transfer_function);
+
     if (mode==3)
     {
         sum=0;
@@ -100,6 +104,7 @@ void xifu::simulate()
         {
             file1 >> pattern[i];
         }
+
         for (int i=0;i<7;i++)
         {
             progress=(int)(100*(double)i/7);
@@ -314,6 +319,20 @@ void xifu::simulate()
     progress=100;
     emit getProgress(progress);
     emit simulation_ended();
+}
+
+void xifu::sweepLC(Channel &ch, CArray &TF)
+{
+    double sig=1;
+    for (int i=0;i<(int)pow(2,20);i++)
+    {
+        ch.setPolar(sig);
+        ch.computeLC_TES();
+        TF[i]=ch.getinput();
+        sig=0;
+    }
+    fft(TF);
+    TF=abs(TF)/pow(2,20);
 }
 
 void xifu::fft(CArray& x)

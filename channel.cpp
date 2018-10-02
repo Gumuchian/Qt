@@ -47,11 +47,20 @@ double Channel::sumPolar()
     {
         sum+=dds.getvalue(ch[i].getcomptR_I());
     }
+    sum=sum/Npr+dac_b_noise(gen);
     for (i=0;i<Npix;i++)
     {
-        ch[i].setinputLC(sum/Npr+dac_b_noise(gen));
+        ch[i].setinputLC(sum);
     }
-    return sum/Npr+dac_b_noise(gen);
+    return sum;
+}
+
+void Channel::setPolar(double polar)
+{
+    for (int i=0;i<Npix;i++)
+    {
+        ch[i].setinputLC(polar);
+    }
 }
 
 double Channel::computeLC_TES()
