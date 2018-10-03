@@ -55,6 +55,7 @@ private:
     vector<double> E;
     ublas::vector<double> energy_gain;
     double *pulse;
+    double frequency[40];
     double *puls_inter;
     double *pattern;
     long progress;

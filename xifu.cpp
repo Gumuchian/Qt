@@ -332,7 +332,22 @@ void xifu::sweepLC(Channel &ch, CArray &TF)
         sig=0;
     }
     fft(TF);
-    TF=abs(TF)/pow(2,20);
+    int index=950000*pow(2,20)/fs;
+    double max_LC=0;
+    for (int i=0;i<Npix;i++)
+    {
+       max_LC=0;
+       for (int j=0;j<(int)(100000/fs*pow(2,20));j++)
+       {
+
+           if (max_LC < abs(TF[index+j]))
+           {
+               frequency[i]=(index+j)*fs/pow(2,20);
+               max_LC=abs(TF[index+j]);
+           }
+       }
+       index=(int)((frequency[i]+50000)*pow(2,20)/fs);
+    }
 }
 
 void xifu::fft(CArray& x)
