@@ -11,20 +11,8 @@ Channel::Channel():dds(Npt,Npr,interpolation)
 {
     int i;
     input=0;
-    std::string str;
-    char* ptr;
-    double frequency[40];
-    std::ifstream file("Frequency.txt", std::ios::out);
-    if(file)
-    {
-        for (i=0;i<40;i++)
-        {
-            getline(file,str);
-            frequency[i]=strtod(str.c_str(),&ptr);
-        }
-    }
     for (i=0;i<Npix;i++){
-        ch.push_back(Pixel(1000000.0+i*100000.0,frequency[i],(Npt*interpolation)-((int)trunc(pow(i,2)*(Npt*interpolation)/(2*Npix)))%(Npt*interpolation)));
+        ch.push_back(Pixel(1000000.0+i*100000.0,(Npt*interpolation)-((int)trunc(pow(i,2)*(Npt*interpolation)/(2*Npix)))%(Npt*interpolation)));
     }
     feedback = new double[delay+1];
     for (i=0;i<delay+1;i++)
@@ -36,6 +24,14 @@ Channel::Channel():dds(Npt,Npr,interpolation)
 Channel::~Channel()
 {
 
+}
+
+void Channel::setFrequencies(double freq[])
+{
+    for (int i=0;i<Npix;i++)
+    {
+        ch[i].setFrequency(freq[i]);
+    }
 }
 
 double Channel::sumPolar()
@@ -126,4 +122,12 @@ double Channel::computeBBFB()
  void Channel::setI(double p)
  {
      ch[0].setI(p);
+ }
+
+ void Channel::setMax(double maxLC)
+ {
+     for (int i=0;i<Npix;i++)
+     {
+        ch[i].setMaxLC(maxLC);
+     }
  }

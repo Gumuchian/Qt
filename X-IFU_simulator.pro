@@ -38,7 +38,8 @@ SOURCES += main.cpp\
     config.cpp \
     global.cpp \
     importation.cpp \
-    qcustomplot.cpp
+    qcustomplot.cpp \
+    truncation.cpp
 
 HEADERS  += mainwindow.h \
     channel.h \
@@ -56,13 +57,15 @@ HEADERS  += mainwindow.h \
     xifu.h \
     config.h \
     importation.h \
-    qcustomplot.h
+    qcustomplot.h \
+    truncation.h
 
 INCLUDEPATH += C:\Users\Paul\Downloads\Boost\boost_1_66_0
 #INCLUDEPATH += /usr/local/Cellar/boost/1.66.0/include
 
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    truncation.ui
 
 RESOURCES += \
     ressources.qrc

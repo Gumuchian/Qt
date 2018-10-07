@@ -52,7 +52,7 @@ void xifu::simulate()
     vector<double> module(Npat,0);
     ublas::vector<double> Y(Nfit),poly_max(order_fit+1);
     ublas::matrix<double> X(Nfit,order_fit+1),Z(order_fit+1,order_fit+1);
-    CArray sig_fft (Npat), sig_ph (Npat), noise_fft (Npat), div_fft (Npat), transfer_function((int)pow(2,20));
+    CArray sig_fft (Npat), sig_ph (Npat), noise_fft (Npat), div_fft (Npat);
     Complex *c = new Complex[Npat];
     const Complex const_i(0,1);
     fstream file1,file2,file3;
@@ -92,7 +92,7 @@ void xifu::simulate()
         energy_mode=energy;
     }
 
-    sweepLC(ch0,transfer_function);
+    sweepLC(ch0);
 
     if (mode==3)
     {
@@ -321,9 +321,10 @@ void xifu::simulate()
     emit simulation_ended();
 }
 
-void xifu::sweepLC(Channel &ch, CArray &TF)
+void xifu::sweepLC(Channel &ch)
 {
     double sig=1;
+    CArray TF((int)pow(2,20));
     for (int i=0;i<(int)pow(2,20);i++)
     {
         ch.setPolar(sig);
@@ -348,6 +349,23 @@ void xifu::sweepLC(Channel &ch, CArray &TF)
        }
        index=(int)((frequency[i]+50000)*pow(2,20)/fs);
     }
+    max_LC=0;
+    for (int i=0;i<(int)pow(2,20);i++)
+    {
+        sig=cos(2*PI*frequency[0]/fs*i);
+        ch.setPolar(sig);
+        ch.computeLC_TES();
+        TF[i]=ch.getinput();
+    }
+    for (int i=0;i<(int)pow(2,19);i++)
+    {
+        if (max_LC < abs(TF[pow(2,19)+i]))
+        {
+            max_LC=abs(TF[pow(2,19)+i]);
+        }
+    }
+    ch.setFrequencies(frequency);
+    ch.setMax(max_LC);
 }
 
 void xifu::fft(CArray& x)

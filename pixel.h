@@ -8,7 +8,7 @@ class Pixel
     public:
         Pixel();
         virtual ~Pixel();
-        Pixel(double frequency, double real_frequency, int phase);
+        Pixel(double frequency, int phase);
         double getfeedback();
         double getmodule();
         void setinputLC(double input);
@@ -21,11 +21,14 @@ class Pixel
         double getbiasm();
         double getI();
         void setI(double p);
+        void setFrequency(double freq);
+        void setMaxLC(double maxLC);
 
     protected:
 
     private:
         double frequency;
+        double max_LC;
         double real_frequency;
         int phase;
         BBFB bbfb;

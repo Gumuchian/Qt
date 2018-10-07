@@ -7,7 +7,7 @@ class TES
     public:
         TES();
         virtual ~TES();
-        double computeLCTES(double freq);
+        double computeLCTES(double freq, double max_LC);
         void setbias(double biass);
         double getI();
         double getbiasm();

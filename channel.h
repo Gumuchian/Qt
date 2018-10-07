@@ -18,6 +18,8 @@ class Channel
         double getfck();
         double getmod();
         void setI(double p);
+        void setFrequencies(double freq[]);
+        void setMax(double maxLC);
     protected:
     private:
         std::vector<Pixel> ch;

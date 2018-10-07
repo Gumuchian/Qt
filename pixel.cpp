@@ -15,14 +15,23 @@ Pixel::~Pixel()
 
 }
 
-Pixel::Pixel(double frequency, double real_frequency, int phase):frequency(frequency)
+Pixel::Pixel(double frequency, int phase):frequency(frequency)
 {
     comptR_I=phase%(Npt*interpolation);
     comptR_Q=(comptR_I+(Npt*interpolation)/4)%(Npt*interpolation);
-    comptD_I=(comptR_I+(((int)(Npt*interpolation*delay*real_frequency/fs))%(Npt*interpolation)))%(Npt*interpolation);
-    comptD_Q=(comptD_I+(Npt*interpolation)/4)%(Npt*interpolation);
-    step=(int)round((Npt*interpolation)*(real_frequency/fs));
     feedback=0;
+}
+
+void Pixel::setFrequency(double freq)
+{
+    comptD_I=(comptR_I+(((int)(Npt*interpolation*delay*freq/fs))%(Npt*interpolation)))%(Npt*interpolation);
+    comptD_Q=(comptD_I+(Npt*interpolation)/4)%(Npt*interpolation);
+    step=(int)round((Npt*interpolation)*(freq/fs));
+}
+
+void Pixel::setMaxLC(double maxLC)
+{
+     maxLC=maxLC;
 }
 
 double Pixel::getfeedback()
@@ -37,7 +46,7 @@ double Pixel::getmodule()
 
 void Pixel::computeLC()
 {
-    I=tes.computeLCTES(frequency);
+    I=tes.computeLCTES(frequency,max_LC);
 }
 
 double Pixel::getI()

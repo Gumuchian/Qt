@@ -16,7 +16,7 @@ TES::~TES()
 
 }
 
-double TES::computeLCTES(double freq)
+double TES::computeLCTES(double freq, double max_LC)
 {
     double Ccar=(1/(4*pow(PI,2)*Lcrit*pow(TR,2)*pow(freq,2))),
     Ccp=Ccar/100.0,
@@ -26,7 +26,7 @@ double TES::computeLCTES(double freq)
     biasm[2]=(-(2-8*C*pow(fs,2))*biasm[1]-(1-2*fs*B+4*pow(fs,2)*C)*biasm[0]+2*fs*A*(bias[2]-bias[0]))/(2*fs*B+1+4*C*pow(fs,2));
     biasm[0]=biasm[1];biasm[1]=biasm[2];
     bias[0]=bias[1];bias[1]=bias[2];
-    return biasm[2]/0.594528739972466*I*sqrt(2)/TR;
+    return biasm[2]/max_LC*I*sqrt(2)/TR;
 }
 
 void TES::setbias(double biass)

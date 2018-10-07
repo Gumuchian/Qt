@@ -11,6 +11,7 @@
 #include <QPushButton>
 #include <QCheckBox>
 
+
 class config: public QWidget
 {
     Q_OBJECT
@@ -21,6 +22,7 @@ public slots:
     void setVal();
     void load();
     void saved();
+    void openTruncation();
 private:
     QDoubleSpinBox *sampling_frequency;
     QSpinBox *Npoint;
@@ -76,6 +78,8 @@ private:
     QPushButton *Load;
     QPushButton *Annuler;
     QPushButton *Save;
+    QPushButton *Trunc;
+
 };
 
 #endif // CONFIG_H

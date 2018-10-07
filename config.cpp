@@ -19,6 +19,7 @@
 #include <QFileDialog>
 #include <QRadioButton>
 #include <importation.h>
+#include "truncation.h"
 
 using namespace std;
 
@@ -286,14 +287,18 @@ config::config()
     delay_step = new QSpinBox;
     delay_step->setValue(delay);
 
+    Trunc = new QPushButton("Truncations",this);
+    connect(Trunc,SIGNAL(clicked()), this, SLOT(openTruncation()));
+
     QVBoxLayout *bbfbLayout = new QVBoxLayout;
     bbfbLayout->addWidget(GainLabel);
     bbfbLayout->addWidget(gain_bbfb);
     bbfbLayout->addWidget(BandLabel);
     bbfbLayout->addWidget(delayLabel);
     bbfbLayout->addWidget(delay_step);
+    bbfbLayout->addWidget(Trunc);
     BBFB_parameter->setLayout(bbfbLayout);
-    BBFB_parameter->setFixedHeight(150);
+    BBFB_parameter->setFixedHeight(200);
 
 
     QGroupBox *DAC_parameter = new QGroupBox(tr(""));
@@ -457,6 +462,12 @@ config::config()
 config::~config()
 {
 
+}
+
+void config::openTruncation()
+{
+    Truncation *truncation = new Truncation(this);
+    truncation->show();
 }
 
 void config::saved()
