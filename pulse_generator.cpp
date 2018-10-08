@@ -54,7 +54,7 @@ double Pulse_generator::compute()
 
 void Pulse_generator::setPopt(double Po)
 {
-    Popt=(Po+59.29)/(2.83694382*pow(10,11));
+    Popt=Po*1.6*pow(10,-19)*fs;
 }
 
 Pulse_generator::~Pulse_generator()

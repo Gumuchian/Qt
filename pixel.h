@@ -28,7 +28,6 @@ class Pixel
 
     private:
         double frequency;
-        double max_LC;
         double real_frequency;
         int phase;
         BBFB bbfb;

@@ -365,6 +365,7 @@ void xifu::sweepLC(Channel &ch)
         }
     }
     ch.setFrequencies(frequency);
+    max_LC/=I0*sqrt(2)/TR;
     ch.setMax(max_LC);
 }
 

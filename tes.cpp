@@ -9,6 +9,7 @@ TES::TES():gen((std::random_device())())
     I=I0;
     biasm[0]=0;biasm[1]=0;biasm[2]=0;
     bias[0]=0;bias[1]=0;bias[2]=0;
+    max_LC=1;
 }
 
 TES::~TES()
@@ -16,7 +17,7 @@ TES::~TES()
 
 }
 
-double TES::computeLCTES(double freq, double max_LC)
+double TES::computeLCTES(double freq)
 {
     double Ccar=(1/(4*pow(PI,2)*Lcrit*pow(TR,2)*pow(freq,2))),
     Ccp=Ccar/100.0,
@@ -47,4 +48,9 @@ double TES::getbiasm()
 void TES::setI(double p)
 {
     I=p;
+}
+
+void TES::setMax(double max)
+{
+    max_LC=max;
 }

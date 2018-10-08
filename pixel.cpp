@@ -31,7 +31,7 @@ void Pixel::setFrequency(double freq)
 
 void Pixel::setMaxLC(double maxLC)
 {
-     maxLC=maxLC;
+     tes.setMax(maxLC);
 }
 
 double Pixel::getfeedback()
@@ -46,7 +46,7 @@ double Pixel::getmodule()
 
 void Pixel::computeLC()
 {
-    I=tes.computeLCTES(frequency,max_LC);
+    I=tes.computeLCTES(frequency);
 }
 
 double Pixel::getI()
