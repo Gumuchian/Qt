@@ -39,7 +39,10 @@ SOURCES += main.cpp\
     global.cpp \
     importation.cpp \
     qcustomplot.cpp \
-    truncation.cpp
+    truncation.cpp \
+    dac.cpp \
+    squid.cpp \
+    adc.cpp
 
 HEADERS  += mainwindow.h \
     channel.h \
@@ -58,7 +61,10 @@ HEADERS  += mainwindow.h \
     config.h \
     importation.h \
     qcustomplot.h \
-    truncation.h
+    truncation.h \
+    dac.h \
+    squid.h \
+    adc.h
 
 INCLUDEPATH += C:\Users\Paul\Downloads\Boost\boost_1_66_0
 #INCLUDEPATH += /usr/local/Cellar/boost/1.66.0/include
