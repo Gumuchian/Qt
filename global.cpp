@@ -45,3 +45,6 @@ bool saveItes;
 bool saveError;
 bool saveFeedback;
 bool saveIQ;
+int ND;
+int NI;
+int NR;

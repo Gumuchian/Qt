@@ -55,7 +55,7 @@ config::config()
     QLabel *energyLabel = new QLabel(tr("Energy of the pulse:"));
     pulse_energy = new QDoubleSpinBox;
     pulse_energy->setSuffix(" eV");
-    pulse_energy->setRange(200,12000);
+    pulse_energy->setRange(0,12000);
     pulse_energy->setValue(energy);
 
     QLabel *binLabel = new QLabel(tr("Bin width:"));

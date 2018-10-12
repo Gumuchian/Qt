@@ -1,5 +1,6 @@
 #include "dac.h"
 #include <random>
+#include "global.h"
 
 DAC::DAC()
 {

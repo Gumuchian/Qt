@@ -351,4 +351,7 @@ void Importation::setInitial()
     Lcrit=121*pow(10,-9);
     binWidth=0.7;
     ntherm=3;
+    ND=20;
+    NI=20;
+    NR=10;
 }

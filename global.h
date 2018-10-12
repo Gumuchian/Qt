@@ -43,7 +43,9 @@ const int order=2; // CIC/Butterworth order, if Butterworth order must be equal 
 // BBFB
 extern double G; // Integrator gain
 extern int delay; // loop delay (simulation step)
-
+extern int ND;
+extern int NI;
+extern int NR;
 
 
 // DAC

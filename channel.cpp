@@ -75,7 +75,7 @@ double Channel::computeLC_TES()
 double Channel::computeBBFB()
 {
     int i;
-    double adc,output_DAC,output_LNA,output_ADC;
+    double output_DAC,output_LNA,output_ADC;
     std::normal_distribution<double> lna_noise(0.0,LNA_dsl*sqrt(B_LNA));
     feedback[0]=0;
     for (i=0;i<Npix;i++)
@@ -83,7 +83,7 @@ double Channel::computeBBFB()
         feedback[0]+=ch[i].getfeedback();
     }
     output_DAC=dac.computeDAC(feedback[delay]);
-    output_LNA=G_LNA*squid.computeSQUID(input,output_DAC,0)+lna_noise(gen);
+    output_LNA=G_LNA*squid.computeSQUID(input,output_DAC,true)+lna_noise(gen);
     output_ADC=adc.computeADC(output_LNA);
 
     for (i=0;i<Npix;i++)

@@ -1,5 +1,7 @@
 #include "squid.h"
 #include <random>
+#include "global.h"
+
 
 SQUID::SQUID()
 {
@@ -13,7 +15,7 @@ double SQUID::computeSQUID(double bias, double feedback, bool mode)
     std::normal_distribution<double> SQUID_noise(0.0,SQUID_dsl*sqrt(B_SQUID));
     if (mode)
     {
-        return Gsquid*(Mb*bias-Mf*feedback)+SQUID_noise(gen);
+        return Gsquid*(bias/Mb-feedback/Mf)+SQUID_noise(gen);
     }
     else
     {

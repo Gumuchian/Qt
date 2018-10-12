@@ -14,9 +14,11 @@ class Truncation : public QDialog
 public:
     explicit Truncation(QWidget *parent = 0);
     ~Truncation();
-
+public slots:
+    void setValue();
 private:
     Ui::Truncation *ui;
+
 };
 
 #endif // TRUNCATION_H

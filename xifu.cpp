@@ -324,8 +324,9 @@ void xifu::simulate()
 void xifu::sweepLC(Channel &ch)
 {
     double sig=1;
-    CArray TF((int)pow(2,20));
-    for (int i=0;i<(int)pow(2,20);i++)
+    int Nsweep=21;
+    CArray TF((int)pow(2,Nsweep));
+    for (int i=0;i<(int)pow(2,Nsweep);i++)
     {
         ch.setPolar(sig);
         ch.computeLC_TES();
@@ -333,35 +334,35 @@ void xifu::sweepLC(Channel &ch)
         sig=0;
     }
     fft(TF);
-    int index=950000*pow(2,20)/fs;
+    int index=950000*pow(2,Nsweep)/fs;
     double max_LC=0;
     for (int i=0;i<Npix;i++)
     {
        max_LC=0;
-       for (int j=0;j<(int)(100000/fs*pow(2,20));j++)
+       for (int j=0;j<(int)(100000/fs*pow(2,Nsweep));j++)
        {
 
            if (max_LC < abs(TF[index+j]))
            {
-               frequency[i]=(index+j)*fs/pow(2,20);
+               frequency[i]=(index+j)*fs/pow(2,Nsweep);
                max_LC=abs(TF[index+j]);
            }
        }
-       index=(int)((frequency[i]+50000)*pow(2,20)/fs);
+       index=(int)((frequency[i]+50000)*pow(2,Nsweep)/fs);
     }
     max_LC=0;
-    for (int i=0;i<(int)pow(2,20);i++)
+    for (int i=0;i<(int)pow(2,Nsweep);i++)
     {
         sig=cos(2*PI*frequency[0]/fs*i);
         ch.setPolar(sig);
         ch.computeLC_TES();
         TF[i]=ch.getinput();
     }
-    for (int i=0;i<(int)pow(2,19);i++)
+    for (int i=0;i<(int)pow(2,Nsweep-1);i++)
     {
-        if (max_LC < abs(TF[pow(2,19)+i]))
+        if (max_LC < abs(TF[pow(2,Nsweep-1)+i]))
         {
-            max_LC=abs(TF[pow(2,19)+i]);
+            max_LC=abs(TF[pow(2,Nsweep-1)+i]);
         }
     }
     ch.setFrequencies(frequency);

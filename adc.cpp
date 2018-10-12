@@ -1,5 +1,7 @@
 #include "adc.h"
 #include <random>
+#include "global.h"
+
 
 ADC::ADC()
 {
