@@ -339,7 +339,7 @@ void xifu::sweepLC(Channel &ch)
     for (int i=0;i<Npix;i++)
     {
        max_LC=0;
-       for (int j=0;j<(int)(100000/fs*pow(2,Nsweep));j++)
+       for (int j=0;j<(int)(50000/fs*pow(2,Nsweep));j++)
        {
 
            if (max_LC < abs(TF[index+j]))
@@ -348,7 +348,7 @@ void xifu::sweepLC(Channel &ch)
                max_LC=abs(TF[index+j]);
            }
        }
-       index=(int)((frequency[i]+50000)*pow(2,Nsweep)/fs);
+       index=(int)((frequency[i]+50000)*pow(2,Nsweep)/fs)+1000;
     }
     max_LC=0;
     for (int i=0;i<(int)pow(2,Nsweep);i++)
