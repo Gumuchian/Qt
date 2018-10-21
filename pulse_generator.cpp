@@ -5,22 +5,27 @@
 
 typedef double (*ptrm) (double,double,double,double);
 
-Pulse_generator::Pulse_generator()
+Pulse_generator::Pulse_generator():
 {
-    Ites=I0;
-    Ttes=T0;
-    Rtes=R0;
+
+}
+
+Pulse_generator::Pulse_generator(double G_b, double n_therm, double T_bath, double C_therm, double R_l, double L_crit, double f_s, double R_0, double T_0, double I_0):G_b(G_b), n_therm(n_therm), T_bath(T_bath), C_therm(C_therm), R_l(R_l), L_crit(L_crit), f_s(f_s), R_0(R_0), T_0(T_0), I_0(I_0)
+{
+    Ites=I_0;
+    Ttes=T_0;
+    Rtes=R_0;
     Popt=0;
 }
 
 double Pulse_generator::dT(double T, double Pj, double Po, double noise)
 {
-    return (Po+Pj-Gb/(3*pow(T,2))*(pow(T,ntherm)-pow(Tbath,ntherm))+noise)/Ctherm;
+    return (Po+Pj-G_b/(3*pow(T,2))*(pow(T,n_therm)-pow(T_bath,n_therm))+noise)/C_therm;
 }
 
 double Pulse_generator::dI(double I, double V, double R, double noise)
 {
-    return (V-I*Rl-I*R+noise)/(2*Lcrit);
+    return (V-I*R_l-I*R+noise)/(2*L_crit);
 }
 
 double Pulse_generator::RK4(ptrm f, double dt, double y0, double y1, double y2, double y3)
@@ -36,25 +41,25 @@ double Pulse_generator::RK4(ptrm f, double dt, double y0, double y1, double y2, 
 double Pulse_generator::compute()
 {
     std::mt19937 gen;
-    double gamma=0.5*(pow(Tbath/Ttes,ntherm+1)+1);
+    double gamma=0.5*(pow(T_bath/Ttes,n_therm+1)+1);
     double kb=1.38*pow(10,-23);
     double M=0;
-    std::normal_distribution<double> Vn_TES(0,sqrt(4*kb*Ttes*Rtes*(1+2*beta)*(1+pow(M,2))*fs)),
-                                     Vn_load(0,sqrt(4*kb*Ttes*Rl*fs)),
-                                     Pn_bath(0,sqrt(4*kb*pow(Ttes,2)*Gb*gamma*fs));
+    std::normal_distribution<double> Vn_TES(0,sqrt(4*kb*Ttes*Rtes*(1+2*beta)*(1+pow(M,2))*f_s)),
+                                     Vn_load(0,sqrt(4*kb*Ttes*R_l*fs)),
+                                     Pn_bath(0,sqrt(4*kb*pow(Ttes,2)*G_b*gamma*f_s));
     ptrm ptrdT,ptrdI;
     ptrdT=&Pulse_generator::dT;
     ptrdI=&Pulse_generator::dI;
-    Ites=RK4(ptrdI,1.0/fs,Ites,R0*I0,Rtes,Vn_load(gen)+Vn_TES(gen));
-    Ttes=RK4(ptrdT,1.0/fs,Ttes,pow(R0*I0,2)/Rtes,Popt,Ites*Vn_TES(gen)+Pn_bath(gen));
-    Rtes=R0+alpha*R0/T0*(Ttes-T0)+beta*R0/I0*(Ites-I0);
+    Ites=RK4(ptrdI,1.0/f_s,Ites,R_0*I_0,Rtes,Vn_load(gen)+Vn_TES(gen));
+    Ttes=RK4(ptrdT,1.0/f_s,Ttes,pow(R_0*I_0,2)/Rtes,Popt,Ites*Vn_TES(gen)+Pn_bath(gen));
+    Rtes=R_0+alpha*R_0/T_0*(Ttes-T_0)+beta*R_0/I_0*(Ites-I_0);
     Popt=0;
     return Ites;
 }
 
 void Pulse_generator::setPopt(double Po)
 {
-    Popt=Po*1.6*pow(10,-19)*fs;
+    Popt=Po*1.6*pow(10,-19)*f_s;
 }
 
 Pulse_generator::~Pulse_generator()

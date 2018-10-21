@@ -7,6 +7,11 @@ DDS::DDS()
 
 }
 
+DDS::DDS(int taille, int precision, int interp)
+{
+
+}
+
 DDS::~DDS()
 {
 
