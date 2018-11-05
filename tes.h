@@ -5,10 +5,10 @@
 class TES
 {
     public:
-        TES();
+        TES(double L_crit, double TTR, double f_s, double frequency);
         virtual ~TES();
-        double computeLCTES(double freq);
-        void setbias(double biass);
+        double computeLCTES();
+        void setBias(double sig);
         double getI();
         double getbiasm();
         void setI(double p);
@@ -16,12 +16,20 @@ class TES
     protected:
 
     private:
-
+        double frequency;
+        double Ccar;
+        double Ccp;
+        double coeff_1;
+        double coeff_2;
+        double coeff_3;
         double I;
         double biasm[3];
         double bias[3];
         std::mt19937 gen;
         double max_LC;
+        double L_crit;
+        double TTR;
+        double f_s;
 };
 
 #endif // TES_H

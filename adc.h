@@ -1,6 +1,6 @@
 #ifndef ADC_H
 #define ADC_H
-
+#include <random>
 
 class ADC
 {
@@ -13,6 +13,8 @@ private:
     double b_adc;
     double fs_adc;
     int adc_bit;
+    std::normal_distribution<double> adc_noise;
+    std::mt19937 gen;
 };
 
 #endif // ADC_H

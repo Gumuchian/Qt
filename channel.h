@@ -11,25 +11,22 @@
 class Channel
 {
     public:
-        Channel();
+        Channel(double f_s, int N_pt, int N_pr, int interpol, int N_pix, int Delay, int nd, int ni, int nr);
         virtual ~Channel();
-        double sumPolar();
-        void setPolar(double polar);
-        double computeLC_TES();
-        double computeBBFB();
-        double getinput();
+        double sumBias();
+        void computeAllBBFB(double input);
         double getfck();
         double getmod();
-        void setI(double p);
         void setFrequencies(double freq[]);
-        void setMax(double maxLC);
     protected:
     private:
         std::vector<Pixel> ch;
+        int N_pt;
+        int N_pr;
+        int interpol;
+        int N_pix;
+        int Delay;
         DDS dds;
-        DAC dac;
-        ADC adc;
-        SQUID squid;
         double input;
         double *feedback;
         std::mt19937 gen;

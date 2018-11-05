@@ -42,7 +42,13 @@ SOURCES += main.cpp\
     truncation.cpp \
     dac.cpp \
     squid.cpp \
-    adc.cpp
+    adc.cpp \
+    event_processor.cpp \
+    fpa.cpp \
+    instrument.cpp \
+    dre.cpp \
+    lna.cpp \
+    simulation.cpp
 
 HEADERS  += mainwindow.h \
     channel.h \
@@ -64,7 +70,13 @@ HEADERS  += mainwindow.h \
     truncation.h \
     dac.h \
     squid.h \
-    adc.h
+    adc.h \
+    event_processor.h \
+    fpa.h \
+    instrument.h \
+    dre.h \
+    lna.h \
+    simulation.h
 
 INCLUDEPATH += C:\Users\Paul\Downloads\Boost\boost_1_66_0
 #INCLUDEPATH += /usr/local/Cellar/boost/1.66.0/include

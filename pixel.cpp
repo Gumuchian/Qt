@@ -15,23 +15,18 @@ Pixel::~Pixel()
 
 }
 
-Pixel::Pixel(double frequency, int phase):frequency(frequency)
+Pixel::Pixel(double f_s, double frequency, int phase, int Delay,int npt, int interpol, int npr, int nd, int ni, int nr):f_s(f_s),frequency(frequency),phase(phase),bbfb(npr,nd,ni,nr),npt(npt),interpol(interpol),Delay(Delay)
 {
-    comptR_I=phase%(Npt*interpolation);
-    comptR_Q=(comptR_I+(Npt*interpolation)/4)%(Npt*interpolation);
+    comptR_I=phase%(npt*interpol);
+    comptR_Q=(comptR_I+(npt*interpol)/4)%(npt*interpol);
     feedback=0;
 }
 
 void Pixel::setFrequency(double freq)
 {
-    comptD_I=(comptR_I+(((int)(Npt*interpolation*delay*freq/fs))%(Npt*interpolation)))%(Npt*interpolation);
-    comptD_Q=(comptD_I+(Npt*interpolation)/4)%(Npt*interpolation);
-    step=(int)round((Npt*interpolation)*(freq/fs));
-}
-
-void Pixel::setMaxLC(double maxLC)
-{
-     tes.setMax(maxLC);
+    comptD_I=(comptR_I+(((int)(npt*interpol*Delay*freq/fs))%(npt*interpol)))%(npt*interpol);
+    comptD_Q=(comptD_I+(npt*interpol)/4)%(npt*interpol);
+    step=(int)round((npt*interpol)*(freq/f_s));
 }
 
 double Pixel::getfeedback()
@@ -44,23 +39,13 @@ double Pixel::getmodule()
     return bbfb.module();
 }
 
-void Pixel::computeLC()
-{
-    I=tes.computeLCTES(frequency);
-}
-
-double Pixel::getI()
-{
-    return I;
-}
-
 void Pixel::computeBBFB(double demoduI, double remoduI, double demoduQ, double remoduQ, double input)
 {
     bbfb.compute_feedback(demoduI,remoduI,demoduQ,remoduQ,input);
-    comptR_I=(comptR_I+step)%(Npt*interpolation);
-    comptD_I=(comptD_I+step)%(Npt*interpolation);
-    comptR_Q=(comptR_Q+step)%(Npt*interpolation);
-    comptD_Q=(comptD_Q+step)%(Npt*interpolation);
+    comptR_I=(comptR_I+step)%(npt*interpol);
+    comptD_I=(comptD_I+step)%(npt*interpol);
+    comptR_Q=(comptR_Q+step)%(npt*interpol);
+    comptD_Q=(comptD_Q+step)%(npt*interpol);
     feedback=bbfb.getfeedback();
 }
 
@@ -82,19 +67,4 @@ int Pixel::getcomptR_I()
 int Pixel::getcomptR_Q()
 {
     return comptR_Q;
-}
-
-void Pixel::setinputLC(double input)
-{
-    tes.setbias(input);
-}
-
-double Pixel::getbiasm()
-{
-    return tes.getbiasm();
-}
-
-void Pixel::setI(double p)
-{
-    tes.setI(p);
 }

@@ -22,6 +22,7 @@ class BBFB
         double I;
         double Q;
         double feedback;
+        bool mode;
 };
 
 #endif // BBFB_H

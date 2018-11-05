@@ -43,7 +43,7 @@ xifu::~xifu()
 
 void xifu::simulate()
 {
-    Channel ch0;
+    /*Channel ch0;
     Butterworth Butter;
     Pulse_generator pulse_generator;
     progress=0; 
@@ -318,11 +318,11 @@ void xifu::simulate()
     file3.close();
     progress=100;
     emit getProgress(progress);
-    emit simulation_ended();
+    emit simulation_ended();*/
 }
 
 void xifu::sweepLC(Channel &ch)
-{
+{/*
     double sig=1;
     int Nsweep=21;
     CArray TF((int)pow(2,Nsweep));
@@ -367,7 +367,7 @@ void xifu::sweepLC(Channel &ch)
     }
     ch.setFrequencies(frequency);
     max_LC/=I0*sqrt(2)/TR;
-    ch.setMax(max_LC);
+    ch.setMax(max_LC);*/
 }
 
 void xifu::fft(CArray& x)
