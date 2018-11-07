@@ -18,15 +18,44 @@ Simulation::Simulation(int decimation_factor, double f_s, double L_crit, double 
     instrument.sweepLC();
 }
 
-void Simulation::simulate()
+void Simulation::simulate(int Npoint)
 {
-    std::fstream file;
-    file.open("Pulse.txt",std::ios::out);
-    for (int i=0;i<1000000;i++)
+    //std::fstream file;
+    //file.open("Pulse.txt",std::ios::out);
+    for (int i=0;i<Npoint;i++)
     {
-        instrument.compute();
-        file << instrument.getData() << std::endl;
+        instrument.compute(0);
+        //file << instrument.getData() << std::endl;
     }
-    file.close();
-    std::cout << "Done";
+    //file.close();
+    //std::cout << "Done";
+}
+
+void Simulation::EstimateOffset()
+{
+    std::vector<double> offset;
+    double sum=0;
+    for (int i=0;i<100000;i++)
+    {
+        instrument.compute(0.0);
+        if (i>50000)
+        {
+            offset.push_back(instrument.getData());
+        }
+    }
+    for (int i=0;i<(int)offset.size();i++)
+    {
+        sum+=offset[i];
+    }
+    sum/=offset.size();
+    instrument.setOffset(sum);
+}
+
+void Simulation::EstimateEnergyCurve()
+{
+    double Energy=100;
+    for (int i=0;i<10000000;i++)
+    {
+        instrument.compute(Energy);
+    }
 }

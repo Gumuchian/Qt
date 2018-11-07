@@ -13,7 +13,7 @@ Instrument::Instrument(int decimation_factor, double f_s, double L_crit, double 
     count_pulse=1;
 }
 
-void Instrument::compute()
+void Instrument::compute(double Energy)
 {
     fpa.setBiasingVoltage(pow(2,16)/0.02*dre.getBiasing());
     dre.setInput(lna.compute(squid.computeSQUID(fpa.getCurrent(),dre.getFeedback(),true)));
@@ -24,12 +24,12 @@ void Instrument::compute()
     }
     if (count_pulse == 0)
     {
-        fpa.setEnergy(7000,0);
+        fpa.setEnergy(Energy,0);
     }
     count ++;
     count=count%decimation_factor;
     count_pulse ++;
-    count_pulse=count_pulse%100000;
+    count_pulse=count_pulse%500000;
 }
 
 void Instrument::setParameters(vector<double> IR, double factor)
@@ -39,9 +39,9 @@ void Instrument::setParameters(vector<double> IR, double factor)
 }
 
 
-void Instrument::setPulse(double Energy)
+void Instrument::setPulse(double Energy, int index)
 {
-    fpa.setEnergy(Energy,0);
+    fpa.setEnergy(Energy,index);
 }
 
 void Instrument::sweepLC()
@@ -114,4 +114,9 @@ void Instrument::fft(CArray& x)
 double Instrument::getData()
 {
     return dre.getmIQ();
+}
+
+void Instrument::setOffset(double offset)
+{
+    EP.setOffset(offset);
 }
