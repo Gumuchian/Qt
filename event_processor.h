@@ -24,7 +24,6 @@ class Event_Processor
         double getEnergy();
         template<class T> bool InvertMatrix(const matrix<T>& input, matrix<T>& inverse);
         void setInput(double input);
-        void setFactor(double f);
         void setThreshold(double thres);
         void setImpulseResponse(vector<double> IR);
         bool getRecording();
@@ -37,12 +36,11 @@ class Event_Processor
         void setMode(bool mod);
         CArray getIR();
         void setRecording();
-        void recordFactor();
-        void computeFactor();
-        double getFactor();
         double gett0();
         void setOffset(double off);
-        void setCorr_coeff(vector<double> v);
+        double getOutput();
+        double convert(double au);
+        void computeCorrCoeff(vector<double> AU, vector<double> energies);
 
     private:
         int counter;
@@ -77,6 +75,7 @@ class Event_Processor
         CArray noise_fft;
         CArray pulse_phase;
         CArray IR;
+        vector<double> energy_curve_coeff;
 };
 
 #endif // EVENT_PROCESSOR_H

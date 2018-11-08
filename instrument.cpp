@@ -32,10 +32,10 @@ void Instrument::compute(double Energy)
     count_pulse=count_pulse%500000;
 }
 
-void Instrument::setParameters(vector<double> IR, double factor)
+void Instrument::setParameters(vector<double> IR)
 {
-    EP.setFactor(factor);
     EP.setImpulseResponse(IR);
+    EP.setThreshold(40);
 }
 
 
@@ -119,4 +119,24 @@ double Instrument::getData()
 void Instrument::setOffset(double offset)
 {
     EP.setOffset(offset);
+}
+
+double Instrument::getOutput()
+{
+    return EP.getOutput();
+}
+
+bool Instrument::getNewOutput()
+{
+    return EP.getRecording();
+}
+
+void Instrument::computeEnergyCurve(ublas::vector<double> AU, ublas::vector<double> energies)
+{
+    EP.computeCorrCoeff(AU,energies);
+}
+
+double Instrument::getEnergy()
+{
+    return EP.getEnergy();
 }

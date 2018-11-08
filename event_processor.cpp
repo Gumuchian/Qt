@@ -13,13 +13,11 @@ Event_Processor::Event_Processor()
 
 }
 
-Event_Processor::Event_Processor(int Npattern):Trigger_coeff(8,0),Buffer(8,0),corr_coeff(3,0),Record(Npattern+2,0),OutputFilter(3,0),ImpulseResponse(Npattern,0),Z(3,3),pulse_fft(Npattern),noise_fft(Npattern),pulse_phase(Npattern),IR(Npattern)
+Event_Processor::Event_Processor(int Npattern):Trigger_coeff(8,0),Buffer(8,0),corr_coeff(3,0),Record(Npattern+2,0),OutputFilter(3,0),ImpulseResponse(Npattern,0),Z(3,3),pulse_fft(Npattern),noise_fft(Npattern),pulse_phase(Npattern),IR(Npattern),energy_curve_coeff(6,0)
 {
     counter = 0;
     count = 0;
     wait = false;
-    factor_count = 0;
-    factor = 0;
     energy = 0;
     RecordSize = Npattern;
     recording = false;
@@ -102,12 +100,27 @@ void Event_Processor::computeOptimalFilter()
     }
 }
 
+double Event_Processor::getOutput()
+{
+    return OutputFilter(1);
+}
+
 void Event_Processor::computeFit()
 {
     Poly_coeff=prod(Z,OutputFilter);
-    energy=7000.0*(Poly_coeff(2)-pow(Poly_coeff(1),2)/(2*Poly_coeff(0)))/factor;
+    energy=convert(Poly_coeff(2)-pow(Poly_coeff(1),2)/(2*Poly_coeff(0)));
     t0=-Poly_coeff(1)/(2*Poly_coeff(0));
     energy/=(corr_coeff(0)*pow(t0,2)+corr_coeff(1)*t0+corr_coeff(2))/7000.0;
+}
+
+double Event_Processor::convert(double au)
+{
+    double energy_converted = 0;
+    for(int i=0;i<6;i++)
+    {
+        energy_converted+=energy_curve_coeff(i)*pow(au/10000,5-i);
+    }
+    return energy_converted;
 }
 
 void Event_Processor::setInput(double input)
@@ -137,11 +150,6 @@ void Event_Processor::computeEventProcessor()
 void Event_Processor::setThreshold(double thres)
 {
     Threshold = thres;
-}
-
-void Event_Processor::setFactor(double f)
-{
-    factor = f;
 }
 
 bool Event_Processor::getRecording()
@@ -195,23 +203,6 @@ void Event_Processor::computeImpulseResponse()
     {
         IR[i]=std::real(IR[i]);
     }
-}
-
-void Event_Processor::recordFactor()
-{
-    trigger_function();
-    if (ReadyToCompute)
-    {
-        factor_count+=1;
-        computeOptimalFilter();
-        factor+=OutputFilter(1);
-    }
-}
-
-void Event_Processor::computeFactor()
-{
-    factor/=factor_count;
-    factor_count = 0;
 }
 
 template<class T> bool Event_Processor::InvertMatrix(const matrix<T>& input, matrix<T>& inverse)
@@ -269,11 +260,6 @@ void Event_Processor::setRecording()
     recording = false;
 }
 
-double Event_Processor::getFactor()
-{
-    return factor;
-}
-
 double Event_Processor::gett0()
 {
     return t0;
@@ -284,10 +270,16 @@ void Event_Processor::setOffset(double off)
     offset=off;
 }
 
-void Event_Processor::setCorr_coeff(vector<double> v)
+void Event_Processor::computeCorrCoeff(vector<double> AU, vector<double> energies)
 {
-    for (int i=0;i<3;i++)
+    matrix<double> mAU((int)AU.size(),6),mAUinv(6,6);
+    for (int i=0;i<(int)AU.size();i++)
     {
-        corr_coeff(i)=v(i);
+        for (int j=0;j<6;j++)
+        {
+            mAU(i,j)=pow(AU(i),5-j);
+        }
     }
+    InvertMatrix(matrix<double> (prod(trans(mAU),mAU)),mAUinv);
+    energy_curve_coeff=prod(prod(mAUinv,trans(mAU)),energies);
 }
