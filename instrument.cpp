@@ -10,17 +10,19 @@ using namespace boost::numeric;
 Instrument::Instrument(int decimation_factor, double f_s, double L_crit, double TTR, double G_b, double n_therm, double T_bath, double C_therm, double R_l, double R_0, double T_0, double I_0, int N_pt, int N_pr, int interpol, int N_pix, int Delay, int nd, int ni, int nr, double adc_dsl, double b_adc, double fs_adc, int adc_bit, double dac_dsl, double b_dac, double fs_dac, int dac_bit, double G_LNA, double dsl_LNA, double b_LNA, double M_b, double M_f, double G_squid, double squid_dsl, double b_squid, int N_pattern):fpa(f_s,N_pix,L_crit,TTR,G_b,n_therm,T_bath,C_therm,R_l,R_0,T_0,I_0),dre(f_s,N_pt,N_pr,interpol,N_pix,Delay,nd,ni,nr,adc_dsl,b_adc,fs_adc,adc_bit,dac_dsl,b_dac,fs_dac,dac_bit),squid(M_b,M_f,G_squid,squid_dsl,b_squid),EP(N_pattern),lna(G_LNA,dsl_LNA,b_LNA),decimation_factor(decimation_factor),f_s(f_s),I_0(I_0),TTR(TTR)
 {
     count = 0;
-    count_pulse=1;
+    count_pulse = 1;
+    DataSentToEP = false;
 }
 
 void Instrument::compute(double Energy)
 {
     fpa.setBiasingVoltage(pow(2,16)/0.02*dre.getBiasing());
     dre.setInput(lna.compute(squid.computeSQUID(fpa.getCurrent(),dre.getFeedback(),true)));
+    DataSentToEP = false;
     if (count == 0)
     {
         EP.setInput(dre.getmIQ());
-        EP.computeEventProcessor();
+        DataSentToEP = true;
     }
     if (count_pulse == 0)
     {
@@ -32,10 +34,10 @@ void Instrument::compute(double Energy)
     count_pulse=count_pulse%500000;
 }
 
-void Instrument::setParameters(vector<double> IR)
+void Instrument::setParameters(vector<double> IR,double threshold)
 {
     EP.setImpulseResponse(IR);
-    EP.setThreshold(40);
+    EP.setThreshold(threshold);
 }
 
 
@@ -136,7 +138,23 @@ void Instrument::computeEnergyCurve(ublas::vector<double> AU, ublas::vector<doub
     EP.computeCorrCoeff(AU,energies);
 }
 
+void Instrument::recordImpulseResponse(bool pulse_mode)
+{
+    EP.setMode(pulse_mode);
+    EP.recordImpulseResponse();
+}
+
+void Instrument::computeImpulseResponse()
+{
+    EP.computeImpulseResponse();
+}
+
 double Instrument::getEnergy()
 {
     return EP.getEnergy();
+}
+
+bool Instrument::readyToSendToEP()
+{
+    return DataSentToEP;
 }

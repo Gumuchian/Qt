@@ -12,7 +12,7 @@ Simulation::Simulation(int decimation_factor, double f_s, double L_crit, double 
         file >> IR[i];
     }
     file.close();
-    instrument.setParameters(IR);
+    instrument.setParameters(IR,5);
     instrument.sweepLC();
 }
 
@@ -21,10 +21,6 @@ void Simulation::simulate(int Npoint)
     for (int i=0;i<Npoint;i++)
     {
         instrument.compute(7000);
-        if (instrument.getNewOutput())
-        {
-            //file << instrument.getEnergy() << std::endl;
-        }
     }
 }
 
@@ -46,6 +42,7 @@ void Simulation::EstimateOffset()
     }
     sum/=offset.size();
     instrument.setOffset(sum);
+    std::cout << "Offset computed: " << sum << std::endl;
 }
 
 void Simulation::EstimateEnergyCurve()
@@ -53,21 +50,59 @@ void Simulation::EstimateEnergyCurve()
     double sum;
     int count;
     vector<double> energies(7,0),Energies(7,0);
-    for (int i=0;i<7;i++)
+    for (int i=0;i<9;i++)
     {
-        Energies(i)=100+i*1000;
-        sum=0;
         count=0;
+        sum=0;
         for (int j=0;j<1000000;j++)
         {
-            instrument.compute(Energies(i));
+            instrument.compute(200+i*1000);
             if (instrument.getNewOutput())
             {
                 count++;
                 sum+=instrument.getOutput();
             }
         }
-        energies(i)=sum;
+        if (i>1)
+        {
+            energies(i-2)=sum/count;
+            Energies(i-2)=(200+ i*1000);
+        }
+        std::cout << sum << "  " << count << std::endl;
+
     }
     instrument.computeEnergyCurve(energies,Energies);
+}
+
+void Simulation::computeImpulseResponse()
+{
+    double Energy=7000.0;
+    bool pulse_mode=true;
+    std::fstream file;
+    file.open("Pattern.txt",std::ios::in);
+    vector<double> IR(2048);
+    for (int i=0;i<2048;i++)
+    {
+        file >> IR[i];
+    }
+    file.close();
+    for (int i=0;i<200000000;i++)
+    {
+        if (i>100000000)
+        {
+            Energy = 0.0;
+            pulse_mode = false;
+            instrument.setParameters(IR,0);
+        }
+        instrument.compute(Energy);
+        if (i>1000000)
+        {
+            if (instrument.readyToSendToEP())
+            {
+                instrument.recordImpulseResponse(pulse_mode);
+            }
+        }
+    }
+    instrument.computeImpulseResponse();
+    std::cout << "IR computed" << std::endl;
 }

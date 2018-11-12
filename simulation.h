@@ -14,6 +14,7 @@ public:
     void simulate(int Npoint);
     void EstimateOffset();
     void EstimateEnergyCurve();
+    void computeImpulseResponse();
 private:
     Instrument instrument;
 };

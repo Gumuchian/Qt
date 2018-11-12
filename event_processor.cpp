@@ -118,7 +118,7 @@ double Event_Processor::convert(double au)
     double energy_converted = 0;
     for(int i=0;i<6;i++)
     {
-        energy_converted+=energy_curve_coeff(i)*pow(au/10000,5-i);
+        energy_converted+=energy_curve_coeff(i)*pow(au/10000000,5-i);
     }
     return energy_converted;
 }
@@ -197,12 +197,16 @@ void Event_Processor::computeImpulseResponse()
     for (int i=0;i<RecordSize;i++)
     {
         IR[i]*=std::exp(const_i*pulse_phase[i]);
-    }
+    }  
     ifft(IR);
+    std::fstream file;
+    file.open("IR.txt",std::ios::out);
     for (int i=0;i<RecordSize;i++)
     {
         IR[i]=std::real(IR[i]);
+        file << std::real(IR[i]) << std::endl;
     }
+    file.close();
 }
 
 template<class T> bool Event_Processor::InvertMatrix(const matrix<T>& input, matrix<T>& inverse)
@@ -277,9 +281,21 @@ void Event_Processor::computeCorrCoeff(vector<double> AU, vector<double> energie
     {
         for (int j=0;j<6;j++)
         {
-            mAU(i,j)=pow(AU(i),5-j);
+            mAU(i,j)=pow(AU(i)/10000,5-j);
         }
+    }
+    for (int k=0;k<(int)AU.size();k++)
+    {
+        for (int l=0;l<6;l++)
+        {
+            std::cout << mAU(k,l) << "\t";
+        }
+        std::cout << std::endl;
     }
     InvertMatrix(matrix<double> (prod(trans(mAU),mAU)),mAUinv);
     energy_curve_coeff=prod(prod(mAUinv,trans(mAU)),energies);
+    for (int i=0;i<6;i++)
+    {
+        std::cout << energy_curve_coeff(i) << std::endl;
+    }
 }
