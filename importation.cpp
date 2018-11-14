@@ -322,7 +322,7 @@ void Importation::setInitial()
     energy=3600;
     decimation=128;
     G=0.0001549644569;
-    delay=1;
+    delay=0;
     PE_DAC=0.02;
     DAC_bit=16;
     B_DAC=20000000;

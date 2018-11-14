@@ -13,7 +13,7 @@ Event_Processor::Event_Processor()
 
 }
 
-Event_Processor::Event_Processor(int Npattern):Trigger_coeff(8,0),Buffer(8,0),corr_coeff(3,0),Record(Npattern+2,0),OutputFilter(3,0),ImpulseResponse(Npattern,0),Z(3,3),pulse_fft(Npattern),noise_fft(Npattern),pulse_phase(Npattern),IR(Npattern),energy_curve_coeff(6,0)
+Event_Processor::Event_Processor(int Npattern):Trigger_coeff(8,0),Buffer(8,0),corr_coeff(3,0),Record(Npattern+2,0),OutputFilter(3,0),ImpulseResponse(Npattern,0),Z(3,3),pulse_fft(Npattern),noise_fft(Npattern),pulse_phase(Npattern),IR(Npattern),energy_curve_coeff(5,0)
 {
     counter = 0;
     count = 0;
@@ -80,10 +80,15 @@ void Event_Processor::trigger_function()
     }
     if (recording)
     {
+        std::fstream file;
+        file.open("Cassoulet.txt",std::ios::out|std::ios::app);
         Record(counter) = offset - Buffer(2);
+        file << Record(counter) << "\t";
         counter++;
         if (counter == RecordSize+2)
         {
+            file << std::endl;
+            file.close();
             recording = false;
             ReadyToCompute = true;
             counter = 0;
@@ -116,9 +121,9 @@ void Event_Processor::computeFit()
 double Event_Processor::convert(double au)
 {
     double energy_converted = 0;
-    for(int i=0;i<6;i++)
+    for(int i=0;i<5;i++)
     {
-        energy_converted+=energy_curve_coeff(i)*pow(au/10000000,5-i);
+        energy_converted+=energy_curve_coeff(i)*pow(au/10000,4-i);
     }
     return energy_converted;
 }
@@ -199,14 +204,17 @@ void Event_Processor::computeImpulseResponse()
         IR[i]*=std::exp(const_i*pulse_phase[i]);
     }  
     ifft(IR);
-    std::fstream file;
+    std::fstream file,file1;
     file.open("IR.txt",std::ios::out);
+    file1.open("Poutpout.txt",std::ios::out);
     for (int i=0;i<RecordSize;i++)
     {
         IR[i]=std::real(IR[i]);
         file << std::real(IR[i]) << std::endl;
+        file1 << abs(noise_fft[i]) << std::endl;
     }
     file.close();
+    file1.close();
 }
 
 template<class T> bool Event_Processor::InvertMatrix(const matrix<T>& input, matrix<T>& inverse)
@@ -276,17 +284,17 @@ void Event_Processor::setOffset(double off)
 
 void Event_Processor::computeCorrCoeff(vector<double> AU, vector<double> energies)
 {
-    matrix<double> mAU((int)AU.size(),6),mAUinv(6,6);
+    matrix<double> mAU((int)AU.size(),5),mAUinv(5,5);
     for (int i=0;i<(int)AU.size();i++)
     {
-        for (int j=0;j<6;j++)
+        for (int j=0;j<5;j++)
         {
-            mAU(i,j)=pow(AU(i)/10000,5-j);
+            mAU(i,j)=pow(AU(i)/10000,4-j);
         }
     }
     for (int k=0;k<(int)AU.size();k++)
     {
-        for (int l=0;l<6;l++)
+        for (int l=0;l<5;l++)
         {
             std::cout << mAU(k,l) << "\t";
         }
@@ -294,7 +302,7 @@ void Event_Processor::computeCorrCoeff(vector<double> AU, vector<double> energie
     }
     InvertMatrix(matrix<double> (prod(trans(mAU),mAU)),mAUinv);
     energy_curve_coeff=prod(prod(mAUinv,trans(mAU)),energies);
-    for (int i=0;i<6;i++)
+    for (int i=0;i<5;i++)
     {
         std::cout << energy_curve_coeff(i) << std::endl;
     }

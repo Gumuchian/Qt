@@ -130,7 +130,13 @@ double Instrument::getOutput()
 
 bool Instrument::getNewOutput()
 {
+    EP.computeEventProcessor();
     return EP.getRecording();
+}
+
+double Instrument::getT0()
+{
+    return EP.gett0();
 }
 
 void Instrument::computeEnergyCurve(ublas::vector<double> AU, ublas::vector<double> energies)

@@ -28,6 +28,7 @@ public:
     void recordImpulseResponse(bool pulse_mode);
     void computeImpulseResponse();
     bool readyToSendToEP();
+    double getT0();
 private:
     FPA fpa;
     DRE dre;

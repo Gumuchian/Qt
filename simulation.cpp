@@ -12,7 +12,7 @@ Simulation::Simulation(int decimation_factor, double f_s, double L_crit, double 
         file >> IR[i];
     }
     file.close();
-    instrument.setParameters(IR,5);
+    instrument.setParameters(IR,10);
     instrument.sweepLC();
 }
 
@@ -20,7 +20,14 @@ void Simulation::simulate(int Npoint)
 {
     for (int i=0;i<Npoint;i++)
     {
-        instrument.compute(7000);
+        instrument.compute(2000);
+        if (instrument.readyToSendToEP())
+        {
+            if (instrument.getNewOutput())
+            {
+                std::cout << instrument.getEnergy() << "\t" << instrument.getT0() << std::endl;
+            }
+        }
     }
 }
 
@@ -57,19 +64,21 @@ void Simulation::EstimateEnergyCurve()
         for (int j=0;j<1000000;j++)
         {
             instrument.compute(200+i*1000);
-            if (instrument.getNewOutput())
+            if (instrument.readyToSendToEP())
             {
-                count++;
-                sum+=instrument.getOutput();
+                if (instrument.getNewOutput())
+                {
+                    count++;
+                    sum+=instrument.getOutput();
+                }
             }
         }
         if (i>1)
         {
             energies(i-2)=sum/count;
-            Energies(i-2)=(200+ i*1000);
+            Energies(i-2)=(200+i*1000);
         }
         std::cout << sum << "  " << count << std::endl;
-
     }
     instrument.computeEnergyCurve(energies,Energies);
 }
@@ -86,9 +95,9 @@ void Simulation::computeImpulseResponse()
         file >> IR[i];
     }
     file.close();
-    for (int i=0;i<200000000;i++)
+    for (int i=0;i<700000000;i++)
     {
-        if (i>100000000)
+        if (i>350000000)
         {
             Energy = 0.0;
             pulse_mode = false;
