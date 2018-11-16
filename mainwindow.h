@@ -30,7 +30,6 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
-    xifu instrument;
     QPushButton *bouton;
     QPushButton *bouton_launch;
     QPushButton *Calibration_mode;

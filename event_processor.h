@@ -6,7 +6,7 @@
 #include <valarray>
 #include <QString>
 
-using namespace boost::numeric::ublas;
+using namespace boost::numeric;
 
 typedef std::complex<double> Complex;
 typedef std::valarray<Complex> CArray;
@@ -22,10 +22,10 @@ class Event_Processor
         void computeFit();
         void computeEventProcessor();
         double getEnergy();
-        template<class T> bool InvertMatrix(const matrix<T>& input, matrix<T>& inverse);
+        template<class T> bool InvertMatrix(const ublas::matrix<T>& input, ublas::matrix<T>& inverse);
         void setInput(double input);
         void setThreshold(double thres);
-        void setImpulseResponse(vector<double> IR);
+        void setImpulseResponse(ublas::vector<double> IR);
         bool getRecording();
         void computeImpulseResponse();
         void recordImpulseResponse();
@@ -40,7 +40,7 @@ class Event_Processor
         void setOffset(double off);
         double getOutput();
         double convert(double au);
-        void computeCorrCoeff(vector<double> AU, vector<double> energies);
+        void computeCorrCoeff(ublas::vector<double> AU, ublas::vector<double> energies);
 
     private:
         int counter;
@@ -49,20 +49,20 @@ class Event_Processor
         double Threshold;
         bool ReadyToCompute;
         bool recording;
-        vector<double> Trigger_coeff;
-        vector<double> Buffer;
-        vector<double> corr_coeff;
-        vector<double> Record;
-        vector<double> OutputFilter;
-        vector<double> ImpulseResponse;
-        vector<double> Poly_coeff;
+        ublas::vector<double> Trigger_coeff;
+        ublas::vector<double> Buffer;
+        ublas::vector<double> corr_coeff;
+        ublas::vector<double> Record;
+        ublas::vector<double> OutputFilter;
+        ublas::vector<double> ImpulseResponse;
+        ublas::vector<double> Poly_coeff;
         double Trigger_output;
         int RecordSize;
         double factor;
         double energy;
         double offset;
         double t0;
-        matrix<double> Z;
+        ublas::matrix<double> Z;
         int noise_size;
         int pulse_size;
         int noise_offset;
@@ -75,7 +75,7 @@ class Event_Processor
         CArray noise_fft;
         CArray pulse_phase;
         CArray IR;
-        vector<double> energy_curve_coeff;
+        ublas::vector<double> energy_curve_coeff;
 };
 
 #endif // EVENT_PROCESSOR_H

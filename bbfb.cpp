@@ -7,7 +7,7 @@ BBFB::BBFB()
 
 }
 
-BBFB::BBFB(int npr, int nd, int ni, int nr):npr(npr),nd(nd),ni(ni),nr(nr)
+BBFB::BBFB(int npr, int trunc_demodulation, int ni, int nr):npr(npr),nd(nd),ni(ni),nr(nr)
 {
     I=0;
     Q=0;

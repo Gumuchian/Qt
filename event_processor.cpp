@@ -36,7 +36,7 @@ Event_Processor::Event_Processor(int Npattern):Trigger_coeff(8,0),Buffer(8,0),co
             Trigger_coeff(k) = 1;
         }
     }
-    matrix<double> X(3,3);
+    ublas::matrix<double> X(3,3);
     for (int i=0;i<3;i++)
     {
         for (int j=0;j<3;j++)
@@ -80,15 +80,15 @@ void Event_Processor::trigger_function()
     }
     if (recording)
     {
-        std::fstream file;
-        file.open("Cassoulet.txt",std::ios::out|std::ios::app);
-        Record(counter) = offset - Buffer(2);
-        file << Record(counter) << "\t";
+        //std::fstream file;
+        //file.open("Cassoulet.txt",std::ios::out|std::ios::app);
+        Record(counter) = offset - Buffer(4);
+        //file << Record(counter) << "\t";
         counter++;
         if (counter == RecordSize+2)
         {
-            file << std::endl;
-            file.close();
+            //file << std::endl;
+            //file.close();
             recording = false;
             ReadyToCompute = true;
             counter = 0;
@@ -162,7 +162,7 @@ bool Event_Processor::getRecording()
     return ReadyToCompute;
 }
 
-void Event_Processor::setImpulseResponse(vector<double> IR)
+void Event_Processor::setImpulseResponse(ublas::vector<double> IR)
 {
     ImpulseResponse = IR;
 }
@@ -217,14 +217,14 @@ void Event_Processor::computeImpulseResponse()
     file1.close();
 }
 
-template<class T> bool Event_Processor::InvertMatrix(const matrix<T>& input, matrix<T>& inverse)
+template<class T> bool Event_Processor::InvertMatrix(const ublas::matrix<T>& input, ublas::matrix<T>& inverse)
 {
-    typedef permutation_matrix<std::size_t> pmatrix;
-    matrix<T> A(input);
+    typedef ublas::permutation_matrix<std::size_t> pmatrix;
+    ublas::matrix<T> A(input);
     pmatrix pm(A.size1());
     int res = lu_factorize(A, pm);
     if (res != 0) return false;
-    inverse.assign(identity_matrix<T> (A.size1()));
+    inverse.assign(ublas::identity_matrix<T> (A.size1()));
     lu_substitute(A, pm, inverse);
     return true;
 }
@@ -282,9 +282,9 @@ void Event_Processor::setOffset(double off)
     offset=off;
 }
 
-void Event_Processor::computeCorrCoeff(vector<double> AU, vector<double> energies)
+void Event_Processor::computeCorrCoeff(ublas::vector<double> AU, ublas::vector<double> energies)
 {
-    matrix<double> mAU((int)AU.size(),5),mAUinv(5,5);
+    ublas::matrix<double> mAU((int)AU.size(),5),mAUinv(5,5);
     for (int i=0;i<(int)AU.size();i++)
     {
         for (int j=0;j<5;j++)
@@ -300,8 +300,8 @@ void Event_Processor::computeCorrCoeff(vector<double> AU, vector<double> energie
         }
         std::cout << std::endl;
     }
-    InvertMatrix(matrix<double> (prod(trans(mAU),mAU)),mAUinv);
-    energy_curve_coeff=prod(prod(mAUinv,trans(mAU)),energies);
+    InvertMatrix(ublas::matrix<double> (ublas::prod(ublas::trans(mAU),mAU)),mAUinv);
+    energy_curve_coeff=ublas::prod(ublas::prod(mAUinv,ublas::trans(mAU)),energies);
     for (int i=0;i<5;i++)
     {
         std::cout << energy_curve_coeff(i) << std::endl;

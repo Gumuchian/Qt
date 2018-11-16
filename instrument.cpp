@@ -34,7 +34,7 @@ void Instrument::compute(double Energy)
     count_pulse=count_pulse%500000;
 }
 
-void Instrument::setParameters(vector<double> IR,double threshold)
+void Instrument::setParameters(ublas::vector<double> IR,double threshold)
 {
     EP.setImpulseResponse(IR);
     EP.setThreshold(threshold);
@@ -163,4 +163,9 @@ double Instrument::getEnergy()
 bool Instrument::readyToSendToEP()
 {
     return DataSentToEP;
+}
+
+void Instrument::setEP()
+{
+    EP.setRecording();
 }

@@ -8,6 +8,7 @@
 #include <math.h>
 #include <fstream>
 #include "importation.h"
+#include "simulation.h"
 
 MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindow)
 {
@@ -66,7 +67,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::displayresult()
 {
-    std::vector<double> E(Npat);
+    /*std::vector<double> E(Npat);
     instrument.getE(E);
     if (E.size()!=0)
     {
@@ -95,8 +96,8 @@ void MainWindow::displayresult()
                 max=Data[i];
             }
         }
-
-        QCustomPlot  *customPlot = new QCustomPlot;
+        */
+        /*QCustomPlot  *customPlot = new QCustomPlot;
         customPlot->setMinimumSize(750,900);
         /*QLinearGradient gradient(0, 0, 0, 400);
         gradient.setColorAt(0, QColor(255, 0, 10));
@@ -105,7 +106,7 @@ void MainWindow::displayresult()
         customPlot->setBackground(QBrush(gradient));*/
 
         // create empty bar chart objects:
-        QCPBars *energy_distrib = new QCPBars(customPlot->xAxis, customPlot->yAxis);
+        /*QCPBars *energy_distrib = new QCPBars(customPlot->xAxis, customPlot->yAxis);
         energy_distrib->setAntialiased(false);
         energy_distrib->setStackingGap(1);
         // set names and colors:
@@ -195,57 +196,61 @@ void MainWindow::displayresult()
     label->show();
     window->setWindowTitle("Results");
     window->setFixedSize(350,100);
-    window->show();
+    window->show();*/
 }
 
 void MainWindow::simulate()
 {
+    int nd=20,ni=20,nr=20;
+    Simulation sim(decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,nd,ni,nr,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048);
+    sim.EstimateOffset();
+    sim.computeImpulseResponse();
     QThread *thread = new QThread();
-    instrument.moveToThread(QApplication::instance()->thread());
-    connect(thread, SIGNAL(finished()), &instrument, SLOT(deleteLater()));
-    connect(thread, SIGNAL(started()), &instrument, SLOT(simulate()));
-    progress = new QProgressBar;
+    sim.moveToThread(QApplication::instance()->thread());
+    connect(thread, SIGNAL(finished()), &sim, SLOT(deleteLater()));
+    connect(thread, SIGNAL(started()), &sim, SLOT(cacalibrate()));
+    /*progress = new QProgressBar;
     progress->setWindowTitle("Progression");
     progress->setFixedSize(400,50);
     progress->show();
     connect(&instrument, SIGNAL(getProgress(int)),progress, SLOT(setValue(int)));
-    connect(&instrument, SIGNAL(simulation_ended()), progress, SLOT(close()));
+    connect(&instrument, SIGNAL(simulation_ended()), progress, SLOT(close()));*/
     thread->start();
 }
 
 void MainWindow::setmode1()
 {
-    instrument.setMode(1);
+    //instrument.setMode(1);
     QMessageBox::information(this, "Mode", "Calibration mode selected");
 }
 
 void MainWindow::setmode2()
 {
-    instrument.setMode(2);
+    //instrument.setMode(2);
     QMessageBox::information(this, "Mode", "Resolution estimation mode selected");
 }
 
 void MainWindow::setmode3()
 {
-    instrument.setMode(3);
+    //instrument.setMode(3);
     QMessageBox::information(this, "Mode", "Gain computation");
 }
 
 void MainWindow::openConfig()
 {
-    config *conf = new config();
-    conf->show();
+    /*config *conf = new config();
+    conf->show();*/
 }
 
 void MainWindow::Export()
 {
-    QString fichier = QFileDialog::getSaveFileName(this, "Save a file", QString(),"XML (*.xml)");
-    Importation::saveConfig(fichier);
+    /*QString fichier = QFileDialog::getSaveFileName(this, "Save a file", QString(),"XML (*.xml)");
+    Importation::saveConfig(fichier);*/
 }
 
 void MainWindow::computeHist(QVector<double> &hist, std::vector<double> data, int Nbin, double binW, double MidBin)
 {
-    for (int i=0;i<(int)hist.size();i++)
+    /*for (int i=0;i<(int)hist.size();i++)
     {
         hist[i]=0;
     }
@@ -258,5 +263,5 @@ void MainWindow::computeHist(QVector<double> &hist, std::vector<double> data, in
         {
             hist[(int)std::round(h/binW)]+=1;
         }
-    }
+    }*/
 }
