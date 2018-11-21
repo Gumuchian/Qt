@@ -10,7 +10,7 @@
 #include "importation.h"
 #include "simulation.h"
 
-MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindow),sim(decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,20,20,20,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048)
 {
     ui->setupUi(this);
     this->setFixedSize(420,260);
@@ -201,21 +201,38 @@ void MainWindow::displayresult()
 
 void MainWindow::simulate()
 {
+    QMessageBox::information(this, "Test", "Lancement");
     int nd=20,ni=20,nr=20;
-    Simulation sim(decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,nd,ni,nr,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048);
-    sim.EstimateOffset();
-    sim.computeImpulseResponse();
+    //Simulation sim(decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,nd,ni,nr,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048);
+                //sim2(decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,nd,ni,nr,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048);
+    //sim2.EstimateOffset();
+    //sim.computeImpulseResponse();
     QThread *thread = new QThread();
     sim.moveToThread(QApplication::instance()->thread());
     connect(thread, SIGNAL(finished()), &sim, SLOT(deleteLater()));
-    connect(thread, SIGNAL(started()), &sim, SLOT(cacalibrate()));
-    /*progress = new QProgressBar;
+    connect(thread, SIGNAL(started()), &sim, SLOT(EstimateOffset()));
+    /*QThread *thread2 = new QThread();
+    sim2.moveToThread(QApplication::instance()->thread());
+    connect(thread2, SIGNAL(finished()), &sim2, SLOT(deleteLater()));
+    connect(thread2, SIGNAL(started()), &sim2, SLOT(cacalibrate()));*/
+    progress = new QProgressBar;
     progress->setWindowTitle("Progression");
     progress->setFixedSize(400,50);
-    progress->show();
+    progress->show();/*
     connect(&instrument, SIGNAL(getProgress(int)),progress, SLOT(setValue(int)));
     connect(&instrument, SIGNAL(simulation_ended()), progress, SLOT(close()));*/
+
+
+    connect(&sim, SIGNAL(simulation_end(int)), progress, SLOT(setValue(int)));
+    //sim.cacalibrate();
+    //connect(&sim2, SIGNAL(simulation_ended()), this, SLOT(test()));
     thread->start();
+    //thread2->start();
+}
+
+void MainWindow::test()
+{
+    QMessageBox::information(this, "Test", "Fini");
 }
 
 void MainWindow::setmode1()
@@ -238,14 +255,14 @@ void MainWindow::setmode3()
 
 void MainWindow::openConfig()
 {
-    /*config *conf = new config();
-    conf->show();*/
+    config *conf = new config();
+    conf->show();
 }
 
 void MainWindow::Export()
 {
-    /*QString fichier = QFileDialog::getSaveFileName(this, "Save a file", QString(),"XML (*.xml)");
-    Importation::saveConfig(fichier);*/
+    QString fichier = QFileDialog::getSaveFileName(this, "Save a file", QString(),"XML (*.xml)");
+    Importation::saveConfig(fichier);
 }
 
 void MainWindow::computeHist(QVector<double> &hist, std::vector<double> data, int Nbin, double binW, double MidBin)

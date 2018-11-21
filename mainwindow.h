@@ -6,6 +6,7 @@
 #include <QWidget>
 #include <string>
 #include "xifu.h"
+#include "simulation.h"
 
 namespace Ui {
 class MainWindow;
@@ -27,9 +28,11 @@ public slots:
     void openConfig();
     void Export();
     void computeHist(QVector<double> &hist, std::vector<double> data, int Nbin, double binW, double MidBin);
+    void test();
 
 private:
     Ui::MainWindow *ui;
+    Simulation sim;
     QPushButton *bouton;
     QPushButton *bouton_launch;
     QPushButton *Calibration_mode;

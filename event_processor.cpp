@@ -204,17 +204,10 @@ void Event_Processor::computeImpulseResponse()
         IR[i]*=std::exp(const_i*pulse_phase[i]);
     }  
     ifft(IR);
-    std::fstream file,file1;
-    file.open("IR.txt",std::ios::out);
-    file1.open("Poutpout.txt",std::ios::out);
     for (int i=0;i<RecordSize;i++)
     {
         IR[i]=std::real(IR[i]);
-        file << std::real(IR[i]) << std::endl;
-        file1 << abs(noise_fft[i]) << std::endl;
     }
-    file.close();
-    file1.close();
 }
 
 template<class T> bool Event_Processor::InvertMatrix(const ublas::matrix<T>& input, ublas::matrix<T>& inverse)
