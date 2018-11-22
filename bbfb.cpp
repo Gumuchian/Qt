@@ -30,9 +30,9 @@ void BBFB::compute_feedback(double demoduI, double remoduI, double demoduQ, doub
     }
     else
     {
-        I+=G*trunc(demoduI*input/nd);
-        Q+=G*trunc(demoduQ*input/nd);
-        feedback = trunc((remoduI*I+remoduQ*Q)/nr);
+        I+=G*trunc(demoduI*input/pow(2,nd));
+        Q+=G*trunc(demoduQ*input/pow(2,nd));
+        feedback = trunc((remoduI*I+remoduQ*Q)/pow(2,nr));
     }
 }
 

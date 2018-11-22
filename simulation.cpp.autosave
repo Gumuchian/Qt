@@ -96,8 +96,6 @@ void Simulation::computeImpulseResponse()
     instrument.setEP();
     double Energy=7000.0;
     bool pulse_mode=true;
-    std::fstream file;
-    file.open("Pattern.txt",std::ios::in);
     ublas::vector<double> IR(2048);
     for (int i=0;i<2048;i++)
     {
@@ -122,5 +120,4 @@ void Simulation::computeImpulseResponse()
         }
     }
     instrument.computeImpulseResponse();
-    std::cout << "IR computed" << std::endl;
 }

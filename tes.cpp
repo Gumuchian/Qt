@@ -4,7 +4,7 @@
 #include <random>
 #include "global.h"
 
-TES::TES(double L_crit, double TTR, double f_s, double frequency):L_crit(L_crit),TTR(TTR),f_s(f_s),frequency(frequency),gen((std::random_device())())
+TES::TES(double L_crit, double TTR, double f_s, double frequency):L_crit(L_crit),TTR(TTR),f_s(f_s),frequency(frequency),gen(std::random_device{}())
 {
     I=I0;
     Ccar=(1/(4*pow(PI,2)*L_crit*pow(TTR,2)*pow(frequency,2)));

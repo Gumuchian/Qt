@@ -270,6 +270,21 @@ double Event_Processor::gett0()
     return t0;
 }
 
+CArray Event_Processor::getPulseSpectrum()
+{
+    return pulse_fft;
+}
+
+CArray Event_Processor::getNoiseSpectrum()
+{
+    return noise_fft;
+}
+
+CArray Event_Processor::getPulsePhase()
+{
+    return pulse_phase;
+}
+
 void Event_Processor::setOffset(double off)
 {
     offset=off;
@@ -285,18 +300,6 @@ void Event_Processor::computeCorrCoeff(ublas::vector<double> AU, ublas::vector<d
             mAU(i,j)=pow(AU(i)/10000,4-j);
         }
     }
-    for (int k=0;k<(int)AU.size();k++)
-    {
-        for (int l=0;l<5;l++)
-        {
-            std::cout << mAU(k,l) << "\t";
-        }
-        std::cout << std::endl;
-    }
     InvertMatrix(ublas::matrix<double> (ublas::prod(ublas::trans(mAU),mAU)),mAUinv);
     energy_curve_coeff=ublas::prod(ublas::prod(mAUinv,ublas::trans(mAU)),energies);
-    for (int i=0;i<5;i++)
-    {
-        std::cout << energy_curve_coeff(i) << std::endl;
-    }
 }

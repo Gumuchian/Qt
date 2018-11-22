@@ -10,7 +10,7 @@
 #include "importation.h"
 #include "simulation.h"
 
-MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindow),sim(decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,20,20,20,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048)
+MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindow),sim(decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,20,20,20,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048),sim2(decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,20,20,20,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048),sim3(decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,20,20,20,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048)
 {
     ui->setupUi(this);
     this->setFixedSize(420,260);
@@ -58,6 +58,28 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
     Gain->setFixedSize(100,50);
     connect(Gain, SIGNAL(clicked()), this, SLOT(setmode3()));
     mode=2;
+
+    /*for (int i=0;i<2;i++)
+    {
+        simulation.push_back(Simulation(decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,20,20,20,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048));
+    }*/
+    std::fstream file;
+    file.open("Pattern.txt",std::ios::in);
+    ublas::vector<double> IR(2048);
+    for (int i=0;i<2048;i++)
+    {
+        file >> IR(i);
+    }
+    file.close();
+    sim.setIR(IR);
+    sim2.setIR(IR);
+    sim3.setIR(IR);
+    sim.EstimateOffset();
+    sim.EstimateEnergyCurve();
+    sim2.EstimateOffset();
+    sim2.EstimateEnergyCurve();
+    sim3.EstimateOffset();
+    sim3.EstimateEnergyCurve();
 }
 
 MainWindow::~MainWindow()
@@ -201,38 +223,36 @@ void MainWindow::displayresult()
 
 void MainWindow::simulate()
 {
-    QMessageBox::information(this, "Test", "Lancement");
-    int nd=20,ni=20,nr=20;
-    //Simulation sim(decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,nd,ni,nr,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048);
-                //sim2(decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,nd,ni,nr,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048);
-    //sim2.EstimateOffset();
-    //sim.computeImpulseResponse();
-    QThread *thread = new QThread();
-    sim.moveToThread(QApplication::instance()->thread());
-    connect(thread, SIGNAL(finished()), &sim, SLOT(deleteLater()));
-    connect(thread, SIGNAL(started()), &sim, SLOT(EstimateOffset()));
-    /*QThread *thread2 = new QThread();
-    sim2.moveToThread(QApplication::instance()->thread());
-    connect(thread2, SIGNAL(finished()), &sim2, SLOT(deleteLater()));
-    connect(thread2, SIGNAL(started()), &sim2, SLOT(cacalibrate()));*/
-    progress = new QProgressBar;
-    progress->setWindowTitle("Progression");
-    progress->setFixedSize(400,50);
-    progress->show();/*
-    connect(&instrument, SIGNAL(getProgress(int)),progress, SLOT(setValue(int)));
-    connect(&instrument, SIGNAL(simulation_ended()), progress, SLOT(close()));*/
+        QThread *thread = new QThread();
+        sim.moveToThread(QApplication::instance()->thread());
+        connect(thread, SIGNAL(finished()), &sim, SLOT(deleteLater()));
+        connect(thread, SIGNAL(started()), &sim, SLOT(simulate()));
+        connect(&sim, SIGNAL(energies(QVector<double>)), this, SLOT(test(QVector<double>)));
 
+        QThread *thread2 = new QThread();
+        sim2.moveToThread(QApplication::instance()->thread());
+        connect(thread2, SIGNAL(finished()), &sim2, SLOT(deleteLater()));
+        connect(thread2, SIGNAL(started()), &sim2, SLOT(simulate()));
+        connect(&sim2, SIGNAL(energies(QVector<double>)), this, SLOT(test(QVector<double>)));
 
-    connect(&sim, SIGNAL(simulation_end(int)), progress, SLOT(setValue(int)));
-    //sim.cacalibrate();
-    //connect(&sim2, SIGNAL(simulation_ended()), this, SLOT(test()));
-    thread->start();
-    //thread2->start();
+        QThread *thread3 = new QThread();
+        sim3.moveToThread(QApplication::instance()->thread());
+        connect(thread3, SIGNAL(finished()), &sim3, SLOT(deleteLater()));
+        connect(thread3, SIGNAL(started()), &sim3, SLOT(simulate()));
+        connect(&sim3, SIGNAL(energies(QVector<double>)), this, SLOT(test(QVector<double>)));
+
+        thread->start();
+        thread2->start();
+        thread3->start();
 }
 
-void MainWindow::test()
+void MainWindow::test(QVector<double> energies)
 {
-    QMessageBox::information(this, "Test", "Fini");
+    std::cout << "Top" << std::endl;
+    for (int i=0;i<(int)energies.size();i++)
+    {
+        std::cout << energies[i] << std::endl;
+    }
 }
 
 void MainWindow::setmode1()
@@ -267,7 +287,7 @@ void MainWindow::Export()
 
 void MainWindow::computeHist(QVector<double> &hist, std::vector<double> data, int Nbin, double binW, double MidBin)
 {
-    /*for (int i=0;i<(int)hist.size();i++)
+    for (int i=0;i<(int)hist.size();i++)
     {
         hist[i]=0;
     }
@@ -280,5 +300,5 @@ void MainWindow::computeHist(QVector<double> &hist, std::vector<double> data, in
         {
             hist[(int)std::round(h/binW)]+=1;
         }
-    }*/
+    }
 }

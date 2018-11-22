@@ -9,7 +9,7 @@ SQUID::SQUID()
 
 }
 
-SQUID::SQUID(double M_b, double M_f, double G_squid, double squid_dsl, double b_squid):M_b(M_b),M_f(M_f),G_squid(G_squid),squid_dsl(squid_dsl),b_squid(b_squid),gen(time(0)),SQUID_noise(0.0,SQUID_dsl*sqrt(B_SQUID))
+SQUID::SQUID(double M_b, double M_f, double G_squid, double squid_dsl, double b_squid):M_b(M_b),M_f(M_f),G_squid(G_squid),squid_dsl(squid_dsl),b_squid(b_squid),gen(std::random_device{}()),SQUID_noise(0.0,SQUID_dsl*sqrt(B_SQUID))
 {
     mode=false;
 }
