@@ -59,6 +59,10 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
     connect(Gain, SIGNAL(clicked()), this, SLOT(setmode3()));
     mode=2;
 
+    /*for (int i=0;i<2;i++)
+    {
+        simulation.push_back(Simulation(decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,20,20,20,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048));
+    }*/
     std::fstream file;
     file.open("Pattern.txt",std::ios::in);
     ublas::vector<double> IR(2048);
@@ -67,10 +71,18 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
         file >> IR(i);
     }
     file.close();
-
-    for (int i=0;i<2;i++)
+    /*sim.setIR(IR);
+    sim2.setIR(IR);
+    sim3.setIR(IR);
+    sim.EstimateOffset();
+    sim.EstimateEnergyCurve();
+    sim2.EstimateOffset();
+    sim2.EstimateEnergyCurve();
+    sim3.EstimateOffset();
+    sim3.EstimateEnergyCurve();*/
+    for (int i=0;i<4;i++)
     {
-        simulation.push_back(new Simulation((unsigned long)(i*10),decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,20,20,20,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048));
+        simulation.push_back(new Simulation(decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,20,20,20,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048));
         simulation[i]->setIR(IR);
         simulation[i]->EstimateOffset();
         simulation[i]->EstimateEnergyCurve();
@@ -84,25 +96,28 @@ MainWindow::~MainWindow()
 
 void MainWindow::displayresult()
 {
-    if (Energies.size()!=0)
+    /*std::vector<double> E(Npat);
+    instrument.getE(E);
+    if (E.size()!=0)
     {
+        E.erase(E.begin(),E.begin()+3);
         double Em=0,max=0,var=0,integral=0;
         int Nbin;
-        for (int i=0;i<(int)Energies.size();i++)
+        for (int i=0;i<(int)E.size();i++)
         {
-            Em+=Energies[i];
+            Em+=E[i];
         }
-        Em/=((int)Energies.size());
-        for (int i=0;i<(int)Energies.size();i++)
+        Em/=((int)E.size());
+        for (int i=0;i<(int)E.size();i++)
         {
-            var+=pow(Energies[i]-Em,2);
+            var+=pow(E[i]-Em,2);
         }
-        var/=(int)Energies.size();
+        var/=(int)E.size();
         var=std::sqrt(var);
 
         Nbin=(int)std::ceil((6*var)/binWidth);
         QVector<double> Data(Nbin);
-        computeHist(Data, Energies, Nbin, binWidth, Em);
+        computeHist(Data, E, Nbin, binWidth, Em);
         for (int i=0;i<Data.size();i++)
         {
             if (max<Data[i])
@@ -110,17 +125,17 @@ void MainWindow::displayresult()
                 max=Data[i];
             }
         }
-
-        QCustomPlot  *customPlot = new QCustomPlot;
+        */
+        /*QCustomPlot  *customPlot = new QCustomPlot;
         customPlot->setMinimumSize(750,900);
-        QLinearGradient gradient(0, 0, 0, 400);
+        /*QLinearGradient gradient(0, 0, 0, 400);
         gradient.setColorAt(0, QColor(255, 0, 10));
         gradient.setColorAt(0.38, QColor(105, 105, 105));
         gradient.setColorAt(1, QColor(70, 70, 70));
-        customPlot->setBackground(QBrush(gradient));
+        customPlot->setBackground(QBrush(gradient));*/
 
         // create empty bar chart objects:
-        QCPBars *energy_distrib = new QCPBars(customPlot->xAxis, customPlot->yAxis);
+        /*QCPBars *energy_distrib = new QCPBars(customPlot->xAxis, customPlot->yAxis);
         energy_distrib->setAntialiased(false);
         energy_distrib->setStackingGap(1);
         // set names and colors:
@@ -142,7 +157,7 @@ void MainWindow::displayresult()
         for (int i=0;i<(int)gaussian.size();i++)
         {
             abs_gaussian[i]=i/10.0;
-            gaussian[i]=(int)Energies.size()/integral*std::exp(-pow(Em-3*var+i*binWidth/10-Em,2)/(2*pow(var,2)));
+            gaussian[i]=(int)E.size()/integral*std::exp(-pow(Em-3*var+i*binWidth/10-Em,2)/(2*pow(var,2)));
         }
 
         QCPGraph *fit = customPlot->addGraph();
@@ -186,7 +201,7 @@ void MainWindow::displayresult()
         customPlot->replot();
         customPlot->show();
 
-        /*QCustomPlot  *customPlotspec = new QCustomPlot;
+        QCustomPlot  *customPlotspec = new QCustomPlot;
         customPlotspec->setMinimumSize(700,500);
         customPlotspec->setWindowTitle("OF Transfer function");
         customPlotspec->addGraph();
@@ -203,9 +218,9 @@ void MainWindow::displayresult()
         customPlotspec->graph(0)->setData(x, y);
         customPlotspec->graph(0)->rescaleAxes();
         customPlotspec->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
-        customPlotspec->show();*/
+        customPlotspec->show();
     }
-    /*QWidget *window = new QWidget();
+    QWidget *window = new QWidget();
     QLabel *label = new QLabel(instrument.getResults(), window);
     label->show();
     window->setWindowTitle("Results");
@@ -215,12 +230,8 @@ void MainWindow::displayresult()
 
 void MainWindow::simulate()
 {
-    if ((int)Energies.size() != 0)
-    {
-        Energies.erase(Energies.begin(),Energies.end());
-    }
     QVector<QThread *> threads;
-    for (int i=0;i<2;i++)
+    for (int i=0;i<4;i++)
     {
         threads.push_back(new QThread);
         simulation[i]->moveToThread(QApplication::instance()->thread());
@@ -228,7 +239,7 @@ void MainWindow::simulate()
         connect(threads[i], SIGNAL(started()), simulation[i], SLOT(simulate()));
         connect(simulation[i], SIGNAL(energies(QVector<double>)), this, SLOT(test(QVector<double>)));
     }
-    for (int i=0;i<2;i++)
+    for (int i=0;i<4;i++)
     {
         threads[i]->start();
     }
@@ -241,7 +252,6 @@ void MainWindow::test(QVector<double> energies)
     {
         std::cout << energies[i] << std::endl;
     }
-    Energies.append(energies);
 }
 
 void MainWindow::setmode1()
@@ -274,7 +284,7 @@ void MainWindow::Export()
     Importation::saveConfig(fichier);
 }
 
-void MainWindow::computeHist(QVector<double> &hist, QVector<double> data, int Nbin, double binW, double MidBin)
+void MainWindow::computeHist(QVector<double> &hist, std::vector<double> data, int Nbin, double binW, double MidBin)
 {
     for (int i=0;i<(int)hist.size();i++)
     {

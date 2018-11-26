@@ -42,6 +42,9 @@ class Event_Processor
         double getOutput();
         double convert(double au);
         void computeCorrCoeff(ublas::vector<double> AU, ublas::vector<double> energies);
+        CArray getPulseSpectrum();
+        CArray getNoiseSpectrum();
+        CArray getPulsePhase();
 
     private:
         int counter;
@@ -75,8 +78,6 @@ class Event_Processor
         CArray pulse_fft;
         CArray noise_fft;
         CArray pulse_phase;
-        QVector<double> pulse;
-        QVector<double> noise;
         CArray IR;
         ublas::vector<double> energy_curve_coeff;
 };

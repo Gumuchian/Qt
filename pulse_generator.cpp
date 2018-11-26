@@ -1,7 +1,6 @@
 #include "pulse_generator.h"
 #include "global.h"
 #include <math.h>
-#include <random>
 
 
 Pulse_generator::Pulse_generator()
@@ -9,7 +8,7 @@ Pulse_generator::Pulse_generator()
 
 }
 
-Pulse_generator::Pulse_generator(double G_b, double n_therm, double T_bath, double C_therm, double R_l, double L_crit, double f_s, double R_0, double T_0, double I_0):G_b(G_b), n_therm(n_therm), T_bath(T_bath), C_therm(C_therm), R_l(R_l), L_crit(L_crit), f_s(f_s), R_0(R_0), T_0(T_0), I_0(I_0)
+Pulse_generator::Pulse_generator(unsigned seed, double G_b, double n_therm, double T_bath, double C_therm, double R_l, double L_crit, double f_s, double R_0, double T_0, double I_0):G_b(G_b), n_therm(n_therm), T_bath(T_bath), C_therm(C_therm), R_l(R_l), L_crit(L_crit), f_s(f_s), R_0(R_0), T_0(T_0), I_0(I_0), gen(seed)
 {
     Ites=I_0;
     Ttes=T_0;
@@ -39,7 +38,6 @@ double Pulse_generator::RK4(ptrm f, double dt, double y0, double y1, double y2, 
 
 double Pulse_generator::compute()
 {
-    std::mt19937 gen;
     double gamma=0.5*(pow(T_bath/Ttes,n_therm+1)+1);
     double kb=1.38*pow(10,-23);
     double M=0;

@@ -27,13 +27,13 @@ public slots:
     void setmode3();
     void openConfig();
     void Export();
-    void computeHist(QVector<double> &hist, std::vector<double> data, int Nbin, double binW, double MidBin);
+    void computeHist(QVector<double> &hist, QVector<double> data, int Nbin, double binW, double MidBin);
     void test(QVector<double> energies);
 
 private:
     Ui::MainWindow *ui;
-    //QVector<Simulation> simulation;
-    Simulation sim,sim2,sim3;
+    QVector<Simulation *> simulation;
+    QVector<double> Energies;
     QPushButton *bouton;
     QPushButton *bouton_launch;
     QPushButton *Calibration_mode;

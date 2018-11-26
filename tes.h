@@ -1,11 +1,10 @@
 #ifndef TES_H
 #define TES_H
-#include <random>
 
 class TES
 {
     public:
-        TES(double L_crit, double TTR, double f_s, double frequency);
+        TES(unsigned seed, double L_crit, double TTR, double f_s, double frequency);
         virtual ~TES();
         double computeLCTES();
         void setBias(double sig);
@@ -25,7 +24,6 @@ class TES
         double I;
         double biasm[3];
         double bias[3];
-        std::mt19937 gen;
         double max_LC;
         double L_crit;
         double TTR;

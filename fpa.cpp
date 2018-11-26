@@ -1,11 +1,11 @@
 #include "fpa.h"
 
-FPA::FPA(double f_s, int N_pix, double L_crit, double TTR, double G_b, double n_therm, double T_bath, double C_therm, double R_l, double R_0, double T_0, double I_0):N_pix(N_pix)
+FPA::FPA(unsigned seed, double f_s, int N_pix, double L_crit, double TTR, double G_b, double n_therm, double T_bath, double C_therm, double R_l, double R_0, double T_0, double I_0):N_pix(N_pix)
 {
     for (int i=0;i<N_pix;i++)
     {
-        TES_array.push_back(TES(L_crit,TTR,f_s,pow(10,6)+i*pow(10,5)));
-        pulse_generator.push_back(Pulse_generator(G_b,n_therm,T_bath,C_therm,R_l,L_crit,f_s,R_0,T_0,I_0));
+        TES_array.push_back(TES(seed, L_crit,TTR,f_s,pow(10,6)+i*pow(10,5)));
+        pulse_generator.push_back(Pulse_generator(seed+(unsigned)i,G_b,n_therm,T_bath,C_therm,R_l,L_crit,f_s,R_0,T_0,I_0));
     }
 }
 
