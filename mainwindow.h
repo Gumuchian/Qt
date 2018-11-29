@@ -24,16 +24,20 @@ public slots:
     void simulate();
     void setmode1();
     void setmode2();
-    void setmode3();
     void openConfig();
     void Export();
     void computeHist(QVector<double> &hist, QVector<double> data, int Nbin, double binW, double MidBin);
-    void test(QVector<double> energies);
-
+    void getEnergy(QVector<double> energies);
+    void getPulse(QVector<double> pulse_spectrum);
+    void getNoise(QVector<double> noise_spectrum);
+    void getPhase(QVector<double> pulse_phase);
 private:
     Ui::MainWindow *ui;
     QVector<Simulation *> simulation;
     QVector<double> Energies;
+    QVector<double> Pulse_spectrum;
+    QVector<double> Noise_spectrum;
+    QVector<double> Pulse_phase;
     QPushButton *bouton;
     QPushButton *bouton_launch;
     QPushButton *Calibration_mode;

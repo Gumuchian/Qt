@@ -226,7 +226,7 @@ void MainWindow::simulate()
         simulation[i]->moveToThread(QApplication::instance()->thread());
         connect(threads[i], SIGNAL(finished()), simulation[i], SLOT(deleteLater()));
         connect(threads[i], SIGNAL(started()), simulation[i], SLOT(simulate()));
-        connect(simulation[i], SIGNAL(energies(QVector<double>)), this, SLOT(test(QVector<double>)));
+        connect(simulation[i], SIGNAL(energies(QVector<double>)), this, SLOT(getEnergy(QVector<double>)));
     }
     for (int i=0;i<2;i++)
     {
@@ -234,14 +234,24 @@ void MainWindow::simulate()
     }
 }
 
-void MainWindow::test(QVector<double> energies)
+void MainWindow::getEnergy(QVector<double> energies)
 {
-    std::cout << "Top" << std::endl;
-    for (int i=0;i<(int)energies.size();i++)
-    {
-        std::cout << energies[i] << std::endl;
-    }
     Energies.append(energies);
+}
+
+void MainWindow::getPulse(QVector<double> pulse_spectrum)
+{
+    Pulse_spectrum += pulse_spectrum;
+}
+
+void MainWindow::getNoise(QVector<double> noise_spectrum)
+{
+    Noise_spectrum += noise_spectrum;
+}
+
+void MainWindow::getPhase(QVector<double> pulse_phase)
+{
+    Pulse_phase = pulse_phase;
 }
 
 void MainWindow::setmode1()
@@ -254,12 +264,6 @@ void MainWindow::setmode2()
 {
     //instrument.setMode(2);
     QMessageBox::information(this, "Mode", "Resolution estimation mode selected");
-}
-
-void MainWindow::setmode3()
-{
-    //instrument.setMode(3);
-    QMessageBox::information(this, "Mode", "Gain computation");
 }
 
 void MainWindow::openConfig()
