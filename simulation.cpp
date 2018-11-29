@@ -2,16 +2,9 @@
 #include <fstream>
 #include <qmessagebox.h>
 
-Simulation::Simulation(unsigned seed,int decimation_factor, double f_s, double L_crit, double TTR, double G_b, double n_therm, double T_bath, double C_therm, double R_l, double R_0, double T_0, double I_0, int N_pt, int N_pr, int interpol, int N_pix, int Delay, int nd, int ni, int nr, double adc_dsl, double b_adc, double fs_adc, int adc_bit, double dac_dsl, double b_dac, double fs_dac, int dac_bit, double G_LNA, double dsl_LNA, double b_LNA, double M_b, double M_f, double G_squid, double squid_dsl, double b_squid, int N_pattern):instrument(seed,decimation_factor,f_s,L_crit,TTR,G_b,n_therm,T_bath,C_therm,R_l,R_0,T_0,I_0,N_pt,N_pr,interpol,N_pix,Delay,nd,ni,nr,adc_dsl,b_adc,fs_adc,adc_bit,dac_dsl,b_dac,fs_dac,dac_bit,G_LNA,dsl_LNA,b_LNA,M_b,M_f,G_squid,squid_dsl,b_squid,N_pattern)
+Simulation::Simulation(int Nsim, unsigned seed,int decimation_factor, double f_s, double L_crit, double TTR, double G_b, double n_therm, double T_bath, double C_therm, double R_l, double R_0, double T_0, double I_0, int N_pt, int N_pr, int interpol, int N_pix, int Delay, int nd, int ni, int nr, double adc_dsl, double b_adc, double fs_adc, int adc_bit, double dac_dsl, double b_dac, double fs_dac, int dac_bit, double G_LNA, double dsl_LNA, double b_LNA, double M_b, double M_f, double G_squid, double squid_dsl, double b_squid, int N_pattern):N_sim(Nsim),instrument(seed,decimation_factor,f_s,L_crit,TTR,G_b,n_therm,T_bath,C_therm,R_l,R_0,T_0,I_0,N_pt,N_pr,interpol,N_pix,Delay,nd,ni,nr,adc_dsl,b_adc,fs_adc,adc_bit,dac_dsl,b_dac,fs_dac,dac_bit,G_LNA,dsl_LNA,b_LNA,M_b,M_f,G_squid,squid_dsl,b_squid,N_pattern)
 {
-    /*std::fstream file;
-    file.open("Pattern.txt",std::ios::in);
-    ublas::vector<double> IR(N_pattern);
-    for (int i=0;i<N_pattern;i++)
-    {
-        file >> IR(i);
-    }
-    file.close();*/
+
 }
 
 Simulation::~Simulation()
@@ -25,12 +18,22 @@ void Simulation::setIR(ublas::vector<double> IR)
     instrument.sweepLC();
 }
 
+void Simulation::setNsim(int Nsim)
+{
+    N_sim = Nsim;
+}
+
+void Simulation::setEnergy(double energy)
+{
+    Energy = energy;
+}
+
 void Simulation::simulate()
 {
     QVector<double> Energies;
-    for (int i=0;i<5000000;i++)
+    for (int i=0;i<N_sim;i++)
     {
-        instrument.compute(7000);
+        instrument.compute(Ernergy);
         if (instrument.readyToSendToEP() && instrument.getNewOutput())
         {
             Energies.push_back(instrument.getEnergy());
@@ -57,7 +60,6 @@ void Simulation::EstimateOffset()
     }
     sum/=offset.size();
     instrument.setOffset(sum);
-    emit simulation_end(50);
 }
 
 void Simulation::EstimateEnergyCurve()
@@ -97,16 +99,16 @@ void Simulation::computeImpulseResponse()
     double Energy=7000.0;
     bool pulse_mode=true;
     ublas::vector<double> IR(2048);
-    for (int i=0;i<70000000;i++)
+    for (int i=0;i<N_sim;i++)
     {
-        if (i>35000000)
+        if (i>N_sim/2)
         {
             Energy = 0.0;
             pulse_mode = false;
             instrument.setParameters(IR,0);
         }
         instrument.compute(Energy);
-        if (i>1000000)
+        if (i>N_sim/5)
         {
             if (instrument.readyToSendToEP())
             {
