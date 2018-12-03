@@ -33,7 +33,7 @@ void Simulation::simulate()
     QVector<double> Energies;
     for (int i=0;i<N_sim;i++)
     {
-        instrument.compute(Ernergy);
+        instrument.compute(Energy);
         if (instrument.readyToSendToEP() && instrument.getNewOutput())
         {
             Energies.push_back(instrument.getEnergy());

@@ -15,11 +15,19 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
     ui->setupUi(this);
     this->setFixedSize(420,260);
     this->setWindowTitle("X-IFU Simulator");
-    QPixmap bkgnd("fenetre.jpg");
-    bkgnd = bkgnd.scaled(100,200, Qt::KeepAspectRatio);
-    QPalette palette;
-    palette.setBrush(QPalette::Background, bkgnd);
-    this->setPalette(palette);
+
+    /*QGridLayout *layout = new QGridLayout;
+    this->setLayout(layout);
+    QLabel *label = new QLabel(this);
+    label->setPixmap(QPixmap("fenetre.jpg"));
+    layout->addWidget(label, 3, 10);*/
+
+
+    //QPixmap bkgnd("fenetre.jpg");
+    //bkgnd = bkgnd.scaled(100,200, Qt::KeepAspectRatio);
+    //QPalette palette;
+    //palette.setBrush(QPalette::Background, bkgnd);
+    //this->setPalette(palette);
 
     QMenu *menuFichier = menuBar()->addMenu("&Fichier");
     QAction *actionConfig = new QAction("&Configuration", this);
@@ -53,10 +61,6 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
     Resolution_mode->setFixedSize(100,50);
     connect(Resolution_mode, SIGNAL(clicked()), this, SLOT(setmode2()));
 
-    Gain = new QPushButton("Gain",this);
-    Gain->move(260,150);
-    Gain->setFixedSize(100,50);
-    connect(Gain, SIGNAL(clicked()), this, SLOT(setmode3()));
     mode=2;
 
     std::fstream file;
@@ -68,13 +72,13 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
     }
     file.close();
 
-    for (int i=0;i<2;i++)
+    /*for (int i=0;i<2;i++)
     {
-        simulation.push_back(new Simulation((unsigned long)(i*10),decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,20,20,20,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048));
+        simulation.push_back(new Simulation(N,(unsigned long)(i*10),decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,20,20,20,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048));
         simulation[i]->setIR(IR);
         simulation[i]->EstimateOffset();
         simulation[i]->EstimateEnergyCurve();
-    }
+    }*/
 }
 
 MainWindow::~MainWindow()
