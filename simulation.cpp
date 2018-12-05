@@ -1,6 +1,7 @@
 #include "simulation.h"
 #include <fstream>
 #include <qmessagebox.h>
+#define PI 3.14159265358979
 
 Simulation::Simulation(int Nsim, unsigned seed,int decimation_factor, double f_s, double L_crit, double TTR, double G_b, double n_therm, double T_bath, double C_therm, double R_l, double R_0, double T_0, double I_0, int N_pt, int N_pr, int interpol, int N_pix, int Delay, int nd, int ni, int nr, double adc_dsl, double b_adc, double fs_adc, int adc_bit, double dac_dsl, double b_dac, double fs_dac, int dac_bit, double G_LNA, double dsl_LNA, double b_LNA, double M_b, double M_f, double G_squid, double squid_dsl, double b_squid, int N_pattern):N_sim(Nsim),instrument(seed,decimation_factor,f_s,L_crit,TTR,G_b,n_therm,T_bath,C_therm,R_l,R_0,T_0,I_0,N_pt,N_pr,interpol,N_pix,Delay,nd,ni,nr,adc_dsl,b_adc,fs_adc,adc_bit,dac_dsl,b_dac,fs_dac,dac_bit,G_LNA,dsl_LNA,b_LNA,M_b,M_f,G_squid,squid_dsl,b_squid,N_pattern)
 {
@@ -130,5 +131,52 @@ void Simulation::computeImpulseResponse()
             }
         }
     }
-    instrument.computeImpulseResponse();
+    emit pulses(instrument.getPulse());
+    emit noises(instrument.getNoise());
+    emit phase(instrument.getPhase());
+}
+
+void Simulation::setImpulseResponse(QVector<double> pulse,QVector<double> noise,QVector<double> phase)
+{
+
+    CArray TF(2048);
+    ublas::vector<double> IR(2048);
+    const Complex const_i(0,1);
+    for (int i=0;i<2048;i++)
+    {
+        TF[i]=pulse[i]/noise[i]*std::exp(const_i*phase[i]);
+    }
+    ifft(TF);
+    for (int i=0;i<2048;i++)
+    {
+        IR[i]=std::real(TF[i]);
+    }
+    setIR(IR);
+}
+
+void Simulation::fft(CArray& x)
+{
+    const size_t N = x.size();
+    if (N <= 1) return;
+
+    CArray even = x[std::slice(0,N/2,2)];
+    CArray  odd = x[std::slice(1,N/2,2)];
+
+    fft(even);
+    fft(odd);
+
+    for (size_t k=0;k<N/2;++k)
+    {
+        Complex t = std::polar(1.0,-2*PI*k/N)*odd[k];
+        x[k]=even[k]+t;
+        x[k+N/2]=even[k]-t;
+    }
+}
+
+void Simulation::ifft(CArray& x)
+{
+    x = x.apply(std::conj);
+    fft(x);
+    x = x.apply(std::conj);
+    x /= x.size();
 }

@@ -270,19 +270,34 @@ double Event_Processor::gett0()
     return t0;
 }
 
-CArray Event_Processor::getPulseSpectrum()
+QVector<double> Event_Processor::getPulseSpectrum()
 {
-    return pulse_fft;
+    QVector<double> pulse(RecordSize);
+    for (int i=0;i<RecordSize;i++)
+    {
+        pulse[i]=abs(pulse_fft[i]);
+    }
+    return pulse;
 }
 
-CArray Event_Processor::getNoiseSpectrum()
+QVector<double> Event_Processor::getNoiseSpectrum()
 {
-    return noise_fft;
+    QVector<double> noise(RecordSize);
+    for (int i=0;i<RecordSize;i++)
+    {
+        noise[i]=abs(noise_fft[i]);
+    }
+    return noise;
 }
 
-CArray Event_Processor::getPulsePhase()
+QVector<double> Event_Processor::getPulsePhase()
 {
-    return pulse_phase;
+    QVector<double> phase(RecordSize);
+    for (int i=0;i<RecordSize;i++)
+    {
+        phase[i]=abs(pulse_phase[i]);
+    }
+    return phase;
 }
 
 void Event_Processor::setOffset(double off)

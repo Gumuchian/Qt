@@ -30,6 +30,9 @@ public:
     bool readyToSendToEP();
     double getT0();
     void setEP();
+    QVector<double> getPulse();
+    QVector<double> getNoise();
+    QVector<double> getPhase();
 private:
     FPA fpa;
     DRE dre;

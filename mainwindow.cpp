@@ -206,9 +206,9 @@ void MainWindow::simulate()
         file >> IR(i);
     }
     file.close();
-    simulation.push_back(new Simulation(N,(unsigned long)(i*10),decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,20,20,20,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048));
-    offset = simulation[i]->EstimateOffset();
-    energies = simulation[i]->EstimateEnergyCurve();
+    simulation.push_back(new Simulation(N,0,decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,20,20,20,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048));
+    offset = simulation[0]->EstimateOffset();
+    energies = simulation[0]->EstimateEnergyCurve();
     if ((int)simulation.size() != 0)
     {
         simulation.erase(simulation.begin(),simulation.end());
@@ -227,8 +227,18 @@ void MainWindow::simulate()
         simulation[i]->setCoefficientEnergyCurve(energies);
         simulation[i]->moveToThread(QApplication::instance()->thread());
         connect(threads[i], SIGNAL(finished()), simulation[i], SLOT(deleteLater()));
-        connect(threads[i], SIGNAL(started()), simulation[i], SLOT(simulate()));
-        connect(simulation[i], SIGNAL(energies(QVector<double>)), this, SLOT(getEnergy(QVector<double>)));
+        if (mode == 2)
+        {
+            connect(threads[i], SIGNAL(started()), simulation[i], SLOT(simulate()));
+            connect(simulation[i], SIGNAL(energies(QVector<double>)), this, SLOT(getEnergy(QVector<double>)));
+        }
+        else
+        {
+            connect(threads[i], SIGNAL(started()), simulation[i], SLOT(computeImpulseResponse()));
+            connect(simulation[i], SIGNAL(pulses(QVector<double>)), this, SLOT(getPulse(QVector<double>)));
+            connect(simulation[i], SIGNAL(noises(QVector<double>)), this, SLOT(getNoise(QVector<double>)));
+            connect(simulation[i], SIGNAL(phase(QVector<double>)), this, SLOT(getNoise(QVector<double>)));
+        }
     }
     for (int i=0;i<2;i++)
     {

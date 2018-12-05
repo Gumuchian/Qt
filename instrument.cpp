@@ -169,3 +169,18 @@ void Instrument::setEP()
 {
     EP.setRecording();
 }
+
+QVector<double> Instrument::getPulse()
+{
+    return EP.getPulseSpectrum();
+}
+
+QVector<double> Instrument::getNoise()
+{
+    return EP.getNoiseSpectrum();
+}
+
+QVector<double> Instrument::getPhase()
+{
+    return EP.getPulsePhase();
+}

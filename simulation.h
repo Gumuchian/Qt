@@ -17,21 +17,25 @@ public:
     virtual ~Simulation();
     ublas::vector<double> EstimateEnergyCurve();
     void setCoefficientEnergyCurve(ublas::vector<double> energies);
-    void computeImpulseResponse();
     void setIR(ublas::vector<double> IR);
     void setNsim(int Nsim);
     void setEnergy(double energy);
     void setOffset(double offset);
+    void fft(CArray& x);
+    void ifft(CArray& x);
+    void setImpulseResponse(QVector<double> pulse,QVector<double> noise,QVector<double> phase);
 public slots:
+    void computeImpulseResponse();
     double EstimateOffset();
     void simulate();
 signals:
     void energies(QVector<double> E);
     void pulses(QVector<double> pulse);
     void noises(QVector<double> noise);
+    void phase(QVector<double> noise);
 private:
-    Instrument instrument;
     int N_sim;
+    Instrument instrument;
     double Energy;
 };
 
