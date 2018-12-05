@@ -16,18 +16,13 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
     this->setFixedSize(420,260);
     this->setWindowTitle("X-IFU Simulator");
 
-    /*QGridLayout *layout = new QGridLayout;
-    this->setLayout(layout);
-    QLabel *label = new QLabel(this);
-    label->setPixmap(QPixmap("fenetre.jpg"));
-    layout->addWidget(label, 3, 10);*/
-
-
-    //QPixmap bkgnd("fenetre.jpg");
-    //bkgnd = bkgnd.scaled(100,200, Qt::KeepAspectRatio);
-    //QPalette palette;
-    //palette.setBrush(QPalette::Background, bkgnd);
-    //this->setPalette(palette);
+    QLabel *imageLabel = new QLabel(this);
+    imageLabel->setAlignment (Qt::AlignCenter);
+    imageLabel->setBackgroundRole(QPalette::Base);
+    imageLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    QPixmap pix = QPixmap::fromImage(QImage("fenetre.jpg"));
+    imageLabel->setPixmap(pix.scaled(90,80,Qt::KeepAspectRatio));
+    imageLabel->setGeometry(265,190,100,80);
 
     QMenu *menuFichier = menuBar()->addMenu("&Fichier");
     QAction *actionConfig = new QAction("&Configuration", this);
@@ -53,32 +48,15 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
 
     Calibration_mode = new QPushButton("Calibration",this);
     Calibration_mode->move(60,150);
-    Calibration_mode->setFixedSize(100,50);
+    Calibration_mode->setFixedSize(150,50);
     connect(Calibration_mode, SIGNAL(clicked()), this, SLOT(setmode1()));
 
     Resolution_mode = new QPushButton("Resolution",this);
-    Resolution_mode->move(160,150);
-    Resolution_mode->setFixedSize(100,50);
+    Resolution_mode->move(210,150);
+    Resolution_mode->setFixedSize(150,50);
     connect(Resolution_mode, SIGNAL(clicked()), this, SLOT(setmode2()));
 
     mode=2;
-
-    std::fstream file;
-    file.open("Pattern.txt",std::ios::in);
-    ublas::vector<double> IR(2048);
-    for (int i=0;i<2048;i++)
-    {
-        file >> IR(i);
-    }
-    file.close();
-
-    /*for (int i=0;i<2;i++)
-    {
-        simulation.push_back(new Simulation(N,(unsigned long)(i*10),decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,20,20,20,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048));
-        simulation[i]->setIR(IR);
-        simulation[i]->EstimateOffset();
-        simulation[i]->EstimateEnergyCurve();
-    }*/
 }
 
 MainWindow::~MainWindow()
@@ -218,7 +196,23 @@ void MainWindow::displayresult()
 }
 
 void MainWindow::simulate()
-{
+{    
+    std::fstream file;
+    file.open("Pattern.txt",std::ios::in);
+    ublas::vector<double> IR(2048),energies(7);
+    double offset;
+    for (int i=0;i<2048;i++)
+    {
+        file >> IR(i);
+    }
+    file.close();
+    simulation.push_back(new Simulation(N,(unsigned long)(i*10),decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,20,20,20,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048));
+    offset = simulation[i]->EstimateOffset();
+    energies = simulation[i]->EstimateEnergyCurve();
+    if ((int)simulation.size() != 0)
+    {
+        simulation.erase(simulation.begin(),simulation.end());
+    }
     if ((int)Energies.size() != 0)
     {
         Energies.erase(Energies.begin(),Energies.end());
@@ -227,6 +221,10 @@ void MainWindow::simulate()
     for (int i=0;i<2;i++)
     {
         threads.push_back(new QThread);
+        simulation.push_back(new Simulation(N,(unsigned long)(i*10),decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,20,20,20,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048));
+        simulation[i]->setIR(IR);
+        simulation[i]->setOffset(offset);
+        simulation[i]->setCoefficientEnergyCurve(energies);
         simulation[i]->moveToThread(QApplication::instance()->thread());
         connect(threads[i], SIGNAL(finished()), simulation[i], SLOT(deleteLater()));
         connect(threads[i], SIGNAL(started()), simulation[i], SLOT(simulate()));

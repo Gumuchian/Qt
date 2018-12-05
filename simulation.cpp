@@ -42,7 +42,7 @@ void Simulation::simulate()
     emit energies(Energies);
 }
 
-void Simulation::EstimateOffset()
+double Simulation::EstimateOffset()
 {
     std::vector<double> offset;
     double sum=0;
@@ -59,15 +59,30 @@ void Simulation::EstimateOffset()
         sum+=offset[i];
     }
     sum/=offset.size();
-    instrument.setOffset(sum);
+    return sum;
 }
 
-void Simulation::EstimateEnergyCurve()
+void Simulation::setOffset(double offset)
+{
+    instrument.setOffset(offset);
+}
+
+void Simulation::setCoefficientEnergyCurve(ublas::vector<double> energies)
+{
+    ublas::vector<double> Energies(7,0);
+    for (int i=0;i<7;i++)
+    {
+        Energies(i)=(200+i*1000);
+    }
+    instrument.computeEnergyCurve(energies,Energies);
+}
+
+ublas::vector<double> Simulation::EstimateEnergyCurve()
 {
     double sum;
     int count;
     instrument.setEP();
-    ublas::vector<double> energies(7,0),Energies(7,0);
+    ublas::vector<double> energies(7,0);
     for (int i=0;i<9;i++)
     {
         count=0;
@@ -86,11 +101,10 @@ void Simulation::EstimateEnergyCurve()
         }
         if (i>1)
         {
-            energies(i-2)=sum/count;
-            Energies(i-2)=(200+i*1000);
+            energies(i-2)=sum/count;           
         }
     }
-    instrument.computeEnergyCurve(energies,Energies);
+    return energies;
 }
 
 void Simulation::computeImpulseResponse()
