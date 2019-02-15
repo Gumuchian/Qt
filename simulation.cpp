@@ -31,15 +31,22 @@ void Simulation::setEnergy(double energy)
 
 void Simulation::simulate()
 {
+    std::fstream file,file1;
+    file.open("Bias.txt",std::ios::out);
+    file1.open("mIQ.txt",std::ios::out);
     QVector<double> Energies;
     for (int i=0;i<N_sim;i++)
     {
+        file << instrument.getBiasing() << std::endl;
         instrument.compute(Energy);
+        file1 << instrument.getmIQ() << std::endl;
         if (instrument.readyToSendToEP() && instrument.getNewOutput())
         {
             Energies.push_back(instrument.getEnergy());
         }
     }
+    file.close();
+    file1.close();
     emit energies(Energies);
 }
 
@@ -147,10 +154,14 @@ void Simulation::setImpulseResponse(QVector<double> pulse,QVector<double> noise,
         TF[i]=pulse[i]/noise[i]*std::exp(const_i*phase[i]);
     }
     ifft(TF);
+    std::fstream file;
+    file.open("Papat.txt",std::ios::out);
     for (int i=0;i<2048;i++)
     {
         IR[i]=std::real(TF[i]);
+        file << IR[i] << std::endl;
     }
+    file.close();
     setIR(IR);
 }
 

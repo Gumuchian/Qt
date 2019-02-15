@@ -206,7 +206,8 @@ void MainWindow::simulate()
         file >> IR(i);
     }
     file.close();
-    simulation.push_back(new Simulation(N,0,decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,20,20,20,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048));
+    simulation.push_back(new Simulation(N,(unsigned)0,decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,20,20,20,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048));
+    simulation[0]->setIR(IR);
     offset = simulation[0]->EstimateOffset();
     energies = simulation[0]->EstimateEnergyCurve();
     if ((int)simulation.size() != 0)
@@ -218,7 +219,7 @@ void MainWindow::simulate()
         Energies.erase(Energies.begin(),Energies.end());
     }
     QVector<QThread *> threads;
-    for (int i=0;i<2;i++)
+    for (int i=0;i<1;i++)
     {
         threads.push_back(new QThread);
         simulation.push_back(new Simulation(N,(unsigned long)(i*10),decimation,fs,Lcrit,TR,Gb,ntherm,Tbath,Ctherm,Rl,R0,T0,I0,Npt,Npr,interpolation,1,delay,20,20,20,ADC_dsl,B_ADC,PE_ADC,ADC_bit,0,B_DAC,PE_DAC,DAC_bit,G_LNA,LNA_dsl,B_LNA,5.8*pow(10,-6),58*pow(10,-6),0.017,SQUID_dsl,B_SQUID,2048));
@@ -226,7 +227,8 @@ void MainWindow::simulate()
         simulation[i]->setOffset(offset);
         simulation[i]->setCoefficientEnergyCurve(energies);
         simulation[i]->moveToThread(QApplication::instance()->thread());
-        connect(threads[i], SIGNAL(finished()), simulation[i], SLOT(deleteLater()));
+        simulation[i]->simulate();
+        /*connect(threads[i], SIGNAL(finished()), simulation[i], SLOT(deleteLater()));
         if (mode == 2)
         {
             connect(threads[i], SIGNAL(started()), simulation[i], SLOT(simulate()));
@@ -237,13 +239,14 @@ void MainWindow::simulate()
             connect(threads[i], SIGNAL(started()), simulation[i], SLOT(computeImpulseResponse()));
             connect(simulation[i], SIGNAL(pulses(QVector<double>)), this, SLOT(getPulse(QVector<double>)));
             connect(simulation[i], SIGNAL(noises(QVector<double>)), this, SLOT(getNoise(QVector<double>)));
-            connect(simulation[i], SIGNAL(phase(QVector<double>)), this, SLOT(getNoise(QVector<double>)));
-        }
+            connect(simulation[i], SIGNAL(phase(QVector<double>)), this, SLOT(getPhase(QVector<double>)));
+        }*/
     }
-    for (int i=0;i<2;i++)
+    /*for (int i=0;i<2;i++)
     {
         threads[i]->start();
-    }
+    }*/
+    simulation[0]->setImpulseResponse(Pulse_spectrum,Noise_spectrum,Pulse_phase);
 }
 
 void MainWindow::getEnergy(QVector<double> energies)
@@ -268,13 +271,11 @@ void MainWindow::getPhase(QVector<double> pulse_phase)
 
 void MainWindow::setmode1()
 {
-    //instrument.setMode(1);
     QMessageBox::information(this, "Mode", "Calibration mode selected");
 }
 
 void MainWindow::setmode2()
 {
-    //instrument.setMode(2);
     QMessageBox::information(this, "Mode", "Resolution estimation mode selected");
 }
 

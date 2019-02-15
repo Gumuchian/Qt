@@ -184,3 +184,13 @@ QVector<double> Instrument::getPhase()
 {
     return EP.getPulsePhase();
 }
+
+double Instrument::getBiasing()
+{
+    return dre.getBiasing();
+}
+
+double Instrument::getmIQ()
+{
+    return dre.getmIQ();
+}

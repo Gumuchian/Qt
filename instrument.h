@@ -33,6 +33,8 @@ public:
     QVector<double> getPulse();
     QVector<double> getNoise();
     QVector<double> getPhase();
+    double getBiasing();
+    double getmIQ();
 private:
     FPA fpa;
     DRE dre;
